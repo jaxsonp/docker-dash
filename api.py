@@ -9,7 +9,7 @@ app = Flask(__name__)
 def statusQuery(dsrc):
   """
   Returns basic information and status of the specified container.
-  
+
   parameters:
     dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
     container_name - this value is passed as an http parameter
@@ -19,14 +19,20 @@ def statusQuery(dsrc):
   """
 
   container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
   if dsrc != "mhpcc":
-    return Response("Unable to locate DSRC", status=404)
+    return Response("Invalid DSRC", status=400)
 
   # executing system command
-  output_list = subprocess.check_output(f"docker ps -a -f name={container_name} --format json").decode().split("\n")
-  output_list = map(json.loads, output_list)
+  output_list = subprocess.check_output(f"docker ps -a -f name={container_name} --format json")
+  print(output_list)
+  if len(output_list) == 0:
+    # container couldn't be found
+    return Response(f"Unable to find app: {container_name}", status=400)
+  output_list = map(json.loads, output_list.decode().split("\n"))
 
   # docker ps returns a list of containers with matching ames, so we must search
   # for the one that matches exactly
@@ -34,8 +40,7 @@ def statusQuery(dsrc):
     if entry["Names"] == container_name:
       return Response(json.dumps(entry), status=200)
 
-  # container couldn't be found
-  return Response(f"Unable to find app: {container_name}", status=500)
+  return Response("This should not be reached", status=500)
 
 
 
@@ -44,7 +49,7 @@ def statusQuery(dsrc):
 def inspectContainer(dsrc):
   """
   Returns detailed information of the specified container.
-  
+
   parameters:
     dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
     container_name - this value is passed as an http parameter
@@ -54,13 +59,18 @@ def inspectContainer(dsrc):
   """
 
   container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
   if dsrc != "mhpcc":
-    return Response("Unable to locate DSRC", status=404)
+    return Response("Invalid DSRC", status=400)
 
-  # executing system command
-  output_list = json.loads(subprocess.check_output(f"docker inspect --type=container {container_name}").decode())
+  try:
+    # executing system command
+    output_list = json.loads(subprocess.check_output(f"docker inspect --type=container {container_name}").decode())
+  except subprocess.CalledProcessError:
+    return Response(f"Unable to inspect app: {container_name}", status=400)
 
   # docker inspect returns a list of containers, so we must search for the one
   # with a matching container name
@@ -69,7 +79,6 @@ def inspectContainer(dsrc):
       return Response(json.dumps(entry), status=200)
 
   return Response("", status=500)
-
 
 
 
