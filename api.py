@@ -8,10 +8,18 @@ app = Flask(__name__)
 @app.route('/<dsrc>/queryStatus')
 def statusQuery(dsrc):
   """
+  Returns basic information and status of specified container.
+  
+  parameters:
+    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    container_name - this value is passed as an http parameter
 
+  returns:
+    if successful, returns container information in json format
   """
   container_name = request.args.get("container")
 
+  # this is temporary just for the demo
   if dsrc != "mhpcc":
     return Response("Unable to locate DSRC", status=404)
 
@@ -25,7 +33,8 @@ def statusQuery(dsrc):
     if entry["Names"] == container_name:
       return Response(json.dumps(entry), status=200)
 
-  return Response("", status=500)
+  # container couldn't be found
+  return Response(f"Unable to find app: {container_name}", status=500)
 
 
 @app.route('/<dsrc>/inspectContainer')
