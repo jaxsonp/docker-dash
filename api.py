@@ -110,6 +110,24 @@ def startContainer(dsrc):
 
 
 
+def _verifyContainer(container_name:str):
+  """
+  A helper function that checks if a container exists with the given name.
+  """
+
+  # executing system command
+  completedResponse = subprocess.run("docker ps -a --format \"{{.Names}}\"")
+  if completedResponse.returncode != 0: return False
+
+  # check if container_name is in list of names
+  nameList = completedResponse.stdout.decode().split("\n")
+  for name in nameList:
+    if name == container_name:
+      return True
+  
+  return False
+
+
 
 
 if __name__ == '__main__':
