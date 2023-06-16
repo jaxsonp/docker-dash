@@ -26,15 +26,16 @@ def statusQuery(dsrc):
   if dsrc != "mhpcc":
     return Response("Invalid DSRC", status=400)
 
-  try:
-    # executing system command
-    output_list = subprocess.check_output(f"docker ps -a -f name={container_name} --format json")
-  except subprocess.CalledProcessError:
-    return Response(f"Failed to query app: \"{container_name}\"", status=400)
+  # executing system command
+  completedProcess = subprocess.run(f"docker ps -a -f name={container_name} --format json", capture_output=True)
+  if completedProcess.returncode != 0:
+    return Response(f"Failed to query app: \"{container_name}\"", status=500)
+
+  output_list = completedProcess.stdout.decode().split("\n")
   if len(output_list) == 0:
     # no matching container found
     return Response(f"Unable to find app: {container_name}", status=400)
-  output_list = map(json.loads, output_list.decode().split("\n"))
+  output_list = map(json.loads, output_list)
 
   # docker ps returns a list of containers with matching ames, so we must search
   # for the one that matches exactly
@@ -68,12 +69,17 @@ def inspectContainer(dsrc):
   if dsrc != "mhpcc":
     return Response("Invalid DSRC", status=400)
 
-  try:
-    # executing system command
-    output_list = json.loads(subprocess.check_output(f"docker inspect --type=container {container_name}").decode())
-  except subprocess.CalledProcessError:
-    return Response(f"Failed to inspect app: \"{container_name}\"", status=400)
+  # executing system command
+  completedProcess = subprocess.run(f"docker inspect --type=container {container_name}", capture_output=True)
+  if completedProcess.returncode != 0:
+    if completedProcess.stdout == b'[]\n':
+      # no matching container found
+      return Response(f"Unable to find app: {container_name}", status=400)
 
+    # undefined error
+    return Response(f"Failed to inspect app: \"{container_name}\"", status=500)
+
+  output_list = json.loads(completedProcess.stdout.decode())
   # docker inspect returns a list of containers, so we must search for the one
   # with a matching container name
   for entry in output_list:
@@ -81,6 +87,7 @@ def inspectContainer(dsrc):
       return Response(json.dumps(entry), status=200)
 
   return Response("", status=500)
+
 
 
 @app.route('/<dsrc>/startContainer', methods=['POST'])
@@ -98,6 +105,13 @@ def startContainer(dsrc):
     output = json.loads(subprocess.check_output(f"docker start {container_name}").decode())
   except subprocess.CalledProcessError:
     return Response(f"Unable to inspect app: {container_name}", status=400)
+
+
+
+
+
+
+
 
 if __name__ == '__main__':
   print("\n\n\n")
