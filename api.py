@@ -29,7 +29,7 @@ def statusQuery(dsrc):
   # executing system command
   completedProcess = subprocess.run(f"docker ps -a -f name={container_name} --format json", capture_output=True)
   if completedProcess.returncode != 0:
-    return Response(f"Failed to query app: \"{container_name}\"", status=500)
+    return Response(f"Failed to query app", status=500)
 
   output_list = completedProcess.stdout.decode().split("\n")
   if len(output_list) == 0:
@@ -37,7 +37,7 @@ def statusQuery(dsrc):
     return Response(f"Unable to find app: {container_name}", status=400)
   output_list = map(json.loads, output_list)
 
-  # docker ps returns a list of containers with matching ames, so we must search
+  # docker ps returns a list of containers with matching names, so we must search
   # for the one that matches exactly
   for entry in output_list:
     if entry["Names"] == container_name:
@@ -77,7 +77,7 @@ def inspectContainer(dsrc):
       return Response(f"Unable to find app: {container_name}", status=400)
 
     # undefined error
-    return Response(f"Failed to inspect app: \"{container_name}\"", status=500)
+    return Response(f"Failed to inspect app", status=500)
 
   output_list = json.loads(completedProcess.stdout.decode())
   # docker inspect returns a list of containers, so we must search for the one
@@ -100,13 +100,12 @@ def startContainer(dsrc):
   if container_name == None:
     return Response("No container name provided", status=400)
 
-  try:
-    # executing system command
-    output = json.loads(subprocess.check_output(f"docker start {container_name}").decode())
-  except subprocess.CalledProcessError:
-    return Response(f"Unable to inspect app: {container_name}", status=400)
+  # executing system command
+  completedResponse = subprocess.run(f"docker start {container_name}", capture_output=True)
+  if completedResponse.returncode != 0:
+    return Response(f"Failed to start app", status=500)
 
-
+  return Response("Success", status=200)
 
 
 
