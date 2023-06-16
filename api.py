@@ -26,11 +26,13 @@ def statusQuery(dsrc):
   if dsrc != "mhpcc":
     return Response("Invalid DSRC", status=400)
 
-  # executing system command
-  output_list = subprocess.check_output(f"docker ps -a -f name={container_name} --format json")
-  print(output_list)
+  try:
+    # executing system command
+    output_list = subprocess.check_output(f"docker ps -a -f name={container_name} --format json")
+  except subprocess.CalledProcessError:
+    return Response(f"Failed to query app: \"{container_name}\"", status=400)
   if len(output_list) == 0:
-    # container couldn't be found
+    # no matching container found
     return Response(f"Unable to find app: {container_name}", status=400)
   output_list = map(json.loads, output_list.decode().split("\n"))
 
@@ -70,7 +72,7 @@ def inspectContainer(dsrc):
     # executing system command
     output_list = json.loads(subprocess.check_output(f"docker inspect --type=container {container_name}").decode())
   except subprocess.CalledProcessError:
-    return Response(f"Unable to inspect app: {container_name}", status=400)
+    return Response(f"Failed to inspect app: \"{container_name}\"", status=400)
 
   # docker inspect returns a list of containers, so we must search for the one
   # with a matching container name
@@ -81,6 +83,21 @@ def inspectContainer(dsrc):
   return Response("", status=500)
 
 
+@app.route('/<dsrc>/startContainer', methods=['POST'])
+def startContainer(dsrc):
+  """
+
+  """
+
+  container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
+
+  try:
+    # executing system command
+    output = json.loads(subprocess.check_output(f"docker start {container_name}").decode())
+  except subprocess.CalledProcessError:
+    return Response(f"Unable to inspect app: {container_name}", status=400)
 
 if __name__ == '__main__':
   print("\n\n\n")
