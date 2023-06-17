@@ -110,6 +110,8 @@ def startContainer(dsrc):
 
 
 
+
+
 def _getContainerID(container_name:str):
   """
   A helper function that returns the id of 
@@ -130,6 +132,10 @@ def _getContainerID(container_name:str):
   return None
 
 
+
+def _verifyDockerEngine():
+  completedResponse = subprocess.run("docker version")
+  return completedResponse.returncode == 0
 
 
 if __name__ == '__main__':
