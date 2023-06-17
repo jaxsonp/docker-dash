@@ -130,8 +130,104 @@ def startContainer(dsrc):
   return Response("Success", status=200)
 
 
+@app.route('/<dsrc>/stopContainer', methods=['POST'])
+def stopContainer(dsrc):
+  """
+  Sends a command to docker to stop the specified container
+
+  parameters:
+    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    container_name - this value is passed as an http parameter
+  """
+
+  container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
+
+  if not _verifyDockerEngine():
+    return Response("Docker daemon not responding", status=500)
+
+  container_id = _getContainerID(container_name)
+  if container_id == None:
+    return Response(f"Unable to find app \"{container_name}\"", status=400)
+
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
+  # executing system command
+  completedResponse = subprocess.run(f"docker stop {container_name}", capture_output=True)
+  if completedResponse.returncode != 0:
+    return Response(f"Failed to stop app", status=500)
+
+  return Response("Success", status=200)
 
 
+@app.route('/<dsrc>/restartContainer', methods=['POST'])
+def restartContainer(dsrc):
+  """
+  Sends a command to docker to restart the specified container
+
+  parameters:
+    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    container_name - this value is passed as an http parameter
+  """
+
+  container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
+
+  if not _verifyDockerEngine():
+    return Response("Docker daemon not responding", status=500)
+
+  container_id = _getContainerID(container_name)
+  if container_id == None:
+    return Response(f"Unable to find app \"{container_name}\"", status=400)
+
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
+  # executing system command
+  completedResponse = subprocess.run(f"docker restart {container_name}", capture_output=True)
+  if completedResponse.returncode != 0:
+    return Response(f"Failed to restart app", status=500)
+
+  return Response("Success", status=200)
+
+
+
+@app.route('/<dsrc>/killContainer', methods=['POST'])
+def killContainer(dsrc):
+  """
+  Sends a command to docker to restart the specified container
+
+  parameters:
+    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    container_name - this value is passed as an http parameter
+  """
+
+  container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
+
+  if not _verifyDockerEngine():
+    return Response("Docker daemon not responding", status=500)
+
+  container_id = _getContainerID(container_name)
+  if container_id == None:
+    return Response(f"Unable to find app \"{container_name}\"", status=400)
+
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
+  # executing system command
+  completedResponse = subprocess.run(f"docker kill {container_name}", capture_output=True)
+  if completedResponse.returncode != 0:
+    return Response(f"Failed to kill app", status=500)
+
+  return Response("Success", status=200)
 
 
 def _getContainerID(container_name:str) -> str | None:
@@ -144,11 +240,11 @@ def _getContainerID(container_name:str) -> str | None:
   completedResponse = subprocess.run(f"docker ps -a --filter name={container_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", capture_output=True)
   if completedResponse.returncode != 0: return None
 
-
+  if completedResponse.stdout == b'': return None
 
   # make list of names and ids
   nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n")]
-
+  print(nameList)
   # check if container_name is in list
   for name, id in nameList:
     if name == container_name:
