@@ -5,8 +5,9 @@ import json
 app = Flask(__name__)
 
 
+
 @app.route('/<dsrc>/queryStatus')
-def statusQuery(dsrc):
+def statusQuery(dsrc=""):
   """
   Returns basic information and status of the specified container.
 
@@ -22,7 +23,7 @@ def statusQuery(dsrc):
   if container_name == None:
     return Response("No container name provided", status=400)
 
-  container_id = _verifyContainer(container_name)
+  container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app: {container_name}", status=400)
 
@@ -50,7 +51,7 @@ def statusQuery(dsrc):
 
 
 @app.route('/<dsrc>/inspectContainer')
-def inspectContainer(dsrc):
+def inspectContainer(dsrc, container_name=None):
   """
   Returns detailed information of the specified container.
 
@@ -61,8 +62,6 @@ def inspectContainer(dsrc):
   returns:
     if successful, returns container information in json format
   """
-
-  container_name = request.args.get("container")
   if container_name == None:
     return Response("No container name provided", status=400)
 
@@ -110,10 +109,9 @@ def startContainer(dsrc):
 
 
 
-
 def _getContainerID(container_name:str):
   """
-  A helper function that returns the id of 
+  A helper function that returns the id of
   """
 
   # executing system command
