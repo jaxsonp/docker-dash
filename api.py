@@ -23,16 +23,16 @@ def statusQuery(dsrc=""):
   if container_name == None:
     return Response("No container name provided", status=400)
 
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
 
   container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
-
-  # this is temporary just for the demo
-  if dsrc != "mhpcc":
-    return Response("Invalid DSRC", status=400)
 
   # executing system command
   completedProcess = subprocess.run(f"docker ps -a -f id={container_id} --format json", capture_output=True)
@@ -69,16 +69,16 @@ def inspectContainer(dsrc):
   if container_name == None:
     return Response("No container name provided", status=400)
 
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
 
   container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
-
-  # this is temporary just for the demo
-  if dsrc != "mhpcc":
-    return Response("Invalid DSRC", status=400)
 
   # executing system command
   completedProcess = subprocess.run(f"docker inspect --type=container {container_name}", capture_output=True)
@@ -111,16 +111,16 @@ def startContainer(dsrc):
   if container_name == None:
     return Response("No container name provided", status=400)
 
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
 
   container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
-
-  # this is temporary just for the demo
-  if dsrc != "mhpcc":
-    return Response("Invalid DSRC", status=400)
 
   # executing system command
   completedResponse = subprocess.run(f"docker start {container_name}", capture_output=True)
@@ -144,16 +144,16 @@ def stopContainer(dsrc):
   if container_name == None:
     return Response("No container name provided", status=400)
 
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
 
   container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
-
-  # this is temporary just for the demo
-  if dsrc != "mhpcc":
-    return Response("Invalid DSRC", status=400)
 
   # executing system command
   completedResponse = subprocess.run(f"docker stop {container_name}", capture_output=True)
@@ -177,16 +177,16 @@ def restartContainer(dsrc):
   if container_name == None:
     return Response("No container name provided", status=400)
 
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
 
   container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
-
-  # this is temporary just for the demo
-  if dsrc != "mhpcc":
-    return Response("Invalid DSRC", status=400)
 
   # executing system command
   completedResponse = subprocess.run(f"docker restart {container_name}", capture_output=True)
@@ -211,6 +211,10 @@ def killContainer(dsrc):
   if container_name == None:
     return Response("No container name provided", status=400)
 
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
 
@@ -218,16 +222,14 @@ def killContainer(dsrc):
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
 
-  # this is temporary just for the demo
-  if dsrc != "mhpcc":
-    return Response("Invalid DSRC", status=400)
-
   # executing system command
   completedResponse = subprocess.run(f"docker kill {container_name}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to kill app", status=500)
 
   return Response("Success", status=200)
+
+
 
 
 def _getContainerID(container_name:str) -> str | None:
