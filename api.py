@@ -110,22 +110,24 @@ def startContainer(dsrc):
 
 
 
-def _verifyContainer(container_name:str):
+def _getContainerID(container_name:str):
   """
-  A helper function that checks if a container exists with the given name.
+  A helper function that returns the id of 
   """
 
   # executing system command
-  completedResponse = subprocess.run("docker ps -a --format \"{{.Names}}\"")
-  if completedResponse.returncode != 0: return False
+  completedResponse = subprocess.run(f"docker ps -a --filter name={container_name} --format \"{{{{.Names .ID}}}}\"")
+  if completedResponse.returncode != 0: return None
 
-  # check if container_name is in list of names
-  nameList = completedResponse.stdout.decode().split("\n")
-  for name in nameList:
+  # make list of names and ids
+  nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n")]
+
+  # check if container_name is in list
+  for name, id in nameList:
     if name == container_name:
-      return True
+      return id
   
-  return False
+  return None
 
 
 
