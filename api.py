@@ -22,19 +22,20 @@ def statusQuery(dsrc):
   if container_name == None:
     return Response("No container name provided", status=400)
 
+  container_id = _verifyContainer(container_name)
+  if container_id == None:
+    return Response(f"Unable to find app: {container_name}", status=400)
+
   # this is temporary just for the demo
   if dsrc != "mhpcc":
     return Response("Invalid DSRC", status=400)
 
   # executing system command
-  completedProcess = subprocess.run(f"docker ps -a -f name={container_name} --format json", capture_output=True)
+  completedProcess = subprocess.run(f"docker ps -a -f id={container_id} --format json", capture_output=True)
   if completedProcess.returncode != 0:
     return Response(f"Failed to query app", status=500)
 
   output_list = completedProcess.stdout.decode().split("\n")
-  if len(output_list) == 0:
-    # no matching container found
-    return Response(f"Unable to find app: {container_name}", status=400)
   output_list = map(json.loads, output_list)
 
   # docker ps returns a list of containers with matching names, so we must search
@@ -124,7 +125,7 @@ def _verifyContainer(container_name:str):
   for name in nameList:
     if name == container_name:
       return True
-  
+
   return False
 
 
