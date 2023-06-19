@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 
 @app.route('/<dsrc>/queryStatus')
-def statusQuery(dsrc=""):
+def statusQuery(dsrc) -> Response:
   """
   Returns basic information and status of the specified container.
 
@@ -54,7 +54,7 @@ def statusQuery(dsrc=""):
 
 
 @app.route('/<dsrc>/inspectContainer')
-def inspectContainer(dsrc):
+def inspectContainer(dsrc) -> Response:
   """
   Returns detailed information of the specified container.
 
@@ -98,7 +98,7 @@ def inspectContainer(dsrc):
 
 
 @app.route('/<dsrc>/startContainer', methods=['POST'])
-def startContainer(dsrc):
+def startContainer(dsrc) -> Response:
   """
   Sends a command to docker to start the specified container
 
@@ -131,7 +131,7 @@ def startContainer(dsrc):
 
 
 @app.route('/<dsrc>/stopContainer', methods=['POST'])
-def stopContainer(dsrc):
+def stopContainer(dsrc) -> Response:
   """
   Sends a command to docker to stop the specified container
 
@@ -164,7 +164,7 @@ def stopContainer(dsrc):
 
 
 @app.route('/<dsrc>/restartContainer', methods=['POST'])
-def restartContainer(dsrc):
+def restartContainer(dsrc) -> Response:
   """
   Sends a command to docker to restart the specified container
 
@@ -198,7 +198,7 @@ def restartContainer(dsrc):
 
 
 @app.route('/<dsrc>/killContainer', methods=['POST'])
-def killContainer(dsrc):
+def killContainer(dsrc) -> Response:
   """
   Sends a command to docker to restart the specified container
 
@@ -225,9 +225,38 @@ def killContainer(dsrc):
   # executing system command
   completedResponse = subprocess.run(f"docker kill {container_name}", capture_output=True)
   if completedResponse.returncode != 0:
-    return Response(f"Failed to kill app", status=500)
+    return Response("Failed to kill app", status=500)
 
   return Response("Success", status=200)
+
+
+@app.route('/<dsrc>/getContainers')
+def getContainers(dsrc) -> Response:
+  """
+  Returns an array of all containers, running or not
+
+  parameters:
+    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+  """
+
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
+  if not _verifyDockerEngine():
+    return Response("Docker daemon not responding", status=500)
+
+  # executing system command
+  completedResponse = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", capture_output=True)
+  if completedResponse.returncode != 0:
+    return Response("Unknown error", status=500)
+
+  arr = []
+  for string in completedResponse.stdout.decode().split("\n"):
+    if string != "":
+      arr.append(string)
+
+  return Response(json.dumps(arr), 200)
 
 
 
