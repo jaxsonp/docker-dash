@@ -4,8 +4,8 @@ This API can be used to control and access information about containers running 
 Because containers are identified by name, it is important that each container name is unique. Container names must only contain letters, numbers, dashes, and/or underscores.
 ### Error Handling
 Each method performs checks in the same order. First, it checks if a name was provided, then it checks if the DSRC key was provided and is valid. Next, it checks if the docker daemon is online by running a docker ps command. Finally it checks if a container with the given name exists, and if so, starts with the actual job.
-DSRC keys
-Each DSRC will be identified by a unique key,
+### DSRC Key
+Each DSRC will be identified by a unique key, but the only one that works for now for demo purposes is `mhpcc`.
 
 ---
 # Get Container Information
@@ -16,7 +16,7 @@ Returns basic information and status of specified container, in json format. Und
 - DSRC_KEY - DSRC-specific identifier
 - CONTAINER_NAME - Name of container to query, must follow naming convention (specified above).
 ### Example Response:
-```
+```json
 {
   "Command": "\"/docker-entrypoint.…\"",
   "CreatedAt": "2021-03-10 00:15:05 +0100 CET",
@@ -44,7 +44,7 @@ Returns detailed information of specified container, in json format. Under the h
 - DSRC_KEY - DSRC-specific identifier
 - CONTAINER_NAME - Name of container to query, must follow naming convention (specified above).
 ### Example Response:
-```
+```json
 {
   "Id": "d2cc496561d6d520cbc0236b4ba88c362c446a7619992123f11c809cded25b47",
   "Created": "2015-06-08T16:18:02.505155285Z",
