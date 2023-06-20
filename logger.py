@@ -44,18 +44,30 @@ def loggingThreadFunc() -> None:
     time.sleep(600)
 
 
-def get24hrSummary(name: str) -> list | None:
+def getHealthSummary(name: str, duration: str) -> list | None:
   if os.path.isfile(f"{dir_path}/logs/{name}.log"):
     output = {}
+
     with open(f"{dir_path}/logs/{name}.log", "r") as log:
       for line in log.readlines():
         timestamp = datetime.strptime(line.split(": ")[0], format_str)
         state = line.split(" ")[1]
-        if timestamp + timedelta(days=1) > datetime.now():
-          output.update({timestamp.isoformat(): container_state_codes[state]})
+
+        if duration == "hour":
+          if timestamp + timedelta(hours=1) > datetime.now():
+            output.update({timestamp.isoformat(): container_state_codes[state]})
+        elif duration == "day":
+          if timestamp + timedelta(days=1) > datetime.now():
+            output.update({timestamp.isoformat(): container_state_codes[state]})
+        elif duration == "week":
+          if timestamp + timedelta(days=7) > datetime.now():
+            output.update({timestamp.isoformat(): container_state_codes[state]})
+        elif duration == "month":
+          if timestamp + timedelta(days=30) > datetime.now():
+            output.update({timestamp.isoformat(): container_state_codes[state]})
+
     return output
   return None
-  #datetime.strptime(date_string, format)
 
 
 def _getContainers() -> list:

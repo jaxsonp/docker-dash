@@ -3,7 +3,7 @@ import subprocess
 import json
 import threading
 
-from logger import loggingThreadFunc, get24hrSummary
+from logger import loggingThreadFunc, getHealthSummary
 
 app = Flask(__name__)
 
@@ -352,8 +352,8 @@ def getContainers(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/get24hrSummary')
-def get24hrSummaryWrapper(dsrc) -> Response:
+@app.route('/<dsrc>/getHealthSummary')
+def getHealthSummaryWrapper(dsrc) -> Response:
   """
   Returns an array of all containers, running or not
 
@@ -365,6 +365,13 @@ def get24hrSummaryWrapper(dsrc) -> Response:
   if container_name == None:
     return Response("No container name provided", status=400)
 
+  duration = request.args.get("duration")
+  if duration == None:
+    return Response("No summary duration provided", status=400)
+
+  if duration not in ["hour", "day", "week", "month"]:
+    return Response("Invalid duration", status=400)
+
   # this is temporary just for the demo
   if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
@@ -373,7 +380,7 @@ def get24hrSummaryWrapper(dsrc) -> Response:
     return Response("Docker daemon not responding", status=500)
 
   # getting summary from logger
-  output = get24hrSummary(container_name)
+  output = getHealthSummary(container_name, duration)
   if output == None:
     return Response(f"Could not find log for \"{container_name}\"", status=400)
   return Response(json.dumps(output), 200)
