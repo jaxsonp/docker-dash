@@ -55,16 +55,16 @@ def getHealthSummary(name: str, duration: str) -> list | None:
 
         if duration == "hour":
           if timestamp + timedelta(hours=1) > datetime.now():
-            output.update({timestamp.isoformat(): container_state_codes[state]})
+            output.update({timestamp.isoformat(): container_state_codes[state] == 1})
         elif duration == "day":
           if timestamp + timedelta(days=1) > datetime.now():
-            output.update({timestamp.isoformat(): container_state_codes[state]})
+            output.update({timestamp.isoformat(): container_state_codes[state] == 1})
         elif duration == "week":
           if timestamp + timedelta(days=7) > datetime.now():
-            output.update({timestamp.isoformat(): container_state_codes[state]})
+            output.update({timestamp.isoformat(): container_state_codes[state] == 1})
         elif duration == "month":
           if timestamp + timedelta(days=30) > datetime.now():
-            output.update({timestamp.isoformat(): container_state_codes[state]})
+            output.update({timestamp.isoformat(): container_state_codes[state] == 1})
 
     return output
   return None
