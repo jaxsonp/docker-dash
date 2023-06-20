@@ -3,7 +3,7 @@ import subprocess
 import json
 import threading
 
-from logger import loggingThreadFunc
+from logger import loggingThreadFunc, get24hrSummary
 
 app = Flask(__name__)
 
@@ -258,6 +258,36 @@ def getContainers(dsrc) -> Response:
       arr.append(string)
 
   return Response(json.dumps(arr), 200)
+
+
+
+
+@app.route('/<dsrc>/get24hrSummary')
+def get24hrSummaryWrapper(dsrc) -> Response:
+  """
+  Returns an array of all containers, running or not
+
+  parameters:
+    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+  """
+
+  container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
+
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
+  if not _verifyDockerEngine():
+    return Response("Docker daemon not responding", status=500)
+
+  # getting summary from logger
+  output = get24hrSummary(container_name)
+  if output == None:
+    return Response(f"Could not find log for \"{container_name}\"", status=400)
+  return Response(json.dumps(output), 200)
+
 
 
 
