@@ -15,7 +15,7 @@ def statusQuery(dsrc) -> Response:
   Returns basic information and status of the specified container.
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
 
   returns:
@@ -27,7 +27,7 @@ def statusQuery(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -62,7 +62,7 @@ def inspectContainer(dsrc) -> Response:
   Returns detailed information of the specified container.
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
 
   returns:
@@ -73,7 +73,7 @@ def inspectContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -107,7 +107,7 @@ def startContainer(dsrc) -> Response:
   Sends a command to docker to start the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -116,7 +116,7 @@ def startContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -142,7 +142,7 @@ def stopContainer(dsrc) -> Response:
   Sends a command to docker to stop the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -151,7 +151,7 @@ def stopContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -177,7 +177,7 @@ def pauseContainer(dsrc) -> Response:
   Sends a command to docker to pause the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -186,7 +186,7 @@ def pauseContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -195,7 +195,7 @@ def pauseContainer(dsrc) -> Response:
   container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
-  
+
   # verify that container is running
   completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() != "running\n":
@@ -217,7 +217,7 @@ def unpauseContainer(dsrc) -> Response:
   Sends a command to docker to unpause the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -226,7 +226,7 @@ def unpauseContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -235,7 +235,7 @@ def unpauseContainer(dsrc) -> Response:
   container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
-  
+
   # verify that container is running
   completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() != "paused\n":
@@ -257,7 +257,7 @@ def restartContainer(dsrc) -> Response:
   Sends a command to docker to restart the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -266,7 +266,7 @@ def restartContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -292,7 +292,7 @@ def killContainer(dsrc) -> Response:
   Sends a command to docker to restart the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -301,7 +301,7 @@ def killContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -327,11 +327,11 @@ def getContainers(dsrc) -> Response:
   Returns an array of all containers, running or not
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
   """
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
@@ -358,7 +358,7 @@ def get24hrSummaryWrapper(dsrc) -> Response:
   Returns an array of all containers, running or not
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
   """
 
   container_name = request.args.get("container")
@@ -366,7 +366,7 @@ def get24hrSummaryWrapper(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "mhpcc":
+  if dsrc != "demo":
     return Response("Invalid DSRC", status=400)
 
   if not _verifyDockerEngine():
