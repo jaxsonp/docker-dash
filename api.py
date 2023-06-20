@@ -9,13 +9,13 @@ app = Flask(__name__)
 
 
 
-@app.route('/<dsrc>/queryStatus')
-def statusQuery(dsrc) -> Response:
+@app.route('/<facility_id>/queryStatus')
+def statusQuery(facility_id) -> Response:
   """
   Returns basic information and status of the specified container.
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
 
   returns:
@@ -27,8 +27,8 @@ def statusQuery(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -56,13 +56,13 @@ def statusQuery(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/inspectContainer')
-def inspectContainer(dsrc) -> Response:
+@app.route('/<facility_id>/inspectContainer')
+def inspectContainer(facility_id) -> Response:
   """
   Returns detailed information of the specified container.
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
 
   returns:
@@ -73,8 +73,8 @@ def inspectContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -101,13 +101,13 @@ def inspectContainer(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/startContainer', methods=['POST'])
-def startContainer(dsrc) -> Response:
+@app.route('/<facility_id>/startContainer', methods=['POST'])
+def startContainer(facility_id) -> Response:
   """
   Sends a command to docker to start the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -116,8 +116,8 @@ def startContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -136,13 +136,13 @@ def startContainer(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/stopContainer', methods=['POST'])
-def stopContainer(dsrc) -> Response:
+@app.route('/<facility_id>/stopContainer', methods=['POST'])
+def stopContainer(facility_id) -> Response:
   """
   Sends a command to docker to stop the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -151,8 +151,8 @@ def stopContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -171,13 +171,13 @@ def stopContainer(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/pauseContainer', methods=['POST'])
-def pauseContainer(dsrc) -> Response:
+@app.route('/<facility_id>/pauseContainer', methods=['POST'])
+def pauseContainer(facility_id) -> Response:
   """
   Sends a command to docker to pause the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -186,8 +186,8 @@ def pauseContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -211,13 +211,13 @@ def pauseContainer(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/unpauseContainer', methods=['POST'])
-def unpauseContainer(dsrc) -> Response:
+@app.route('/<facility_id>/unpauseContainer', methods=['POST'])
+def unpauseContainer(facility_id) -> Response:
   """
   Sends a command to docker to unpause the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -226,8 +226,8 @@ def unpauseContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -251,13 +251,13 @@ def unpauseContainer(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/restartContainer', methods=['POST'])
-def restartContainer(dsrc) -> Response:
+@app.route('/<facility_id>/restartContainer', methods=['POST'])
+def restartContainer(facility_id) -> Response:
   """
   Sends a command to docker to restart the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -266,8 +266,8 @@ def restartContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -286,13 +286,13 @@ def restartContainer(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/killContainer', methods=['POST'])
-def killContainer(dsrc) -> Response:
+@app.route('/<facility_id>/killContainer', methods=['POST'])
+def killContainer(facility_id) -> Response:
   """
   Sends a command to docker to restart the specified container
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
     container_name - this value is passed as an http parameter
   """
 
@@ -301,8 +301,8 @@ def killContainer(dsrc) -> Response:
     return Response("No container name provided", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -321,18 +321,18 @@ def killContainer(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/getContainers')
-def getContainers(dsrc) -> Response:
+@app.route('/<facility_id>/getContainers')
+def getContainers(facility_id) -> Response:
   """
   Returns an array of all containers, running or not
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
   """
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
@@ -352,13 +352,13 @@ def getContainers(dsrc) -> Response:
 
 
 
-@app.route('/<dsrc>/getHealthSummary')
-def getHealthSummaryWrapper(dsrc) -> Response:
+@app.route('/<facility_id>/getHealthSummary')
+def getHealthSummaryWrapper(facility_id) -> Response:
   """
   Returns an array of all containers, running or not
 
   parameters:
-    dsrc - this value is passed in the API route, for demo purposes this should always be "demo"
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
   """
 
   container_name = request.args.get("container")
@@ -373,8 +373,8 @@ def getHealthSummaryWrapper(dsrc) -> Response:
     return Response("Invalid duration", status=400)
 
   # this is temporary just for the demo
-  if dsrc != "demo":
-    return Response("Invalid DSRC", status=400)
+  if facility_id != "demo":
+    return Response("Invalid facility ID", status=400)
 
   if not _verifyDockerEngine():
     return Response("Docker daemon not responding", status=500)
