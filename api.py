@@ -125,6 +125,11 @@ def startContainer(facility_id) -> Response:
   container_id = _getContainerID(container_name)
   if container_id == None:
     return Response(f"Unable to find app \"{container_name}\"", status=400)
+  
+  # verify that container is not paused
+  completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
+  if completedResponse.stdout.decode() == "paused\n":
+    return Response("Container is paused", status=409)
 
   # executing system command
   completedResponse = subprocess.run(f"docker start {container_name}", capture_output=True)
