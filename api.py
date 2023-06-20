@@ -7,6 +7,8 @@ from logger import loggingThreadFunc, get24hrSummary
 
 app = Flask(__name__)
 
+
+
 @app.route('/<dsrc>/queryStatus')
 def statusQuery(dsrc) -> Response:
   """
@@ -98,6 +100,7 @@ def inspectContainer(dsrc) -> Response:
 
 
 
+
 @app.route('/<dsrc>/startContainer', methods=['POST'])
 def startContainer(dsrc) -> Response:
   """
@@ -131,6 +134,8 @@ def startContainer(dsrc) -> Response:
   return Response("Success", status=200)
 
 
+
+
 @app.route('/<dsrc>/stopContainer', methods=['POST'])
 def stopContainer(dsrc) -> Response:
   """
@@ -162,6 +167,88 @@ def stopContainer(dsrc) -> Response:
     return Response(f"Failed to stop app", status=500)
 
   return Response("Success", status=200)
+
+
+
+
+@app.route('/<dsrc>/pauseContainer', methods=['POST'])
+def pauseContainer(dsrc) -> Response:
+  """
+  Sends a command to docker to pause the specified container
+
+  parameters:
+    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    container_name - this value is passed as an http parameter
+  """
+
+  container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
+
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
+  if not _verifyDockerEngine():
+    return Response("Docker daemon not responding", status=500)
+
+  container_id = _getContainerID(container_name)
+  if container_id == None:
+    return Response(f"Unable to find app \"{container_name}\"", status=400)
+  
+  # verify that container is running
+  completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
+  if completedResponse.stdout.decode() != "running\n":
+    return Response("Container must be running to be paused", status=409)
+
+  # executing system command
+  completedResponse = subprocess.run(f"docker pause {container_name}", capture_output=True)
+  if completedResponse.returncode != 0:
+    return Response(f"Failed to pause app", status=500)
+
+  return Response("Success", status=200)
+
+
+
+
+@app.route('/<dsrc>/unpauseContainer', methods=['POST'])
+def unpauseContainer(dsrc) -> Response:
+  """
+  Sends a command to docker to unpause the specified container
+
+  parameters:
+    dsrc - this value is passed in the API route, for demo purposes this should always be mhpcc
+    container_name - this value is passed as an http parameter
+  """
+
+  container_name = request.args.get("container")
+  if container_name == None:
+    return Response("No container name provided", status=400)
+
+  # this is temporary just for the demo
+  if dsrc != "mhpcc":
+    return Response("Invalid DSRC", status=400)
+
+  if not _verifyDockerEngine():
+    return Response("Docker daemon not responding", status=500)
+
+  container_id = _getContainerID(container_name)
+  if container_id == None:
+    return Response(f"Unable to find app \"{container_name}\"", status=400)
+  
+  # verify that container is running
+  completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
+  if completedResponse.stdout.decode() != "paused\n":
+    return Response("Container must be paused to be unpaused", status=409)
+
+  # executing system command
+  completedResponse = subprocess.run(f"docker unpause {container_name}", capture_output=True)
+  if completedResponse.returncode != 0:
+    return Response(f"Failed to stop app", status=500)
+
+  return Response("Success", status=200)
+
+
 
 
 @app.route('/<dsrc>/restartContainer', methods=['POST'])
@@ -198,6 +285,7 @@ def restartContainer(dsrc) -> Response:
 
 
 
+
 @app.route('/<dsrc>/killContainer', methods=['POST'])
 def killContainer(dsrc) -> Response:
   """
@@ -229,6 +317,8 @@ def killContainer(dsrc) -> Response:
     return Response("Failed to kill app", status=500)
 
   return Response("Success", status=200)
+
+
 
 
 @app.route('/<dsrc>/getContainers')
@@ -306,7 +396,7 @@ def _getContainerID(container_name:str) -> str | None:
 
   # make list of names and ids
   nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n")]
-  print(nameList)
+
   # check if container_name is in list
   for name, id in nameList:
     if name == container_name:
@@ -315,12 +405,16 @@ def _getContainerID(container_name:str) -> str | None:
   return None
 
 
+
+
 def _verifyDockerEngine() -> bool:
   """
   This helper function verifies that the docker daemon is running
   """
   completedResponse = subprocess.run("docker ps", capture_output=True)
   return completedResponse.returncode == 0
+
+
 
 
 if __name__ == '__main__':
