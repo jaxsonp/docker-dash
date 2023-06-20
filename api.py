@@ -1,10 +1,11 @@
 from flask import Flask, request, Response
 import subprocess
 import json
+import threading
+
+from logger import loggingThreadFunc
 
 app = Flask(__name__)
-
-
 
 @app.route('/<dsrc>/queryStatus')
 def statusQuery(dsrc) -> Response:
@@ -294,4 +295,9 @@ def _verifyDockerEngine() -> bool:
 
 if __name__ == '__main__':
   print("\n\n\n")
+
+  print("Starting logging thread")
+  logThread = threading.Thread(target=loggingThreadFunc, daemon=True)
+  logThread.start()
+  print("Starting flask server")
   app.run()
