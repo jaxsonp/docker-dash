@@ -16,6 +16,19 @@ Each method performs checks in the same order. First it checks if the facility I
 
 Each facility will be identified by a unique key in order to specify which SRC to interface with. For demo purposes, this API only responds to a placeholder facility with the ID "demo".
 
+## Table of Contents:
+
+1. [Start App](#start-app)
+2. [Stop App](#stop-app)
+3. [Pause App](#pause-app)
+4. [Unpause App](#unpause-app)
+5. [Restart App](#restart-app)
+6. [Kill App](#kill-app)
+7. [Get App Names](#get-app-names)
+8. [Get App Status](#get-app-status)
+9. [Get App Information](#get-app-information)
+10. [Get App Health Summary](#get-app-health-summary)
+
 ---
 
 # Start App
@@ -31,7 +44,7 @@ https://placeholder.url/[FACILITY_ID]/startApp?name=[APP_NAME]
 Starts the specified app using the `docker start` command. Trying to start an app that is paused will return an error, a paused app must be unpaused.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to start, must follow naming convention (specified above).
+`APP_NAME` - Name of app to start, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -49,7 +62,7 @@ https://placeholder.url/[FACILITY_ID]/stopApp?name=[APP_NAME]
 Signals for the specified app to exit using the `docker stop` command. If the container does not respond to the `SIGTERM` signal within a 10 second grace period, it will kill the container forcefully with `SIGKILL`.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to stop, must follow naming convention (specified above).
+`APP_NAME` - Name of app to stop, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -66,7 +79,7 @@ https://placeholder.url/[FACILITY_ID]/pauseApp?name=[APP_NAME]
 Pauses the specified app using the `docker pause` command. An app must be already running in order to be paused, otherwise the api will return error. While an app is paused, it can be unpaused, stopped, restarted, or killed.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to pause, must follow naming convention (specified above).
+`APP_NAME` - Name of app to pause, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -83,7 +96,7 @@ https://placeholder.url/[FACILITY_ID]/unpauseApp?name=[APP_NAME]
 Unauses the specified app using the `docker unpause` command. An app must be paused, otherwise the api will return error.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to unpause, must follow naming convention (specified above).
+`APP_NAME` - Name of app to unpause, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -100,7 +113,7 @@ https://placeholder.url/[FACILITY_ID]/restartApp?name=[APP_NAME]
 Restarts the specified app using the `docker restart` command. This command behaves similarly to a `docker stop` then a `docker start` command.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to restart, must follow naming convention (specified above).
+`APP_NAME` - Name of app to restart, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -117,7 +130,7 @@ https://placeholder.url/[FACILITY_ID]/killApp?name=[APP_NAME]
 Kills the specified app by sending it a `SIGKILL` signal using the `docker kill` command.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to kill, must follow naming convention (specified above).
+`APP_NAME` - Name of app to kill, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -157,7 +170,7 @@ https://placeholder.url/[FACILITY_ID]/getAppStatus?name=[APP_NAME]
 Returns basic information and status of specified app, in json format. Under the hood, this method uses the `docker ps` commmand.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to query, must follow naming convention (specified above).
+`APP_NAME` - Name of app to query, must follow [naming convention](#naming-convention).
 
 ### Example Response:
 
@@ -195,7 +208,7 @@ https://placeholder.url/[FACILITY_ID]/getAppInfo?name=[APP_NAME]
 Returns detailed information of specified app, in json format. Under the hood, this method uses the `docker inspect` commmand.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to query, must follow naming convention (specified above).
+`APP_NAME` - Name of app to query, must follow [naming convention](#naming-convention).
 
 ### Example Response:
 
@@ -234,7 +247,7 @@ Returns detailed information of specified app, in json format. Under the hood, t
 ---
 
 
-# Get container health summary
+# Get App Health Summary
 
 ### Usage:
 
