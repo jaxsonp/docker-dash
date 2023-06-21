@@ -44,7 +44,21 @@ def loggingThreadFunc() -> None:
     time.sleep(600)
 
 
-def getHealthSummary(name: str, duration: str) -> list | None:
+def getHealthSummary(name: str, duration: str) -> dict | None:
+  """
+  Returns a summary of the health/uptime of an app
+
+  parameters:
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    app_name - this value is passed as an http parameter
+    duration - this value is passed as an http parameter to specify duration of
+      log data to return. (hour, day, week, or month)
+
+  returns:
+    returns a timestamped list of bools representing uptime
+  """
+
+  # checking if log exists
   if os.path.isfile(f"{dir_path}/logs/{name}.log"):
     output = {}
 
