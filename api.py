@@ -9,24 +9,24 @@ from logger import loggingThreadFunc, getHealthSummary
 app = Flask(__name__)
 
 
-@app.route('/<facility_id>/queryStatus')
+@app.route('/<facility_id>/getAppStatus')
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def statusQuery(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def getAppStatus(facility_id, app_name="", app_id="") -> Response:
   """
-  Returns basic information and status of the specified container.
+  Returns basic information and status of the specified app.
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    container_name - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
 
   returns:
-    if successful, returns container information in json format
+    if successful, returns app information in json format
   """
 
   # executing system command
-  completedProcess = subprocess.run(f"docker ps -a -f id={container_id} --format json", capture_output=True)
+  completedProcess = subprocess.run(f"docker ps -a -f id={app_id} --format json", capture_output=True)
   if completedProcess.returncode != 0:
     return Response(f"Failed to query app", status=500)
 
@@ -36,7 +36,7 @@ def statusQuery(facility_id, container_name="", container_id="") -> Response:
   # docker ps returns a list of containers with matching names, so we must search
   # for the one that matches exactly
   for entry in output_list:
-    if entry["Names"] == container_name:
+    if entry["Names"] == app_name:
       return Response(json.dumps(entry), status=200)
 
   return Response("This should not be reached", status=500)
@@ -44,60 +44,58 @@ def statusQuery(facility_id, container_name="", container_id="") -> Response:
 
 
 
-@app.route('/<facility_id>/inspectContainer')
+@app.route('/<facility_id>/getAppInfo')
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def inspectContainer(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def getAppInfo(facility_id, app_name="", app_id="") -> Response:
   """
-  Returns detailed information of the specified container.
+  Returns detailed information of the specified app.
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    container_name - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
 
   returns:
-    if successful, returns container information in json format
+    if successful, returns app information in json format
   """
 
   # executing system command
-  completedProcess = subprocess.run(f"docker inspect --type=container {container_id}", capture_output=True)
+  completedProcess = subprocess.run(f"docker inspect --type=container {app_id}", capture_output=True)
   if completedProcess.returncode != 0:
     # undefined error
     return Response(f"Failed to inspect app", status=500)
 
   output_list = json.loads(completedProcess.stdout.decode())
   # docker inspect returns a list of containers, so we must search for the one
-  # with a matching container name
+  # with a matching app name
   for entry in output_list:
-    if entry["Name"].replace("/", "") == container_name:
+    if entry["Name"].replace("/", "") == app_name:
       return Response(json.dumps(entry), status=200)
 
-  return Response("", status=500)
 
 
 
-
-@app.route('/<facility_id>/startContainer', methods=['POST'])
+@app.route('/<facility_id>/startApp', methods=['POST'])
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def startContainer(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def startApp(facility_id, app_name="", app_id="") -> Response:
   """
-  Sends a command to docker to start the specified container
+  Sends a command to docker to start the specified app
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    container_name - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
   """
 
-  # verify that container is not paused
-  completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
+  # verify that app is not paused
+  completedResponse = subprocess.run(f"docker ps -a -f id={app_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() == "paused\n":
-    return Response("Container is paused", status=409)
+    return Response("App is paused", status=409)
 
   # executing system command
-  completedResponse = subprocess.run(f"docker start {container_id}", capture_output=True)
+  completedResponse = subprocess.run(f"docker start {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to start app", status=500)
 
@@ -106,21 +104,21 @@ def startContainer(facility_id, container_name="", container_id="") -> Response:
 
 
 
-@app.route('/<facility_id>/stopContainer', methods=['POST'])
+@app.route('/<facility_id>/stopApp', methods=['POST'])
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def stopContainer(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def stopApp(facility_id, app_name="", app_id="") -> Response:
   """
-  Sends a command to docker to stop the specified container
+  Sends a command to docker to stop the specified app
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    container_name - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker stop {container_id}", capture_output=True)
+  completedResponse = subprocess.run(f"docker stop {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to stop app", status=500)
 
@@ -129,26 +127,26 @@ def stopContainer(facility_id, container_name="", container_id="") -> Response:
 
 
 
-@app.route('/<facility_id>/pauseContainer', methods=['POST'])
+@app.route('/<facility_id>/pauseApp', methods=['POST'])
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def pauseContainer(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def pauseApp(facility_id, app_name="", app_id="") -> Response:
   """
-  Sends a command to docker to pause the specified container
+  Sends a command to docker to pause the specified app
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    container_name - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
   """
 
-  # verify that container is running
-  completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
+  # verify that app is running
+  completedResponse = subprocess.run(f"docker ps -a -f id={app_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() != "running\n":
-    return Response("Container must be running to be paused", status=409)
+    return Response("App must be running to be paused", status=409)
 
   # executing system command
-  completedResponse = subprocess.run(f"docker pause {container_id}", capture_output=True)
+  completedResponse = subprocess.run(f"docker pause {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to pause app", status=500)
 
@@ -157,26 +155,26 @@ def pauseContainer(facility_id, container_name="", container_id="") -> Response:
 
 
 
-@app.route('/<facility_id>/unpauseContainer', methods=['POST'])
+@app.route('/<facility_id>/unpauseApp', methods=['POST'])
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def unpauseContainer(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def unpauseApp(facility_id, app_name="", app_id="") -> Response:
   """
-  Sends a command to docker to unpause the specified container
+  Sends a command to docker to unpause the specified app
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    container_name - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
   """
 
-  # verify that container is running
-  completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
+  # verify that app is running
+  completedResponse = subprocess.run(f"docker ps -a -f id={app_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() != "paused\n":
-    return Response("Container must be paused to be unpaused", status=409)
+    return Response("App must be paused to be unpaused", status=409)
 
   # executing system command
-  completedResponse = subprocess.run(f"docker unpause {container_id}", capture_output=True)
+  completedResponse = subprocess.run(f"docker unpause {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to stop app", status=500)
 
@@ -185,21 +183,21 @@ def unpauseContainer(facility_id, container_name="", container_id="") -> Respons
 
 
 
-@app.route('/<facility_id>/restartContainer', methods=['POST'])
+@app.route('/<facility_id>/restartApp', methods=['POST'])
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def restartContainer(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def restartApp(facility_id, app_name="", app_id="") -> Response:
   """
-  Sends a command to docker to restart the specified container
+  Sends a command to docker to restart the specified app
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    container_name - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker restart {container_id}", capture_output=True)
+  completedResponse = subprocess.run(f"docker restart {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to restart app", status=500)
 
@@ -208,21 +206,21 @@ def restartContainer(facility_id, container_name="", container_id="") -> Respons
 
 
 
-@app.route('/<facility_id>/killContainer', methods=['POST'])
+@app.route('/<facility_id>/killApp', methods=['POST'])
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def killContainer(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def killApp(facility_id, app_name="", app_id="") -> Response:
   """
-  Sends a command to docker to restart the specified container
+  Sends a command to docker to restart the specified app
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    container_name - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker kill {container_id}", capture_output=True)
+  completedResponse = subprocess.run(f"docker kill {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response("Failed to kill app", status=500)
 
@@ -231,12 +229,12 @@ def killContainer(facility_id, container_name="", container_id="") -> Response:
 
 
 
-@app.route('/<facility_id>/getContainers')
+@app.route('/<facility_id>/getAppNames')
 @verifyFacilityID
 @verifyDockerEngine
-def getContainers(facility_id) -> Response:
+def getAppNames(facility_id) -> Response:
   """
-  Returns an array of all containers, running or not
+  Returns an array of all apps, running or not
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
@@ -260,13 +258,19 @@ def getContainers(facility_id) -> Response:
 @app.route('/<facility_id>/getHealthSummary')
 @verifyFacilityID
 @verifyDockerEngine
-@verifyContainer
-def getHealthSummaryWrapper(facility_id, container_name="", container_id="") -> Response:
+@verifyAppName
+def getHealthSummaryWrapper(facility_id, app_name="", app_id="") -> Response:
   """
-  Returns an array of all containers, running or not
+  Returns a summary of the health/uptime of an app
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    app_name - this value is passed as an http parameter
+    duration - this value is passed as an http parameter to specify duration of
+      log data to return. (hour, day, week, or month)
+
+  returns:
+    returns a timestamped list of bools representing uptime
   """
 
   duration = request.args.get("duration")
@@ -277,9 +281,9 @@ def getHealthSummaryWrapper(facility_id, container_name="", container_id="") -> 
     return Response("Invalid duration", status=400)
 
   # getting summary from logger
-  output = getHealthSummary(container_name, duration)
+  output = getHealthSummary(app_name, duration)
   if output == None:
-    return Response(f"Could not find log for \"{container_name}\"", status=400)
+    return Response(f"Could not find log for \"{app_name}\"", status=400)
   return Response(json.dumps(output), 200)
 
 
