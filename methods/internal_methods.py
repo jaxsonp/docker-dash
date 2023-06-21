@@ -31,8 +31,8 @@ def verifyFacilityID(function):
   purposes, the id must match the string "demo".
   """
   def decoratorFunction(*args, **kwargs):
-    print("args:", args)
-    print("kwargs:", kwargs)
+    #print("args:", args)
+    #print("kwargs:", kwargs)
 
     # this is temporary just for the demo
     if "facility_id" in kwargs.keys() and kwargs["facility_id"] != "demo":
