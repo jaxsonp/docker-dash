@@ -1,10 +1,7 @@
 from flask import Flask, request, Response
-import subprocess
-import json
 import threading
 
-from methods import internal_methods
-from logger import loggingThreadFunc, getHealthSummary
+import logger
 
 
 app = Flask(__name__)
@@ -84,26 +81,13 @@ def getAppNamesWrapper(facility_id):
 
 
 
+from methods.getHealthSummary import getHealthSummary
 
 @app.route('/<facility_id>/getHealthSummary')
-@internal_methods.verifyFacilityID
-@internal_methods.verifyDockerEngine
-@internal_methods.verifyAppName
 def getHealthSummaryWrapper(facility_id, app_name="", app_id="") -> Response:
 
-  # validating duration
-  duration = request.args.get("duration")
-  if duration == None:
-    return Response("No summary duration provided", status=400)
-
-  if duration not in ["hour", "day", "week", "month"]:
-    return Response("Invalid duration", status=400)
-
   # getting summary from logger
-  output = getHealthSummary(app_name, duration)
-  if output == None:
-    return Response(f"Could not find log for \"{app_name}\"", status=400)
-  return Response(json.dumps(output), 200)
+  return getHealthSummary(app_name)
 
 
 
@@ -112,7 +96,7 @@ if __name__ == '__main__':
   print("\n\n\n")
 
   print("Starting logging thread")
-  logThread = threading.Thread(target=loggingThreadFunc, daemon=True)
+  logThread = threading.Thread(target=logger.loggingThreadFunc, daemon=True)
   logThread.start()
   print("Starting flask server")
   app.run()
