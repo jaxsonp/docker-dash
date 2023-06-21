@@ -2,14 +2,14 @@ from flask import Response, request
 import subprocess
 
 
-def getContainerID(container_name:str) -> str | None:
+def getContainerID(app_name:str) -> str | None:
   """
   this helper function that returns the id of the container matching the given name
   Returns None if unsuccessful
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker ps -a --filter name={container_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", capture_output=True)
+  completedResponse = subprocess.run(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", capture_output=True)
   if completedResponse.returncode != 0: return None
 
   if completedResponse.stdout == b'': return None
@@ -17,9 +17,9 @@ def getContainerID(container_name:str) -> str | None:
   # make list of names and ids
   nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n")]
 
-  # check if container_name is in list
+  # check if app_name is in list
   for name, id in nameList:
-    if name == container_name:
+    if name == app_name:
       return id
 
   return None
@@ -57,23 +57,23 @@ def verifyDockerEngine(function):
   decoratorFunction.__name__ = function.__name__
   return decoratorFunction
 
-def verifyContainer(function):
+def verifyAppName(function):
   """
-  this decorator verifies that the given function received a container argument,
+  this decorator verifies that the given function received an app name argument,
   and that the container given is on the machine
   """
   def decoratorFunction(*args, **kwargs):
 
-    container_name = request.args.get("container")
-    if container_name == None:
+    app_name = request.args.get("name")
+    if app_name == None:
       return Response("No container name provided", status=400)
 
-    container_id = getContainerID(container_name)
-    if container_id == None:
-      return Response(f"Unable to find app \"{container_name}\"", status=400)
+    app_id = getContainerID(app_name)
+    if app_id == None:
+      return Response(f"Unable to find app \"{app_name}\"", status=400)
 
-    kwargs["container_name"] = container_name
-    kwargs["container_id"] = container_id
+    kwargs["app_name"] = app_name
+    kwargs["app_id"] = app_id
 
     return function(*args, **kwargs)
 
