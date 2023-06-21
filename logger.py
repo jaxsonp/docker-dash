@@ -4,6 +4,7 @@ import time
 import logging
 import subprocess
 from datetime import datetime, timedelta
+from flask import request
 
 
 container_state_codes = {
@@ -42,46 +43,6 @@ def loggingThreadFunc() -> None:
       logger.removeHandler(fileHandler)
 
     time.sleep(600)
-
-
-def getHealthSummary(name: str, duration: str) -> dict | None:
-  """
-  Returns a summary of the health/uptime of an app
-
-  parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    app_name - this value is passed as an http parameter
-    duration - this value is passed as an http parameter to specify duration of
-      log data to return. (hour, day, week, or month)
-
-  returns:
-    returns a timestamped list of bools representing uptime
-  """
-
-  # checking if log exists
-  if os.path.isfile(f"{dir_path}/logs/{name}.log"):
-    output = {}
-
-    with open(f"{dir_path}/logs/{name}.log", "r") as log:
-      for line in log.readlines():
-        timestamp = datetime.strptime(line.split(": ")[0], format_str)
-        state = line.split(" ")[1]
-
-        if duration == "hour":
-          if timestamp + timedelta(hours=1) > datetime.now():
-            output.update({timestamp.isoformat(): container_state_codes[state] == 1})
-        elif duration == "day":
-          if timestamp + timedelta(days=1) > datetime.now():
-            output.update({timestamp.isoformat(): container_state_codes[state] == 1})
-        elif duration == "week":
-          if timestamp + timedelta(days=7) > datetime.now():
-            output.update({timestamp.isoformat(): container_state_codes[state] == 1})
-        elif duration == "month":
-          if timestamp + timedelta(days=30) > datetime.now():
-            output.update({timestamp.isoformat(): container_state_codes[state] == 1})
-
-    return output
-  return None
 
 
 def _getContainers() -> list:
