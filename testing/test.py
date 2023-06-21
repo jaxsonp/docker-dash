@@ -1,4 +1,5 @@
 from requests import get, post
+from colorama import Fore, Style
 from datetime import datetime
 
 
@@ -14,10 +15,13 @@ def test(testname:str, method:str, url:str, expectedCode:int):
         return False
 
     if response.status_code == expectedCode:
-        print("SUCCESS")
+        print(Fore.GREEN + "SUCCESS", Fore.RESET)
         return True
     else:
-        print(f"FAIL: expected {expectedCode}, got {response.status_code} ({response.text[:150]})")
+        print(Fore.RED + "FAIL", Fore.RESET + f"- expected {expectedCode}, got {response.status_code}")
+        print("-" * 60)
+        print(response.text[:300])
+        print("-" * 60)
         return False
 
 
@@ -25,11 +29,10 @@ if __name__ == "__main__":
 
     #read secrets.txt
     with open("testing/secrets.txt", "r") as f:
-        lines = [tuple(line.split("=")) for line in f.readlines()]
-    BASE_URL = lines[0][1].strip()
-    FACILITY_ID = lines[1][1].strip()
-    APP_NAME = lines[2][1].strip()
-
+        lines = [line.split("=")[1] for line in f.readlines()]
+    BASE_URL = lines[0].strip()
+    FACILITY_ID = lines[1].strip()
+    APP_NAME = lines[2].strip()
     def startApp():
         post(f"{BASE_URL}/{FACILITY_ID}/startApp?name={APP_NAME}")
 
