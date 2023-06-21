@@ -30,78 +30,78 @@ if __name__ == "__main__":
     FACILITY_ID = lines[1][1].strip()
     APP_NAME = lines[2][1].strip()
 
-    def startContainer():
-        post(f"{BASE_URL}/{FACILITY_ID}/startContainer?container={APP_NAME}")
+    def startApp():
+        post(f"{BASE_URL}/{FACILITY_ID}/startApp?name={APP_NAME}")
 
-    def killContainer():
-        post(f"{BASE_URL}/{FACILITY_ID}/killContainer?container={APP_NAME}")
+    def killApp():
+        post(f"{BASE_URL}/{FACILITY_ID}/killApp?name={APP_NAME}")
 
     print("\nStarting testing...")
     startTime = datetime.now()
     total = 39
     successful = 0
 
-    killContainer()
+    killApp()
     print()
-    if test("Start container - success",                    "POST", f"{BASE_URL}/{FACILITY_ID}/startContainer?container={APP_NAME}",    200): successful += 1
-    if test("Start container - invalid facility ID",        "POST", f"{BASE_URL}/iaminvalid/startContainer?container={APP_NAME}",       400): successful += 1
-    if test("Start container - invalid app name",           "POST", f"{BASE_URL}/{FACILITY_ID}/startContainer?container=iaminvalid",    400): successful += 1
-    if test("Start container - no app name",                "POST", f"{BASE_URL}/{FACILITY_ID}/startContainer",                         400): successful += 1
+    if test("Start container - success",                    "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name={APP_NAME}",    200): successful += 1
+    if test("Start container - invalid facility ID",        "POST", f"{BASE_URL}/iaminvalid/startApp?name={APP_NAME}",       400): successful += 1
+    if test("Start container - invalid app name",           "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name=iaminvalid",    400): successful += 1
+    if test("Start container - no app name",                "POST", f"{BASE_URL}/{FACILITY_ID}/startApp",                         400): successful += 1
     
     print()
-    if test("Stop container - success",                     "POST", f"{BASE_URL}/{FACILITY_ID}/stopContainer?container={APP_NAME}",     200): successful += 1
-    if test("Stop container - invalid facility ID",         "POST", f"{BASE_URL}/iaminvalid/stopContainer?container={APP_NAME}",        400): successful += 1
-    if test("Stop container - invalid app name",            "POST", f"{BASE_URL}/{FACILITY_ID}/stopContainer?container=iaminvalid",     400): successful += 1
-    if test("Stop container - no app name",                 "POST", f"{BASE_URL}/{FACILITY_ID}/stopContainer",                          400): successful += 1
-    startContainer()
+    if test("Stop container - success",                     "POST", f"{BASE_URL}/{FACILITY_ID}/stopApp?name={APP_NAME}",     200): successful += 1
+    if test("Stop container - invalid facility ID",         "POST", f"{BASE_URL}/iaminvalid/stopApp?name={APP_NAME}",        400): successful += 1
+    if test("Stop container - invalid app name",            "POST", f"{BASE_URL}/{FACILITY_ID}/stopApp?name=iaminvalid",     400): successful += 1
+    if test("Stop container - no app name",                 "POST", f"{BASE_URL}/{FACILITY_ID}/stopApp",                          400): successful += 1
+    startApp()
 
     print()
-    if test("Pause container - success",                    "POST", f"{BASE_URL}/{FACILITY_ID}/pauseContainer?container={APP_NAME}",    200): successful += 1
-    if test("Pause container - invalid facility ID",        "POST", f"{BASE_URL}/iaminvalid/pauseContainer?container={APP_NAME}",       400): successful += 1
-    if test("Pause container - invalid app name",           "POST", f"{BASE_URL}/{FACILITY_ID}/pauseContainer?container=iaminvalid",    400): successful += 1
-    if test("Pause container - no app name",                "POST", f"{BASE_URL}/{FACILITY_ID}/pauseContainer",                         400): successful += 1
+    if test("Pause container - success",                    "POST", f"{BASE_URL}/{FACILITY_ID}/pauseApp?name={APP_NAME}",    200): successful += 1
+    if test("Pause container - invalid facility ID",        "POST", f"{BASE_URL}/iaminvalid/pauseApp?name={APP_NAME}",       400): successful += 1
+    if test("Pause container - invalid app name",           "POST", f"{BASE_URL}/{FACILITY_ID}/pauseApp?name=iaminvalid",    400): successful += 1
+    if test("Pause container - no app name",                "POST", f"{BASE_URL}/{FACILITY_ID}/pauseApp",                         400): successful += 1
     
     print()
-    if test("Unpause container - success",                  "POST", f"{BASE_URL}/{FACILITY_ID}/unpauseContainer?container={APP_NAME}",  200): successful += 1
-    if test("Unpause container - invalid facility ID",      "POST", f"{BASE_URL}/iaminvalid/unpauseContainer?container={APP_NAME}",     400): successful += 1
-    if test("Unpause container - invalid app name",         "POST", f"{BASE_URL}/{FACILITY_ID}/unpauseContainer?container=iaminvalid",  400): successful += 1
-    if test("Unpause container - no app name",              "POST", f"{BASE_URL}/{FACILITY_ID}/unpauseContainer",                       400): successful += 1
+    if test("Unpause container - success",                  "POST", f"{BASE_URL}/{FACILITY_ID}/unpauseApp?name={APP_NAME}",  200): successful += 1
+    if test("Unpause container - invalid facility ID",      "POST", f"{BASE_URL}/iaminvalid/unpauseApp?name={APP_NAME}",     400): successful += 1
+    if test("Unpause container - invalid app name",         "POST", f"{BASE_URL}/{FACILITY_ID}/unpauseApp?name=iaminvalid",  400): successful += 1
+    if test("Unpause container - no app name",              "POST", f"{BASE_URL}/{FACILITY_ID}/unpauseApp",                       400): successful += 1
 
     print()
-    if test("Restart container - success",                  "POST", f"{BASE_URL}/{FACILITY_ID}/restartContainer?container={APP_NAME}",  200): successful += 1
-    if test("Restart container - invalid facility ID",      "POST", f"{BASE_URL}/iaminvalid/restartContainer?container={APP_NAME}",     400): successful += 1
-    if test("Restart container - invalid app name",         "POST", f"{BASE_URL}/{FACILITY_ID}/restartContainer?container=iaminvalid",  400): successful += 1
-    if test("Restart container - no app name",              "POST", f"{BASE_URL}/{FACILITY_ID}/restartContainer",                       400): successful += 1
+    if test("Restart container - success",                  "POST", f"{BASE_URL}/{FACILITY_ID}/restartApp?name={APP_NAME}",  200): successful += 1
+    if test("Restart container - invalid facility ID",      "POST", f"{BASE_URL}/iaminvalid/restartApp?name={APP_NAME}",     400): successful += 1
+    if test("Restart container - invalid app name",         "POST", f"{BASE_URL}/{FACILITY_ID}/restartApp?name=iaminvalid",  400): successful += 1
+    if test("Restart container - no app name",              "POST", f"{BASE_URL}/{FACILITY_ID}/restartApp",                       400): successful += 1
     
     print()
-    if test("Kill container - success",                     "POST", f"{BASE_URL}/{FACILITY_ID}/killContainer?container={APP_NAME}",     200): successful += 1
-    if test("Kill container - invalid facility ID",         "POST", f"{BASE_URL}/iaminvalid/killContainer?container={APP_NAME}",        400): successful += 1
-    if test("Kill container - invalid app name",            "POST", f"{BASE_URL}/{FACILITY_ID}/killContainer?container=iaminvalid",     400): successful += 1
-    if test("Kill container - no app name",                 "POST", f"{BASE_URL}/{FACILITY_ID}/killContainer",                          400): successful += 1
-    startContainer()
+    if test("Kill container - success",                     "POST", f"{BASE_URL}/{FACILITY_ID}/killApp?name={APP_NAME}",     200): successful += 1
+    if test("Kill container - invalid facility ID",         "POST", f"{BASE_URL}/iaminvalid/killApp?name={APP_NAME}",        400): successful += 1
+    if test("Kill container - invalid app name",            "POST", f"{BASE_URL}/{FACILITY_ID}/killApp?name=iaminvalid",     400): successful += 1
+    if test("Kill container - no app name",                 "POST", f"{BASE_URL}/{FACILITY_ID}/killApp",                          400): successful += 1
+    startApp()
 
     print()
-    if test("Get container names - success",                "GET", f"{BASE_URL}/{FACILITY_ID}/getContainers",                           200): successful += 1
-    if test("Get container names - invalid facility ID",    "GET", f"{BASE_URL}/iaminvalid/getContainers",                              400): successful += 1
+    if test("Get container names - success",                "GET", f"{BASE_URL}/{FACILITY_ID}/getAppNames",                           200): successful += 1
+    if test("Get container names - invalid facility ID",    "GET", f"{BASE_URL}/iaminvalid/getAppNames",                              400): successful += 1
     
     print()
-    if test("Get container status - success",               "GET", f"{BASE_URL}/{FACILITY_ID}/queryStatus?container={APP_NAME}",        200): successful += 1
-    if test("Get container status - invalid facility ID",   "GET", f"{BASE_URL}/iaminvalid/queryStatus?container={APP_NAME}",           400): successful += 1
-    if test("Get container status - invalid app name",      "GET", f"{BASE_URL}/{FACILITY_ID}/queryStatus?container=iaminvalid",        400): successful += 1
-    if test("Get container status - no app name",           "GET", f"{BASE_URL}/{FACILITY_ID}/queryStatus",                             400): successful += 1
+    if test("Get container status - success",               "GET", f"{BASE_URL}/{FACILITY_ID}/getAppStatus?name={APP_NAME}",        200): successful += 1
+    if test("Get container status - invalid facility ID",   "GET", f"{BASE_URL}/iaminvalid/getAppStatus?name={APP_NAME}",           400): successful += 1
+    if test("Get container status - invalid app name",      "GET", f"{BASE_URL}/{FACILITY_ID}/getAppStatus?name=iaminvalid",        400): successful += 1
+    if test("Get container status - no app name",           "GET", f"{BASE_URL}/{FACILITY_ID}/getAppStatus",                             400): successful += 1
 
     print()
-    if test("Get container info - success",                 "GET", f"{BASE_URL}/{FACILITY_ID}/inspectContainer?container={APP_NAME}",   200): successful += 1
-    if test("Get container info - invalid facility ID",     "GET", f"{BASE_URL}/iaminvalid/inspectContainer?container={APP_NAME}",      400): successful += 1
-    if test("Get container info - invalid app name",        "GET", f"{BASE_URL}/{FACILITY_ID}/inspectContainer?container=iaminvalid",   400): successful += 1
-    if test("Get container info - no app name",             "GET", f"{BASE_URL}/{FACILITY_ID}/inspectContainer",                        400): successful += 1
+    if test("Get container info - success",                 "GET", f"{BASE_URL}/{FACILITY_ID}/getAppInfo?name={APP_NAME}",   200): successful += 1
+    if test("Get container info - invalid facility ID",     "GET", f"{BASE_URL}/iaminvalid/getAppInfo?name={APP_NAME}",      400): successful += 1
+    if test("Get container info - invalid app name",        "GET", f"{BASE_URL}/{FACILITY_ID}/getAppInfo?name=iaminvalid",   400): successful += 1
+    if test("Get container info - no app name",             "GET", f"{BASE_URL}/{FACILITY_ID}/getAppInfo",                        400): successful += 1
 
     print()
-    if test("Get health summary - success",                 "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?container={APP_NAME}&duration=day", 200): successful += 1
-    if test("Get health summary - invalid facility ID",     "GET", f"{BASE_URL}/iaminvalid/getHealthSummary?container={APP_NAME}&duration=day",    400): successful += 1
-    if test("Get health summary - invalid app name",        "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?container=iaminvalid&duration=day", 400): successful += 1
-    if test("Get health summary - invalid duration",        "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?container={APP_NAME}&duration=bad", 400): successful += 1
-    if test("Get health summary - no duration",             "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?container={APP_NAME}",              400): successful += 1
+    if test("Get health summary - success",                 "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name={APP_NAME}&duration=day", 200): successful += 1
+    if test("Get health summary - invalid facility ID",     "GET", f"{BASE_URL}/iaminvalid/getHealthSummary?name={APP_NAME}&duration=day",    400): successful += 1
+    if test("Get health summary - invalid app name",        "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name=iaminvalid&duration=day", 400): successful += 1
+    if test("Get health summary - invalid duration",        "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name={APP_NAME}&duration=bad", 400): successful += 1
+    if test("Get health summary - no duration",             "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name={APP_NAME}",              400): successful += 1
 
     testDuration = datetime.now() - startTime
     print(f"\n\nCompleted testing, {successful}/{total} tests successful (took {round(testDuration.total_seconds(), 2)} seconds)")
