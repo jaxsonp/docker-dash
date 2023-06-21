@@ -8,9 +8,55 @@ from logger import loggingThreadFunc, getHealthSummary
 app = Flask(__name__)
 
 
+def verifyFacilityID(function):
+  def decoratorFunction(*args, **kwargs):
+
+    # this is temporary just for the demo
+    if kwargs["facility_id"] != "demo":
+      return Response("Invalid facility ID", status=400)
+
+    return function(*args, **kwargs)
+
+  decoratorFunction.__name__ = function.__name__
+  return decoratorFunction
+
+
+def verifyDockerEngine(function):
+  def decoratorFunction(*args, **kwargs):
+
+    if not _verifyDockerEngine():
+      return Response("Docker daemon not responding", status=500)
+
+    return function(*args, **kwargs)
+
+  decoratorFunction.__name__ = function.__name__
+  return decoratorFunction
+
+def verifyContainer(function):
+  def decoratorFunction(*args, **kwargs):
+
+    container_name = request.args.get("container")
+    if container_name == None:
+      return Response("No container name provided", status=400)
+
+    container_id = _getContainerID(container_name)
+    if container_id == None:
+      return Response(f"Unable to find app \"{container_name}\"", status=400)
+
+    kwargs["container_name"] = container_name
+    kwargs["container_id"] = container_id
+
+    return function(*args, **kwargs)
+
+  decoratorFunction.__name__ = function.__name__
+  return decoratorFunction
+
 
 @app.route('/<facility_id>/queryStatus')
-def statusQuery(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def statusQuery(facility_id, container_name="", container_id="") -> Response:
   """
   Returns basic information and status of the specified container.
 
@@ -21,21 +67,6 @@ def statusQuery(facility_id) -> Response:
   returns:
     if successful, returns container information in json format
   """
-
-  container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
-
-  container_id = _getContainerID(container_name)
-  if container_id == None:
-    return Response(f"Unable to find app \"{container_name}\"", status=400)
 
   # executing system command
   completedProcess = subprocess.run(f"docker ps -a -f id={container_id} --format json", capture_output=True)
@@ -57,7 +88,10 @@ def statusQuery(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/inspectContainer')
-def inspectContainer(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def inspectContainer(facility_id, container_name="", container_id="") -> Response:
   """
   Returns detailed information of the specified container.
 
@@ -68,23 +102,12 @@ def inspectContainer(facility_id) -> Response:
   returns:
     if successful, returns container information in json format
   """
+
   container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
-
   container_id = _getContainerID(container_name)
-  if container_id == None:
-    return Response(f"Unable to find app \"{container_name}\"", status=400)
 
   # executing system command
-  completedProcess = subprocess.run(f"docker inspect --type=container {container_name}", capture_output=True)
+  completedProcess = subprocess.run(f"docker inspect --type=container {container_id}", capture_output=True)
   if completedProcess.returncode != 0:
     # undefined error
     return Response(f"Failed to inspect app", status=500)
@@ -102,7 +125,10 @@ def inspectContainer(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/startContainer', methods=['POST'])
-def startContainer(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def startContainer(facility_id, container_name="", container_id="") -> Response:
   """
   Sends a command to docker to start the specified container
 
@@ -111,28 +137,13 @@ def startContainer(facility_id) -> Response:
     container_name - this value is passed as an http parameter
   """
 
-  container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
-
-  container_id = _getContainerID(container_name)
-  if container_id == None:
-    return Response(f"Unable to find app \"{container_name}\"", status=400)
-  
   # verify that container is not paused
   completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() == "paused\n":
     return Response("Container is paused", status=409)
 
   # executing system command
-  completedResponse = subprocess.run(f"docker start {container_name}", capture_output=True)
+  completedResponse = subprocess.run(f"docker start {container_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to start app", status=500)
 
@@ -142,7 +153,10 @@ def startContainer(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/stopContainer', methods=['POST'])
-def stopContainer(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def stopContainer(facility_id, container_name="", container_id="") -> Response:
   """
   Sends a command to docker to stop the specified container
 
@@ -151,23 +165,8 @@ def stopContainer(facility_id) -> Response:
     container_name - this value is passed as an http parameter
   """
 
-  container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
-
-  container_id = _getContainerID(container_name)
-  if container_id == None:
-    return Response(f"Unable to find app \"{container_name}\"", status=400)
-
   # executing system command
-  completedResponse = subprocess.run(f"docker stop {container_name}", capture_output=True)
+  completedResponse = subprocess.run(f"docker stop {container_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to stop app", status=500)
 
@@ -177,7 +176,10 @@ def stopContainer(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/pauseContainer', methods=['POST'])
-def pauseContainer(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def pauseContainer(facility_id, container_name="", container_id="") -> Response:
   """
   Sends a command to docker to pause the specified container
 
@@ -186,28 +188,13 @@ def pauseContainer(facility_id) -> Response:
     container_name - this value is passed as an http parameter
   """
 
-  container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
-
-  container_id = _getContainerID(container_name)
-  if container_id == None:
-    return Response(f"Unable to find app \"{container_name}\"", status=400)
-
   # verify that container is running
   completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() != "running\n":
     return Response("Container must be running to be paused", status=409)
 
   # executing system command
-  completedResponse = subprocess.run(f"docker pause {container_name}", capture_output=True)
+  completedResponse = subprocess.run(f"docker pause {container_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to pause app", status=500)
 
@@ -217,7 +204,10 @@ def pauseContainer(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/unpauseContainer', methods=['POST'])
-def unpauseContainer(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def unpauseContainer(facility_id, container_name="", container_id="") -> Response:
   """
   Sends a command to docker to unpause the specified container
 
@@ -226,28 +216,13 @@ def unpauseContainer(facility_id) -> Response:
     container_name - this value is passed as an http parameter
   """
 
-  container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
-
-  container_id = _getContainerID(container_name)
-  if container_id == None:
-    return Response(f"Unable to find app \"{container_name}\"", status=400)
-
   # verify that container is running
   completedResponse = subprocess.run(f"docker ps -a -f id={container_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() != "paused\n":
     return Response("Container must be paused to be unpaused", status=409)
 
   # executing system command
-  completedResponse = subprocess.run(f"docker unpause {container_name}", capture_output=True)
+  completedResponse = subprocess.run(f"docker unpause {container_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to stop app", status=500)
 
@@ -257,7 +232,10 @@ def unpauseContainer(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/restartContainer', methods=['POST'])
-def restartContainer(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def restartContainer(facility_id, container_name="", container_id="") -> Response:
   """
   Sends a command to docker to restart the specified container
 
@@ -266,23 +244,8 @@ def restartContainer(facility_id) -> Response:
     container_name - this value is passed as an http parameter
   """
 
-  container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
-
-  container_id = _getContainerID(container_name)
-  if container_id == None:
-    return Response(f"Unable to find app \"{container_name}\"", status=400)
-
   # executing system command
-  completedResponse = subprocess.run(f"docker restart {container_name}", capture_output=True)
+  completedResponse = subprocess.run(f"docker restart {container_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response(f"Failed to restart app", status=500)
 
@@ -292,7 +255,10 @@ def restartContainer(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/killContainer', methods=['POST'])
-def killContainer(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def killContainer(facility_id, container_name="", container_id="") -> Response:
   """
   Sends a command to docker to restart the specified container
 
@@ -301,23 +267,8 @@ def killContainer(facility_id) -> Response:
     container_name - this value is passed as an http parameter
   """
 
-  container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
-
-  container_id = _getContainerID(container_name)
-  if container_id == None:
-    return Response(f"Unable to find app \"{container_name}\"", status=400)
-
   # executing system command
-  completedResponse = subprocess.run(f"docker kill {container_name}", capture_output=True)
+  completedResponse = subprocess.run(f"docker kill {container_id}", capture_output=True)
   if completedResponse.returncode != 0:
     return Response("Failed to kill app", status=500)
 
@@ -327,6 +278,8 @@ def killContainer(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/getContainers')
+@verifyFacilityID
+@verifyDockerEngine
 def getContainers(facility_id) -> Response:
   """
   Returns an array of all containers, running or not
@@ -334,13 +287,6 @@ def getContainers(facility_id) -> Response:
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
   """
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
 
   # executing system command
   completedResponse = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", capture_output=True)
@@ -358,7 +304,10 @@ def getContainers(facility_id) -> Response:
 
 
 @app.route('/<facility_id>/getHealthSummary')
-def getHealthSummaryWrapper(facility_id) -> Response:
+@verifyFacilityID
+@verifyDockerEngine
+@verifyContainer
+def getHealthSummaryWrapper(facility_id, container_name="", container_id="") -> Response:
   """
   Returns an array of all containers, running or not
 
@@ -366,23 +315,12 @@ def getHealthSummaryWrapper(facility_id) -> Response:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
   """
 
-  container_name = request.args.get("container")
-  if container_name == None:
-    return Response("No container name provided", status=400)
-
   duration = request.args.get("duration")
   if duration == None:
     return Response("No summary duration provided", status=400)
 
   if duration not in ["hour", "day", "week", "month"]:
     return Response("Invalid duration", status=400)
-
-  # this is temporary just for the demo
-  if facility_id != "demo":
-    return Response("Invalid facility ID", status=400)
-
-  if not _verifyDockerEngine():
-    return Response("Docker daemon not responding", status=500)
 
   # getting summary from logger
   output = getHealthSummary(container_name, duration)
