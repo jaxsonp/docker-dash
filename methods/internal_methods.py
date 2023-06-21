@@ -31,15 +31,22 @@ def verifyFacilityID(function):
   purposes, the id must match the string "demo".
   """
   def decoratorFunction(*args, **kwargs):
+    print("args:", args)
+    print("kwargs:", kwargs)
 
     # this is temporary just for the demo
-    if kwargs["facility_id"] != "demo":
-      return Response("Invalid facility ID", status=400)
+    if "facility_id" in kwargs.keys() and kwargs["facility_id"] != "demo":
+      if kwargs["facility_id"] != "demo":
+        return Response("Invalid facility ID", status=400)
+    elif "facility_id" not in kwargs.keys():
+      if args[0] != "demo":
+        return Response("Invalid facility ID", status=400)
 
     return function(*args, **kwargs)
 
   decoratorFunction.__name__ = function.__name__
   return decoratorFunction
+
 
 
 def verifyDockerEngine(function):
@@ -56,6 +63,8 @@ def verifyDockerEngine(function):
 
   decoratorFunction.__name__ = function.__name__
   return decoratorFunction
+
+
 
 def verifyAppName(function):
   """
