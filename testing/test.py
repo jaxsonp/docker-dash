@@ -8,6 +8,8 @@ successfulTests = 0
 
 def test(testname:str, method:str, url:str, expectedCode:int):
   global totalTests, successfulTests
+
+  startTime = datetime.now()
   totalTests += 1
   print(f"{'{:50.50}'.format(testname):}: ", end='')
   response = None
@@ -19,12 +21,13 @@ def test(testname:str, method:str, url:str, expectedCode:int):
     print("test error")
     return False
 
+  duration = (datetime.now() - startTime).microseconds // 1000
   if response.status_code == expectedCode:
-    print(Fore.GREEN + "SUCCESS", Fore.RESET)
+    print(f"{Fore.GREEN}SUCCESS {Fore.RESET}" + f"({duration}ms)".rjust(8))
     successfulTests += 1
     return True
   else:
-    print(Fore.RED + "FAIL", Fore.RESET + f"- expected {expectedCode}, got {response.status_code}")
+    print(f"{Fore.RED}FAIL     {Fore.RESET}({str(duration).rjust(3)}ms) - expected {expectedCode}, got {response.status_code}")
     print("-" * 60)
     print(response.text[:300])
     print("-" * 60)
@@ -61,7 +64,7 @@ if __name__ == "__main__":
   print()
   test("Start container - success",                      "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name={APP_NAME}",    200)
   test("Start container - invalid facility ID",          "POST", f"{BASE_URL}/iaminvalid/startApp?name={APP_NAME}",       400)
-  test("Start container - invalid app name",             "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name=iaminvalid",    400)
+  test("Start container - invalid app name",             "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name=iaminvalid",    401)
   test("Start container - no app name",                  "POST", f"{BASE_URL}/{FACILITY_ID}/startApp",                    400)
 
   print()
@@ -123,11 +126,15 @@ if __name__ == "__main__":
   test("Get images - success",                           "GET", f"{BASE_URL}/{FACILITY_ID}/getImages",                   200)
   test("Get images - invalid facility ID",               "GET", f"{BASE_URL}/iaminvalid/getImages",                      400)
 
-  # put delete container here
+  print()
+  test("Delete container - success",                       "POST", f"{BASE_URL}/{FACILITY_ID}/deleteApp?name={APP_NAME}",     200)
+  test("Delete container - invalid facility ID",           "POST", f"{BASE_URL}/iaminvalid/deleteApp?name={APP_NAME}",        400)
+  test("Delete container - invalid app name",              "POST", f"{BASE_URL}/{FACILITY_ID}/deleteApp?name=iaminvalid",     400)
+  test("Delete container - no app name",                   "POST", f"{BASE_URL}/{FACILITY_ID}/deleteApp",                     400)
 
   print()
   test("Create app - success",                           "POST", f"{BASE_URL}/{FACILITY_ID}/createApp?image={IMAGE_NAME}", 200)
-  test("Create app - app already exists",                "POST", f"{BASE_URL}/{FACILITY_ID}/createApp?image={IMAGE_NAME}", 200)
+  test("Create app - app already exists",                "POST", f"{BASE_URL}/{FACILITY_ID}/createApp?image={IMAGE_NAME}", 400)
   test("Create app - invalid facility ID",               "POST", f"{BASE_URL}/iaminvalid/createApp?image={IMAGE_NAME}", 400)
   test("Create app - invalid image name",                "POST", f"{BASE_URL}/{FACILITY_ID}/createApp?image=iaminvalid", 400)
   test("Create app - no image name",                     "POST", f"{BASE_URL}/{FACILITY_ID}/createApp?", 400)

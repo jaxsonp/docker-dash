@@ -73,6 +73,14 @@ def killAppWrapper(facility_id) -> Response:
 
 
 
+from methods.deleteApp import deleteApp
+
+@app.route('/<facility_id>/deleteApp', methods=['POST'])
+def deleteAppWrapper(facility_id) -> Response:
+  return deleteApp(facility_id)
+
+
+
 from methods.getAppNames import getAppNames
 
 @app.route('/<facility_id>/getAppNames')

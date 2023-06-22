@@ -7,7 +7,11 @@ from . import internal_methods
 @internal_methods.verifyDockerEngine
 def createApp(facility_id) -> Response:
   """
+  Creates an app container from a given image name
 
+  parameters:
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    image - this value is passed as an http parameter
   """
 
   image_name = request.args.get("image")
