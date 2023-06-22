@@ -28,7 +28,7 @@ Each facility will be identified by a unique key in order to specify which SRC t
 8. [Get App Status](#get-app-status)
 9. [Get App Stats](#get-app-stats)
 10. [Get App Information](#get-app-information)
-11. [Get App Health Summary](#get-app-health-summary)
+11. [Get App Uptime Summary](#get-app-uptime-summary)
 12. [Get Images](#get-images)
 
 ---
@@ -283,12 +283,12 @@ Returns detailed information of specified app, in json format. Under the hood, t
 ---
 
 
-# Get App Health Summary
+# Get App Uptime Summary
 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getHealthSummary?name=[APP_NAME]&duration=[DURATION]
+https://placeholder.url/[FACILITY_ID]/getHUptimeSummary?name=[APP_NAME]&duration=[DURATION]
 ```
 
 ### Description:

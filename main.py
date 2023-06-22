@@ -89,11 +89,11 @@ def getAppNamesWrapper(facility_id):
 
 
 
-from methods.getHealthSummary import getHealthSummary
+from methods.getUptimeSummary import getUptimeSummary
 
-@app.route('/<facility_id>/getHealthSummary')
-def getHealthSummaryWrapper(facility_id) -> Response:
-  return getHealthSummary(facility_id)
+@app.route('/<facility_id>/getUptimeSummary')
+def getUptimeSummaryWrapper(facility_id) -> Response:
+  return getUptimeSummary(facility_id)
 
 
 

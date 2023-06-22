@@ -122,11 +122,11 @@ if __name__ == "__main__":
   test("Get container info - no app name",               "GET", f"{BASE_URL}/{FACILITY_ID}/getAppInfo",                   400)
 
   print()
-  test("Get health summary - success",                   "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name={APP_NAME}&duration=day", 200)
-  test("Get health summary - invalid facility ID",       "GET", f"{BASE_URL}/iaminvalid/getHealthSummary?name={APP_NAME}&duration=day",    400)
-  test("Get health summary - invalid app name",          "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name=iaminvalid&duration=day", 400)
-  test("Get health summary - invalid duration",          "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name={APP_NAME}&duration=bad", 400)
-  test("Get health summary - no duration",               "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name={APP_NAME}",              400)
+  test("Get uptime summary - success",                   "GET", f"{BASE_URL}/{FACILITY_ID}/getUptimeSummary?name={APP_NAME}&duration=day", 200)
+  test("Get uptime summary - invalid facility ID",       "GET", f"{BASE_URL}/iaminvalid/getUptimeSummary?name={APP_NAME}&duration=day",    400)
+  test("Get uptime summary - invalid app name",          "GET", f"{BASE_URL}/{FACILITY_ID}/getUptimeSummary?name=iaminvalid&duration=day", 400)
+  test("Get uptime summary - invalid duration",          "GET", f"{BASE_URL}/{FACILITY_ID}/getUptimeSummary?name={APP_NAME}&duration=bad", 400)
+  test("Get uptime summary - no duration",               "GET", f"{BASE_URL}/{FACILITY_ID}/getUptimeSummary?name={APP_NAME}",              400)
 
   print()
   test("Get images - success",                           "GET", f"{BASE_URL}/{FACILITY_ID}/getImages",                   200)
