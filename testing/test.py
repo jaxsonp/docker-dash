@@ -11,7 +11,7 @@ def test(testname:str, method:str, url:str, expectedCode:int):
 
   startTime = datetime.now()
   totalTests += 1
-  print(f"{'{:50.50}'.format(testname):}: ", end='')
+  print(f"{'{:47.47}'.format(testname):}: ", end='')
   response = None
   if method == "GET":
     response = get(url)
@@ -108,6 +108,12 @@ if __name__ == "__main__":
   test("Get container status - success (specific app)",  "GET", f"{BASE_URL}/{FACILITY_ID}/getAppStatus?name={APP_NAME}", 200)
   test("Get container status - invalid facility ID",     "GET", f"{BASE_URL}/iaminvalid/getAppStatus?name={APP_NAME}",    400)
   test("Get container status - invalid app name",        "GET", f"{BASE_URL}/{FACILITY_ID}/getAppStatus?name=iaminvalid", 400)
+
+  print()
+  test("Get container stats - success",                 "GET", f"{BASE_URL}/{FACILITY_ID}/getAppStats",                 200)
+  test("Get container stats - success (specific app)",  "GET", f"{BASE_URL}/{FACILITY_ID}/getAppStats?name={APP_NAME}", 200)
+  test("Get container stats - invalid facility ID",     "GET", f"{BASE_URL}/iaminvalid/getAppStats?name={APP_NAME}",    400)
+  test("Get container stats - invalid app name",        "GET", f"{BASE_URL}/{FACILITY_ID}/getAppStats?name=iaminvalid", 400)
 
   print()
   test("Get container info - success",                   "GET", f"{BASE_URL}/{FACILITY_ID}/getAppInfo?name={APP_NAME}",   200)
