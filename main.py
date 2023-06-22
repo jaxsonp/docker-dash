@@ -91,7 +91,7 @@ def getHealthSummaryWrapper(facility_id) -> Response:
 
 from methods.createApp import createApp
 
-@app.route('/<facility_id>/createApp')
+@app.route('/<facility_id>/createApp', methods=['POST'])
 def createAppWrapper(facility_id) -> Response:
 
   # getting summary from logger
