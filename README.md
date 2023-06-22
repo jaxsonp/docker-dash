@@ -279,3 +279,50 @@ Returns timestamped log data representing uptime since the duration specified in
 ```
 
 ---
+
+# Get Images
+
+### Usage:
+
+```
+https://placeholder.url/[FACILITY_ID]/getAppNames
+```
+
+### Description:
+
+Returns an array of all existing images on the specified DSRC
+
+`FACILITY_ID` - Facility-specific identifier
+
+### Example Response:
+
+``` json
+[
+  {
+    "Containers": "N/A",
+    "CreatedAt": "2023-06-14 10:45:43 -1000 HST",
+    "CreatedSince": "7 days ago",
+    "Digest": "<none>",
+    "ID": "ad303d7f80f9",
+    "Repository": "httpd",
+    "SharedSize": "N/A",
+    "Size": "168MB",
+    "Tag": "latest",
+    "UniqueSize": "N/A",
+    "VirtualSize": "168.1MB"
+  },
+  {
+    "Containers": "N/A",
+    "CreatedAt": "2023-06-13 07:45:16 -1000 HST",
+    "CreatedSince": "8 days ago",
+    "Digest": "<none>",
+    "ID": "09b1cac8826b",
+    "Repository": "python",
+    "SharedSize": "N/A",
+    "Size": "1.01GB",
+    "Tag": "latest",
+    "UniqueSize": "N/A",
+    "VirtualSize": "1.008GB"
+  }
+]
+```
