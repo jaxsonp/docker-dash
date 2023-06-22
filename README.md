@@ -170,7 +170,7 @@ https://placeholder.url/[FACILITY_ID]/getAppStatus?name=[APP_NAME]
 Returns basic information and status of specified app, in json format. Under the hood, this method uses the `docker ps` commmand.
 
 `FACILITY_ID` - Facility-specific identifier  
-`APP_NAME` - Name of app to query, must follow [naming convention](#naming-convention).
+`APP_NAME` **(Optional)**: Name of app to query, must follow [naming convention](#naming-convention). If omitted, will return a list of all apps and statuses.
 
 ### Example Response:
 
