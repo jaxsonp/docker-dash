@@ -26,9 +26,10 @@ Each facility will be identified by a unique key in order to specify which SRC t
 6. [Kill App](#kill-app)
 7. [Get App Names](#get-app-names)
 8. [Get App Status](#get-app-status)
-9. [Get App Information](#get-app-information)
-10. [Get App Health Summary](#get-app-health-summary)
-11. [Get Images](#get-images)
+9. [Get App Stats](#get-app-stats)
+10. [Get App Information](#get-app-information)
+11. [Get App Health Summary](#get-app-health-summary)
+12. [Get Images](#get-images)
 
 ---
 
@@ -168,7 +169,7 @@ https://placeholder.url/[FACILITY_ID]/getAppStatus?name=[APP_NAME]
 
 ### Description:
 
-Returns basic information and status of specified app, in json format. Under the hood, this method uses the `docker ps` commmand.
+Returns basic information and status, in json format. Under the hood, this method uses the `docker ps` commmand.
 
 `FACILITY_ID` - Facility-specific identifier  
 `APP_NAME` **(Optional)**: Name of app to query, must follow [naming convention](#naming-convention). If omitted, will return a list of all apps and statuses.
@@ -191,6 +192,40 @@ Returns basic information and status of specified app, in json format. Under the
   "Size": "0B",
   "State": "running",
   "Status": "Up 3 seconds"
+}
+```
+
+---
+
+# Get App Stats
+
+### Usage:
+
+```
+https://placeholder.url/[FACILITY_ID]/getAppStats?name=[APP_NAME]
+
+```
+
+### Description:
+
+Returns hardware information in json format, using the `docker stats` commmand.
+
+`FACILITY_ID` - Facility-specific identifier  
+`APP_NAME` **(Optional)**: Name of app to query, must follow [naming convention](#naming-convention). If omitted, will return a list of all apps and statuses.
+
+### Example Response:
+
+``` json
+{
+  "BlockIO": "0B / 0B",
+  "CPUPerc": "0.02%",
+  "Container": "0203b8e9c65b",
+  "ID": "0203b8e9c65b",
+  "MemPerc": "0.38%",
+  "MemUsage": "29.92MiB / 7.668GiB",
+  "Name": "testcontainer",
+  "NetIO": "1.01kB / 0B",
+  "PIDs": "82"
 }
 ```
 
