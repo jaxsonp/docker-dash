@@ -84,12 +84,20 @@ def getAppNamesWrapper(facility_id):
 from methods.getHealthSummary import getHealthSummary
 
 @app.route('/<facility_id>/getHealthSummary')
-def getHealthSummaryWrapper(facility_id, app_name="", app_id="") -> Response:
+def getHealthSummaryWrapper(facility_id) -> Response:
 
   # getting summary from logger
-  return getHealthSummary(app_name)
+  return getHealthSummary(facility_id)
 
 
+
+from methods.createApp import createApp
+
+@app.route('/<facility_id>/createApp')
+def createAppWrapper(facility_id) -> Response:
+
+  # getting summary from logger
+  return createApp(facility_id)
 
 
 if __name__ == '__main__':

@@ -4,14 +4,14 @@ from datetime import datetime, timedelta
 from flask import Response, request
 
 
-import internal_methods
+from . import internal_methods
 import logger
 
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.verifyAppName
-def getHealthSummary(name: str) -> Response:
+def getHealthSummary(facility_id, app_name="", app_id="") -> Response:
   """
   Returns a summary of the health/uptime of an app
 
@@ -34,10 +34,10 @@ def getHealthSummary(name: str) -> Response:
     return Response("Invalid duration", status=400)
 
   # checking if log exists
-  if os.path.isfile(f"{logger.dir_path}/logs/{name}.log"):
+  if os.path.isfile(f"{logger.dir_path}/logs/{app_name}.log"):
     output = {}
 
-    with open(f"{logger.dir_path}/logs/{name}.log", "r") as log:
+    with open(f"{logger.dir_path}/logs/{app_name}.log", "r") as log:
       for line in log.readlines():
         timestamp = datetime.strptime(line.split(": ")[0], logger.format_str)
         state = line.split(" ")[1]
@@ -57,4 +57,4 @@ def getHealthSummary(name: str) -> Response:
 
     return Response(json.dumps(output), 200)
 
-  return Response(f"Could not find log for \"{name}\"", status=400)
+  return Response(f"Could not find log for \"{app_name}\"", status=400)

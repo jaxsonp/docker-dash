@@ -10,8 +10,12 @@ def createApp(facility_id) -> Response:
 
   """
 
-  image_name = request.args.get("name")
+  image_name = request.args.get("image")
   if image_name == None:
+    return Response("No image name provided", status=400)
+
+  name = request.args.get("name")
+  if name == None:
     return Response("No container name provided", status=400)
 
   # checking if image exists
@@ -20,7 +24,7 @@ def createApp(facility_id) -> Response:
     return Response("No container name provided", status=400)
 
   # executing system command
-  completedProcess = subprocess.run(f"docker create --pull never {image_name}", capture_output=True)
+  completedProcess = subprocess.run(f"docker create --name \"{name}\" --pull never {image_name}", capture_output=True)
   if completedProcess.returncode != 0:
     # uncaught error
     return Response(f"Failed to create app", status=500)
