@@ -28,6 +28,7 @@ Each facility will be identified by a unique key in order to specify which SRC t
 8. [Get App Status](#get-app-status)
 9. [Get App Information](#get-app-information)
 10. [Get App Health Summary](#get-app-health-summary)
+11. [Get Images](#get-images)
 
 ---
 
