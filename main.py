@@ -85,8 +85,6 @@ from methods.getHealthSummary import getHealthSummary
 
 @app.route('/<facility_id>/getHealthSummary')
 def getHealthSummaryWrapper(facility_id) -> Response:
-
-  # getting summary from logger
   return getHealthSummary(facility_id)
 
 
