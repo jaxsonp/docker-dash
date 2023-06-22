@@ -100,6 +100,15 @@ def createAppWrapper(facility_id) -> Response:
   return createApp(facility_id)
 
 
+from methods.getImages import getImages
+
+@app.route('/<facility_id>/getImages')
+def getImagesWrapper(facility_id):
+  return getImages(facility_id)
+
+
+
+
 if __name__ == '__main__':
   print("\n\n\n")
 
