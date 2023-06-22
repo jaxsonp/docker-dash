@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     print("\nStarting testing...")
     startTime = datetime.now()
-    total = 39
+    total = 41
     successful = 0
 
     killApp()
@@ -105,6 +105,10 @@ if __name__ == "__main__":
     if test("Get health summary - invalid app name",        "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name=iaminvalid&duration=day", 400): successful += 1
     if test("Get health summary - invalid duration",        "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name={APP_NAME}&duration=bad", 400): successful += 1
     if test("Get health summary - no duration",             "GET", f"{BASE_URL}/{FACILITY_ID}/getHealthSummary?name={APP_NAME}",              400): successful += 1
+
+    print()
+    if test("Get images - success",                         "GET", f"{BASE_URL}/{FACILITY_ID}/getImages",                   200): successful += 1
+    if test("Get images - invalid facility ID",             "GET", f"{BASE_URL}/iaminvalid/getImages",                      400): successful += 1
 
     testDuration = datetime.now() - startTime
     print(f"\n\nCompleted testing, {successful}/{total} tests successful (took {round(testDuration.total_seconds(), 2)} seconds)")

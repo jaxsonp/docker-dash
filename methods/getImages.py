@@ -21,8 +21,5 @@ def getImages(facility_id) -> Response:
 
   output_list = completedResponse.stdout.decode().strip().split("\n")
   output_list = [json.dumps(json.loads(s)) for s in output_list]
-  output_str = f"[{', '.join(output_list)}]"
-  
-  print(output_str)
 
-  return Response(output_str, 200)
+  return Response(f"[{', '.join(output_list)}]", 200)
