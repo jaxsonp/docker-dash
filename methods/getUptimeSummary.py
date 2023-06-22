@@ -11,7 +11,7 @@ import logger
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.verifyAppName
-def getHealthSummary(facility_id, app_name="", app_id="") -> Response:
+def getUptimeSummary(facility_id, app_name="", app_id="") -> Response:
   """
   Returns a summary of the health/uptime of an app
 
@@ -28,7 +28,7 @@ def getHealthSummary(facility_id, app_name="", app_id="") -> Response:
   # validating duration
   duration = request.args.get("duration")
   if duration == None:
-    return Response("No summary duration provided", status=400)
+    return Response("No duration provided", status=400)
 
   if duration not in ["hour", "day", "week", "month"]:
     return Response("Invalid duration", status=400)

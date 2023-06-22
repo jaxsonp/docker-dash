@@ -330,12 +330,12 @@ Returns detailed information of specified app, in json format. Under the hood, t
 ---
 
 
-# Get App Health Summary
+# Get App Uptime Summary
 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getHealthSummary?name=[APP_NAME]&duration=[DURATION]
+https://placeholder.url/[FACILITY_ID]/getHUptimeSummary?name=[APP_NAME]&duration=[DURATION]
 ```
 
 ### Description:
