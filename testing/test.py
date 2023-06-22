@@ -64,7 +64,7 @@ if __name__ == "__main__":
   print()
   test("Start container - success",                      "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name={APP_NAME}",    200)
   test("Start container - invalid facility ID",          "POST", f"{BASE_URL}/iaminvalid/startApp?name={APP_NAME}",       400)
-  test("Start container - invalid app name",             "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name=iaminvalid",    401)
+  test("Start container - invalid app name",             "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name=iaminvalid",    400)
   test("Start container - no app name",                  "POST", f"{BASE_URL}/{FACILITY_ID}/startApp",                    400)
 
   print()
