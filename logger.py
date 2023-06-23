@@ -26,8 +26,7 @@ def loggingThreadFunc() -> None:
     os.makedirs(f'{dir_path}/logs')
 
   while True:
-    containers = _getContainers()
-    for container in containers:
+    for container in _getContainers():
       logger = logging.getLogger(container)
       logger.setLevel(logging.INFO)
 
@@ -47,11 +46,7 @@ def loggingThreadFunc() -> None:
 
 def _getContainers() -> list:
   completedResponse = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", capture_output=True)
-  arr = []
-  for string in completedResponse.stdout.decode().split("\n"):
-    if string != "":
-      arr.append(string)
-  return arr
+  return [s for s in completedResponse.stdout.decode().split("\n") if s]
 
 
 if __name__ == "__main__":
