@@ -10,7 +10,7 @@ import logger
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
-@internal_methods.verifyAppName
+@internal_methods.handleAppName
 def getUptimeSummary(facility_id, app_name="", app_id="") -> Response:
   """
   Returns a summary of the health/uptime of an app

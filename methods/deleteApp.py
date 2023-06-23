@@ -5,7 +5,7 @@ from . import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
-@internal_methods.verifyAppName
+@internal_methods.handleAppName
 def deleteApp(facility_id, app_name="", app_id="") -> Response:
   """
   This method stops and deletes a container

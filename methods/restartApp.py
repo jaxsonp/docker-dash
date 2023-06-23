@@ -5,7 +5,7 @@ from . import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
-@internal_methods.verifyAppName
+@internal_methods.handleAppName
 def restartApp(facility_id, app_name="", app_id="") -> Response:
   """
   Sends a command to docker to restart the specified app
