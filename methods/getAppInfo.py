@@ -6,7 +6,7 @@ from . import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
-@internal_methods.verifyAppName
+@internal_methods.handleAppName
 def getAppInfo(facility_id, app_name="", app_id="") -> Response:
   """
   Returns detailed information of the specified app.

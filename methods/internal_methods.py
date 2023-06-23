@@ -66,10 +66,10 @@ def verifyDockerEngine(function):
 
 
 
-def verifyAppName(function):
+def handleAppName(function):
   """
   this decorator verifies that the given function received an app name argument,
-  and that the container given is on the machine
+  and that the container given is on the machine.
   """
   def decoratorFunction(*args, **kwargs):
 

@@ -24,8 +24,9 @@ Each facility will be identified by a unique key in order to specify which SRC t
 1. [Unpause App](#unpause-app)
 1. [Restart App](#restart-app)
 1. [Kill App](#kill-app)
-1. [Create App](#kill-app)
-1. [Delete App](#kill-app)
+1. [Create App](#create-app)
+1. [Delete App](#delete-app)
+1. [Hard Reset App](#hard-reset-app)
 1. [Get App Names](#get-app-names)
 1. [Get App Status](#get-app-status)
 1. [Get App Stats](#get-app-stats)
@@ -178,6 +179,24 @@ Deletes the specified app, removing ALL related data.
 `FACILITY_ID` - Facility-specific identifier
 
 `APP_NAME` - Name of app to delete
+
+---
+
+# Hard Reset App
+
+### Usage:
+
+```
+https://placeholder.url/[FACILITY_ID]/hardResetApp?name=[APP_NAME]
+```
+
+### Description:
+
+Resets the specified app, clearing ALL data and restoring it from the original image. Under the hood this method stops and deletes the app instance, then recreates it from the source image.
+
+`FACILITY_ID` - Facility-specific identifier
+
+`APP_NAME` - Name of app to reset
 
 ---
 

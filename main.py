@@ -55,6 +55,12 @@ def deleteAppWrapper(facility_id) -> Response:
   return deleteApp(facility_id)
 
 
+from methods.hardResetApp import hardResetApp
+@app.route('/<facility_id>/hardResetApp', methods=['POST'])
+def hardResetAppWrapper(facility_id) -> Response:
+  return hardResetApp(facility_id)
+
+
 from methods.getAppNames import getAppNames
 @app.route('/<facility_id>/getAppNames', methods=['GET'])
 def getAppNamesWrapper(facility_id):
