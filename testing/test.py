@@ -48,6 +48,8 @@ if __name__ == "__main__":
   def startApp(app_name): subprocess.run(f"docker start {app_name}", capture_output=True)
   def killApp(app_name): subprocess.run(f"docker kill {app_name}", capture_output=True)
   def removeImage(image): subprocess.run(f"docker rmi {image}", capture_output=True)
+  def createApp(image, user): subprocess.run(f"docker create --name {image}.{user} {image}", capture_output=True)
+  def deleteApp(app_name): subprocess.run(f"docker rm {app_name}", capture_output=True)
 
   print("\nStarting testing...")
   startTime = datetime.now()
@@ -65,6 +67,15 @@ if __name__ == "__main__":
   test("Start container - invalid facility ID",          "POST", f"{BASE_URL}/iaminvalid/startApp?name={APP_NAME}", 400)
   test("Start container - invalid app name",             "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name=iaminvalid", 400)
   test("Start container - no app name",                  "POST", f"{BASE_URL}/{FACILITY_ID}/startApp", 400)
+
+  print()
+  createApp(IMAGE_NAME, USER_NAME + "2")
+  createApp(IMAGE_NAME, USER_NAME + "3")
+  test("Batch start container",                          "POST", f"{BASE_URL}/{FACILITY_ID}/startApp?name={APP_NAME},{APP_NAME}2,{APP_NAME}3", 200)
+  test("Batch stop container",                           "POST", f"{BASE_URL}/{FACILITY_ID}/stopApp?name={APP_NAME},{APP_NAME}2,{APP_NAME}3", 200)
+  deleteApp(APP_NAME + "2")
+  deleteApp(APP_NAME + "3")
+
 
   print()
   test("Stop container - success",                       "POST", f"{BASE_URL}/{FACILITY_ID}/stopApp?name={APP_NAME}", 200)

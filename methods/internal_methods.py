@@ -108,7 +108,7 @@ def handleAppName(function):
         if response.status_code == 200:
           successes += 1
 
-      return flask.make_response(f"{successes}/{total} succeeded", 200)
+      return flask.make_response(f"{successes}/{total} succeeded", 200 if successes == total else 400)
 
   decoratorFunction.__name__ = function.__name__
   return decoratorFunction
