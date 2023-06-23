@@ -31,6 +31,7 @@ Each facility will be identified by a unique key in order to specify which SRC t
 1. [Get App Stats](#get-app-stats)
 1. [Get App Information](#get-app-information)
 1. [Get App Health Summary](#get-app-health-summary)
+1. [Request Image](#request-image)
 1. [Get Images](#get-images)
 
 ---
@@ -365,12 +366,30 @@ Returns timestamped log data representing uptime since the duration specified in
 
 ---
 
+# Request Image
+
+### Usage:
+
+```
+https://placeholder.url/[FACILITY_ID]/requestImage?image=[IMAGE_NAME]
+```
+
+### Description:
+
+Request an image to be pulled from docker hub.
+
+`FACILITY_ID` - Facility-specific identifier
+
+`IMAGE_NAME` - Name of requested image
+
+---
+
 # Get Images
 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getAppNames
+https://placeholder.url/[FACILITY_ID]/getImages
 ```
 
 ### Description:
