@@ -4,19 +4,21 @@ This API can be used to control and access information about apps running as Doc
 
 _Note: The words 'app' and 'container' both refer to the Docker container that the app is running on._
 
-### Naming Convention
+## Naming Convention
 
-Because containers are identified by name, it is important that each container name is unique. Container names must only contain letters, numbers, dashes, and/or underscores.
+When an app is created, the image and user name are provided, then the container is made with the name `"image_name.user_name"`. All subsequent references to this container will use this name.
 
-### Error Handling
+Names can include uppercase and lowercase letters and numbers, as well as dashes and underscores. The image name can use dots, but the last dot is used as a deliminator between image and user name, so the user name cannot have dots in it. Image names in docker hub are already unique, but user names must be unique as well.
 
-Each method performs checks in the same order. First it checks if the facility ID was provided and is valid. Next, it checks if the docker engine is online by running a `docker ps` command. Finally it checks if an app name was provided and if it exists, and if so, starts with the actual job.
-
-### Facility ID
+## Facility ID
 
 Each facility will be identified by a unique key in order to specify which SRC to interface with. For demo purposes, this API only responds to a placeholder facility with the ID "demo".
 
-## Table of Contents:
+## Error Handling
+
+Each method performs checks in the same order. First it checks if the facility ID was provided and is valid. Next, it checks if the docker engine is online by running a `docker ps` command. Finally it checks if an app name was provided and if it exists, and if so, starts with the actual job.
+
+## API Endpoints:
 
 1. [Start App](#start-app)
 1. [Stop App](#stop-app)
@@ -151,7 +153,7 @@ Kills the specified app by sending it a `SIGKILL` signal using the `docker kill`
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/createApp?image=[IMAGE_NAME]
+https://placeholder.url/[FACILITY_ID]/createApp?image=[IMAGE_NAME]&user=[USER_NAME]
 ```
 
 ### Description:
@@ -161,6 +163,8 @@ Creates an app instance using the image specified. The image must have already b
 `FACILITY_ID` - Facility-specific identifier
 
 `IMAGE_NAME` - Name of the image to load the app from
+
+`USER_NAME` - Name of the user who is using the app
 
 ---
 
