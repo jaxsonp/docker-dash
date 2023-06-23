@@ -1,12 +1,12 @@
 import subprocess
-from flask import Response
+import flask
 from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.handleAppName
-def stopApp(facility_id, app_name="", app_id="") -> Response:
+def stopApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Sends a command to docker to stop the specified app
 
@@ -18,6 +18,6 @@ def stopApp(facility_id, app_name="", app_id="") -> Response:
   # executing system command
   completedResponse = subprocess.run(f"docker stop {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
-    return Response(f"Failed to stop app", status=500)
+    return flask.make_response(f"Failed to stop app", 500)
 
-  return Response("Success", status=200)
+  return flask.make_response("Success", 200)

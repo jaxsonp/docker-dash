@@ -1,11 +1,11 @@
 import subprocess
 import json
-from flask import Response, request
+import flask
 from . import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
-def getAppStatus(facility_id, app_name="", app_id="") -> Response:
+def getAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Returns basic information and status of the specified app, or all apps if no name is provided.
 
@@ -17,30 +17,30 @@ def getAppStatus(facility_id, app_name="", app_id="") -> Response:
     if successful, returns app information in json format
   """
 
-  app_name = request.args.get("name")
+  app_name = flask.request.args.get("name")
   if app_name == None:
 
     # executing system command
     completedProcess = subprocess.run(f"docker ps -a --format json", capture_output=True)
     if completedProcess.returncode != 0:
-      return Response(f"Failed to query app", status=500)
+      return flask.make_response(f"Failed to query app", 500)
 
     output_list = completedProcess.stdout.decode().strip().split("\n")
     output_list = [json.dumps(json.loads(s)) for s in output_list]
     
-    return Response(f"[{', '.join(output_list)}]", status=200)
+    return flask.make_response(f"[{', '.join(output_list)}]", 200)
     
   else:
 
     # verify name
     app_id = internal_methods.getContainerID(app_name)
     if app_id == None:
-      return Response(f"Unable to find app \"{app_name}\"", status=400)
+      return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
 
     # executing system command
     completedProcess = subprocess.run(f"docker ps -a -f id={app_id} --format json", capture_output=True)
     if completedProcess.returncode != 0:
-      return Response(f"Failed to query app", status=500)
+      return flask.make_response(f"Failed to query app", 500)
 
     output_list = completedProcess.stdout.decode().split("\n")
     output_list = map(json.loads, output_list)
@@ -49,6 +49,6 @@ def getAppStatus(facility_id, app_name="", app_id="") -> Response:
     # for the one that matches exactly
     for entry in output_list:
       if entry["Names"] == app_name:
-        return Response(json.dumps(entry), status=200)
+        return flask.make_response(json.dumps(entry), 200)
 
-    return Response("This should not be reached", status=500)
+    return flask.make_response("This should not be reached", 500)

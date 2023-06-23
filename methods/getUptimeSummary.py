@@ -1,7 +1,7 @@
 import os
 import json
 from datetime import datetime, timedelta
-from flask import Response, request
+import flask
 
 
 from . import internal_methods
@@ -11,7 +11,7 @@ import logger
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.handleAppName
-def getUptimeSummary(facility_id, app_name="", app_id="") -> Response:
+def getUptimeSummary(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Returns a summary of the health/uptime of an app
 
@@ -26,12 +26,12 @@ def getUptimeSummary(facility_id, app_name="", app_id="") -> Response:
   """
 
   # validating duration
-  duration = request.args.get("duration")
+  duration = flask.request.args.get("duration")
   if duration == None:
-    return Response("No duration provided", status=400)
+    return flask.make_response("No duration provided", 400)
 
   if duration not in ["hour", "day", "week", "month"]:
-    return Response("Invalid duration", status=400)
+    return flask.make_response("Invalid duration", 400)
 
   # checking if log exists
   if os.path.isfile(f"{logger.dir_path}/logs/{app_name}.log"):
@@ -55,6 +55,6 @@ def getUptimeSummary(facility_id, app_name="", app_id="") -> Response:
           if timestamp + timedelta(days=30) > datetime.now():
             output.update({timestamp.isoformat(): state == "running"})
 
-    return Response(json.dumps(output), 200)
+    return flask.make_response(json.dumps(output), 200)
 
-  return Response(f"Could not find log for \"{app_name}\"", status=400)
+  return flask.make_response(f"Could not find log for \"{app_name}\"", 400)

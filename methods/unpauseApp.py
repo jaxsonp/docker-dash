@@ -1,12 +1,12 @@
 import subprocess
-from flask import Response
+import flask
 from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.handleAppName
-def unpauseApp(facility_id, app_name="", app_id="") -> Response:
+def unpauseApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Sends a command to docker to unpause the specified app
 
@@ -18,11 +18,11 @@ def unpauseApp(facility_id, app_name="", app_id="") -> Response:
   # verify that app is running
   completedResponse = subprocess.run(f"docker ps -a -f id={app_id} --format \"{{{{.State}}}}\"", capture_output=True)
   if completedResponse.stdout.decode() != "paused\n":
-    return Response("App must be paused to be unpaused", status=409)
+    return flask.make_response("App must be paused to be unpaused", 409)
 
   # executing system command
   completedResponse = subprocess.run(f"docker unpause {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
-    return Response(f"Failed to stop app", status=500)
+    return flask.make_response(f"Failed to stop app", 500)
 
-  return Response("Success", status=200)
+  return flask.make_response("Success", 200)

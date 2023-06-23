@@ -1,12 +1,12 @@
 import subprocess
-from flask import Response
+import flask
 from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.handleAppName
-def killApp(facility_id, app_name="", app_id="") -> Response:
+def killApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Sends a command to docker to restart the specified app
 
@@ -18,6 +18,6 @@ def killApp(facility_id, app_name="", app_id="") -> Response:
   # executing system command
   completedResponse = subprocess.run(f"docker kill {app_id}", capture_output=True)
   if completedResponse.returncode != 0:
-    return Response("Failed to kill app", status=500)
+    return flask.make_response("Failed to kill app", 500)
 
-  return Response("Success", status=200)
+  return flask.make_response("Success", 200)

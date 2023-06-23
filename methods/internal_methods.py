@@ -1,4 +1,4 @@
-from flask import Response, request
+import flask
 import subprocess
 
 
@@ -37,10 +37,10 @@ def verifyFacilityID(function):
     # this is temporary just for the demo
     if "facility_id" in kwargs.keys() and kwargs["facility_id"] != "demo":
       if kwargs["facility_id"] != "demo":
-        return Response("Invalid facility ID", status=400)
+        return flask.make_response("Invalid facility ID", 400)
     elif "facility_id" not in kwargs.keys():
       if args[0] != "demo":
-        return Response("Invalid facility ID", status=400)
+        return flask.make_response("Invalid facility ID", 400)
 
     return function(*args, **kwargs)
 
@@ -57,7 +57,7 @@ def verifyDockerEngine(function):
 
     completedResponse = subprocess.run("docker ps", capture_output=True)
     if completedResponse.returncode != 0:
-      return Response("Docker daemon not responding", status=500)
+      return flask.make_response("Docker daemon not responding", 500)
 
     return function(*args, **kwargs)
 
@@ -73,18 +73,42 @@ def handleAppName(function):
   """
   def decoratorFunction(*args, **kwargs):
 
-    app_name = request.args.get("name")
+    app_name = flask.request.args.get("name")
     if app_name == None:
-      return Response("No container name provided", status=400)
+      return flask.make_response("No container name provided", 400)
 
-    app_id = getContainerID(app_name)
-    if app_id == None:
-      return Response(f"Unable to find app \"{app_name}\"", status=400)
+    app_names = app_name.split(",")
 
-    kwargs["app_name"] = app_name
-    kwargs["app_id"] = app_id
+    if len(app_names) == 1:
+      app_id = getContainerID(app_name)
+      if app_id == None:
+        return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
 
-    return function(*args, **kwargs)
+      kwargs["app_name"] = app_name
+      kwargs["app_id"] = app_id
+
+      return function(*args, **kwargs)
+    else: # batch methods
+      successes = 0
+      total = 0
+      for app_name in app_names:
+        print("app:", app_name)
+        if app_name == "":
+          continue
+
+        total += 1
+        app_id = getContainerID(app_name)
+        if app_id == None:
+          continue
+
+        kwargs["app_name"] = app_name
+        kwargs["app_id"] = app_id
+
+        response = function(*args, **kwargs)
+        if response.status_code == 200:
+          successes += 1
+
+      return flask.make_response(f"{successes}/{total} succeeded", 200)
 
   decoratorFunction.__name__ = function.__name__
   return decoratorFunction

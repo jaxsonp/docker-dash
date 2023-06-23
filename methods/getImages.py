@@ -1,12 +1,12 @@
 import subprocess
 import json
-from flask import Response
+import flask
 from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
-def getImages(facility_id) -> Response:
+def getImages(facility_id) -> flask.Response:
   """
   Returns an array of all local images
 
@@ -17,9 +17,9 @@ def getImages(facility_id) -> Response:
   # executing system command
   completedResponse = subprocess.run(f"docker images --format json", capture_output=True)
   if completedResponse.returncode != 0:
-    return Response("Unknown error", status=500)
+    return flask.make_response("Unknown error", 500)
 
   output_list = completedResponse.stdout.decode().strip().split("\n")
   output_list = [json.dumps(json.loads(s)) for s in output_list]
 
-  return Response(f"[{', '.join(output_list)}]", 200)
+  return flask.make_response(f"[{', '.join(output_list)}]", 200)

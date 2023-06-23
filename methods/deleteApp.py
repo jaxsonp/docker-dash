@@ -1,12 +1,12 @@
 import subprocess
-from flask import Response, request
+import flask
 from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.handleAppName
-def deleteApp(facility_id, app_name="", app_id="") -> Response:
+def deleteApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
   This method stops and deletes a container
 
@@ -20,6 +20,6 @@ def deleteApp(facility_id, app_name="", app_id="") -> Response:
   completedProcess = subprocess.run(f"docker rm \"{app_id}\"", capture_output=True)
   if completedProcess.returncode != 0:
     # uncaught error
-    return Response(f"Failed to delete app", status=500)
+    return flask.make_response(f"Failed to delete app", 500)
 
-  return Response("Success", status=200)
+  return flask.make_response("Success", 200)

@@ -1,11 +1,11 @@
 import subprocess
-from flask import Response, request
+import flask
 from . import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.handleAppName
-def hardResetApp(facility_id, app_name="", app_id="") -> Response:
+def hardResetApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
   This method deletes then re-creates a container, clearing all data
 
@@ -22,11 +22,11 @@ def hardResetApp(facility_id, app_name="", app_id="") -> Response:
   # deleting container
   completedProcess = subprocess.run(f"docker rm {app_id}", capture_output=True)
   if completedProcess.returncode != 0:
-    return Response(f"Failed to delete app", status=500)
+    return flask.make_response(f"Failed to delete app", 500)
 
   # re-creating container
   completedProcess = subprocess.run(f"docker create --name \"{app_name}\" --pull never \"{image_name}\"", capture_output=True)
   if completedProcess.returncode != 0:
-    return Response(f"Failed to create app {image_name}", status=500)
+    return flask.make_response(f"Failed to create app {image_name}", 500)
 
-  return Response("Success", status=200)
+  return flask.make_response("Success", 200)
