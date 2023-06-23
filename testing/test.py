@@ -42,11 +42,7 @@ if __name__ == "__main__":
   BASE_URL = lines[0].strip()
   FACILITY_ID = lines[1].strip()
   APP_NAME = lines[2].strip()
-  def startApp():
-    post(f"{BASE_URL}/{FACILITY_ID}/startApp?name={APP_NAME}")
-
-  def killApp():
-    post(f"{BASE_URL}/{FACILITY_ID}/killApp?name={APP_NAME}")
+  TEST_IMAGE = "hello-world"
 
   # getting image name
   IMAGE_NAME = ""
@@ -56,6 +52,10 @@ if __name__ == "__main__":
     if name == APP_NAME:
       IMAGE_NAME = image
       break
+
+  def startApp(): post(f"{BASE_URL}/{FACILITY_ID}/startApp?name={APP_NAME}")
+  def killApp(): post(f"{BASE_URL}/{FACILITY_ID}/killApp?name={APP_NAME}")
+  def removeImage(image): subprocess.run(f"docker rmi {image}", capture_output=True)
 
   print("\nStarting testing...")
   startTime = datetime.now()
@@ -137,6 +137,7 @@ if __name__ == "__main__":
   test("Hard reset container - invalid facility ID",     "POST", f"{BASE_URL}/iaminvalid/hardResetApp?name={APP_NAME}",        400)
   test("Hard reset container - invalid app name",        "POST", f"{BASE_URL}/{FACILITY_ID}/hardResetApp?name=iaminvalid",     400)
   test("Hard reset container - no app name",             "POST", f"{BASE_URL}/{FACILITY_ID}/hardResetApp",                     400)
+
   print()
   test("Delete container - success",                     "POST", f"{BASE_URL}/{FACILITY_ID}/deleteApp?name={APP_NAME}",     200)
   test("Delete container - invalid facility ID",         "POST", f"{BASE_URL}/iaminvalid/deleteApp?name={APP_NAME}",        400)
@@ -149,6 +150,13 @@ if __name__ == "__main__":
   test("Create app - invalid facility ID",               "POST", f"{BASE_URL}/iaminvalid/createApp?image={IMAGE_NAME}", 400)
   test("Create app - invalid image name",                "POST", f"{BASE_URL}/{FACILITY_ID}/createApp?image=iaminvalid", 400)
   test("Create app - no image name",                     "POST", f"{BASE_URL}/{FACILITY_ID}/createApp?", 400)
+
+  print()
+  test("Request Image - success",                        "POST", f"{BASE_URL}/{FACILITY_ID}/requestImage?image={TEST_IMAGE}", 200)
+  test("Request Image - invalid facility ID",            "POST", f"{BASE_URL}/iaminvalid/requestImage?image={TEST_IMAGE}", 400)
+  test("Request Image - invalid image name",             "POST", f"{BASE_URL}/{FACILITY_ID}/requestImage?image=iaminvalid", 400)
+  test("Request Image - no image name",                  "POST", f"{BASE_URL}/{FACILITY_ID}/requestImage?", 400)
+  removeImage(TEST_IMAGE)
 
   testDuration = datetime.now() - startTime
   print(f"\n\nCompleted testing, {successfulTests}/{totalTests} tests successful (took {round(testDuration.total_seconds(), 2)} seconds)")
