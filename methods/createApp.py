@@ -16,7 +16,11 @@ def createApp(facility_id) -> flask.Response:
 
   image_name = flask.request.args.get("image")
   if image_name == None:
-    return flask.make_response("No image name provided", 400)
+    return flask.Response("No image name provided", status=400)
+
+  user_name = flask.request.args.get("user")
+  if user_name == None:
+    return flask.Response("No user name provided", status=400)
 
   version = flask.request.args.get("version")
   if version == None:
@@ -25,16 +29,17 @@ def createApp(facility_id) -> flask.Response:
   # checking if image exists
   completedProcess = subprocess.run(f"docker image ls --format \"{{{{.Repository}}}}\"", capture_output=True)
   if image_name not in completedProcess.stdout.decode().split("\n"):
-    return flask.make_response(f"Could not find image \"{image_name}\"", 400)
+    return flask.Response(f"Could not find image \"{image_name}\"", status=400)
+
+  container_name = image_name + "." + user_name
 
   # checking if container already exists
   completedProcess = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", capture_output=True)
-  print(completedProcess.stdout.decode().split("\n"))
-  if image_name in completedProcess.stdout.decode().split("\n"):
-    return flask.make_response("App already exists", 400)
+  if container_name in completedProcess.stdout.decode().split("\n"):
+    return flask.Response("App already exists", status=400)
 
   # executing system command
-  completedProcess = subprocess.run(f"docker create --name \"{image_name}\" --pull never {image_name}", capture_output=True)
+  completedProcess = subprocess.run(f"docker create --name \"{container_name}\" --pull never {image_name}", capture_output=True)
   if completedProcess.returncode != 0:
     # uncaught error
     return flask.make_response(f"Failed to create app", 500)
