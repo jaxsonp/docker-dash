@@ -16,10 +16,10 @@ def deleteApp(facility_id, app_name="", app_id="") -> Response:
   """
 
   # executing system commands
-  subprocess.run(f"docker stop \"{app_name}\"")
-  completedProcess = subprocess.run(f"docker rm \"{app_name}\"", capture_output=True)
+  subprocess.run(f"docker stop \"{app_id}\"")
+  completedProcess = subprocess.run(f"docker rm \"{app_id}\"", capture_output=True)
   if completedProcess.returncode != 0:
     # uncaught error
-    return Response(f"Failed to create app", status=500)
+    return Response(f"Failed to delete app", status=500)
 
   return Response("Success", status=200)
