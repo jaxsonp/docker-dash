@@ -42,6 +42,6 @@ def createApp(facility_id) -> flask.Response:
   completedProcess = subprocess.run(f"docker create --name \"{container_name}\" --pull never {image_name}", capture_output=True)
   if completedProcess.returncode != 0:
     # uncaught error
-    return flask.make_response(f"Failed to create app", 500)
+    return flask.make_response("Failed to create app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   return flask.make_response("Success", 200)

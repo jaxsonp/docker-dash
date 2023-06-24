@@ -16,8 +16,8 @@ def killApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker kill {app_id}", capture_output=True)
-  if completedResponse.returncode != 0:
-    return flask.make_response("Failed to kill app", 500)
+  completedProcess = subprocess.run(f"docker kill {app_id}", capture_output=True)
+  if completedProcess.returncode != 0:
+    return flask.make_response("Failed to kill app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   return flask.make_response("Success", 200)

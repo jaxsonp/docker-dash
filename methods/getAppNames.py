@@ -15,12 +15,12 @@ def getAppNames(facility_id) -> flask.Response:
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", capture_output=True)
-  if completedResponse.returncode != 0:
-    return flask.make_response("Unknown error", 500)
+  completedProcess = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", capture_output=True)
+  if completedProcess.returncode != 0:
+    return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   arr = []
-  for string in completedResponse.stdout.decode().split("\n"):
+  for string in completedProcess.stdout.decode().split("\n"):
     if string != "":
       arr.append(string)
 

@@ -22,11 +22,11 @@ def hardResetApp(facility_id, app_name="", app_id="") -> flask.Response:
   # deleting container
   completedProcess = subprocess.run(f"docker rm {app_id}", capture_output=True)
   if completedProcess.returncode != 0:
-    return flask.make_response(f"Failed to delete app", 500)
+    return flask.make_response("Failed to delete app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   # re-creating container
   completedProcess = subprocess.run(f"docker create --name \"{app_name}\" --pull never \"{image_name}\"", capture_output=True)
   if completedProcess.returncode != 0:
-    return flask.make_response(f"Failed to create app {image_name}", 500)
+    return flask.make_response("Failed to create app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   return flask.make_response("Success", 200)

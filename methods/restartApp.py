@@ -16,8 +16,8 @@ def restartApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker restart {app_id}", capture_output=True)
-  if completedResponse.returncode != 0:
-    return flask.make_response(f"Failed to restart app", 500)
+  completedProcess = subprocess.run(f"docker restart {app_id}", capture_output=True)
+  if completedProcess.returncode != 0:
+    return flask.make_response(f"Failed to restart app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   return flask.make_response("Success", 200)
