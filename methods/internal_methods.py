@@ -2,7 +2,7 @@ import flask
 import subprocess
 
 
-def getContainerID(app_name:str) -> str | None:
+def getContainerID(app_name:str):
   """
   this helper function that returns the id of the container matching the given name
   Returns None if unsuccessful
