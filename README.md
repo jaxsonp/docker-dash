@@ -49,11 +49,11 @@ https://placeholder.url/[FACILITY_ID]/startApp?name=[APP_NAME]
 
 ### Description:
 
-Starts the specified app using the `docker start` command. Trying to start an app that is paused will return an error, a paused app must be unpaused.
+Starts the specified app/apps using the `docker start` command. Trying to start an app that is paused will return an error, a paused app must be unpaused.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to start, must follow [naming convention](#naming-convention).
+`APP_NAME` - Name of app(s) to start, must follow [naming convention](#naming-convention). To start multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
 
 ---
 
@@ -68,11 +68,11 @@ https://placeholder.url/[FACILITY_ID]/stopApp?name=[APP_NAME]
 
 ### Description:
 
-Signals for the specified app to exit using the `docker stop` command. If the container does not respond to the `SIGTERM` signal within a 10 second grace period, it will kill the container forcefully with `SIGKILL`.
+Signals for the specified app/apps to exit using the `docker stop` command. If the container does not respond to the `SIGTERM` signal within a 10 second grace period, it will kill the container forcefully with `SIGKILL`.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to stop, must follow [naming convention](#naming-convention).
+`APP_NAME` - Name of app to stop, must follow [naming convention](#naming-convention). To stop multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
 
 ---
 
@@ -86,11 +86,11 @@ https://placeholder.url/[FACILITY_ID]/pauseApp?name=[APP_NAME]
 
 ### Description:
 
-Pauses the specified app using the `docker pause` command. An app must be already running in order to be paused, otherwise the api will return error. While an app is paused, it can be unpaused, stopped, restarted, or killed.
+Pauses the specified app/apps using the `docker pause` command. An app must be already running in order to be paused, otherwise the api will return error. While an app is paused, it can be unpaused, stopped, restarted, or killed.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to pause, must follow [naming convention](#naming-convention).
+`APP_NAME` - Name of app to pause, must follow [naming convention](#naming-convention). To pause multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
 
 ---
 
@@ -104,11 +104,11 @@ https://placeholder.url/[FACILITY_ID]/unpauseApp?name=[APP_NAME]
 
 ### Description:
 
-Unauses the specified app using the `docker unpause` command. An app must be paused, otherwise the api will return error.
+Unpauses the specified app/apps using the `docker unpause` command. An app must be paused, otherwise the api will return error.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to unpause, must follow [naming convention](#naming-convention).
+`APP_NAME` - Name of app to unpause, must follow [naming convention](#naming-convention). To unpause multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
 
 ---
 
@@ -122,11 +122,11 @@ https://placeholder.url/[FACILITY_ID]/restartApp?name=[APP_NAME]
 
 ### Description:
 
-Restarts the specified app using the `docker restart` command. This command behaves similarly to a `docker stop` then a `docker start` command.
+Restarts the specified app/apps using the `docker restart` command. This command behaves similarly to a `docker stop` then a `docker start` command.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to restart, must follow [naming convention](#naming-convention).
+`APP_NAME` - Name of app to restart, must follow [naming convention](#naming-convention). To restart multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
 
 ---
 
@@ -140,11 +140,11 @@ https://placeholder.url/[FACILITY_ID]/killApp?name=[APP_NAME]
 
 ### Description:
 
-Kills the specified app by sending it a `SIGKILL` signal using the `docker kill` command.
+Kills the specified app/apps by sending it a `SIGKILL` signal using the `docker kill` command.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to kill, must follow [naming convention](#naming-convention).
+`APP_NAME` - Name of app to kill, must follow [naming convention](#naming-convention). To kill multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
 
 ---
 
@@ -178,11 +178,11 @@ https://placeholder.url/[FACILITY_ID]/killApp?name=[APP_NAME]
 
 ### Description:
 
-Deletes the specified app, removing ALL related data.
+Deletes the specified app/apps, removing ALL related data.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to delete
+`APP_NAME` - Name of app(s) to delete. To delete multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
 
 ---
 
@@ -196,11 +196,11 @@ https://placeholder.url/[FACILITY_ID]/hardResetApp?name=[APP_NAME]
 
 ### Description:
 
-Resets the specified app, clearing ALL data and restoring it from the original image. Under the hood this method stops and deletes the app instance, then recreates it from the source image.
+Resets the specified app/apps, clearing ALL data and restoring it from the original image. Use this endpoint with caution, it is meant to be thought of as a factory reset. Under the hood this method stops and deletes the app instance, then recreates it from the source image.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to reset
+`APP_NAME` - Name of app(s) to hard reset. To reset multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
 
 ---
 
@@ -317,6 +317,8 @@ Returns detailed information of specified app, in json format. Under the hood, t
 
 `APP_NAME` - Name of app to query, must follow [naming convention](#naming-convention).
 
+_Note: For the sake of consistency, this method will accept batch requests similar to the other post methods, however it will not return any useful data and is therefore completely useless_
+
 ### Example Response:
 
 ``` json
@@ -371,6 +373,8 @@ Returns timestamped log data representing uptime since the duration specified in
 `APP_NAME` - Facility-specific identifier
 
 `DURATION` - String to specify duration of log data to return. (hour, day, week, or month)
+
+_Note: For the sake of consistency, this method will accept batch requests similar to the other post methods, however it will not return any useful data and is therefore completely useless_
 
 ### Example Response:
 
