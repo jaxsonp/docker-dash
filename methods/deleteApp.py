@@ -16,10 +16,10 @@ def deleteApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # executing system commands
-  subprocess.run(f"docker stop \"{app_id}\"")
+  subprocess.run(f"docker stop \"{app_id}\"", capture_output=True)
   completedProcess = subprocess.run(f"docker rm \"{app_id}\"", capture_output=True)
   if completedProcess.returncode != 0:
     # uncaught error
-    return flask.make_response(f"Failed to delete app", 500)
+    return flask.make_response("Failed to delete app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   return flask.make_response("Success", 200)

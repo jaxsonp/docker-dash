@@ -23,7 +23,7 @@ def getAppInfo(facility_id, app_name="", app_id="") -> flask.Response:
   completedProcess = subprocess.run(f"docker inspect --type=container {app_id}", capture_output=True)
   if completedProcess.returncode != 0:
     # undefined error
-    return flask.make_response(f"Failed to inspect app", 500)
+    return flask.make_response("Failed to inspect app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   output_list = json.loads(completedProcess.stdout.decode())
   # docker inspect returns a list of containers, so we must search for the one

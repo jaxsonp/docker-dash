@@ -23,7 +23,7 @@ def getAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
     # executing system command
     completedProcess = subprocess.run(f"docker ps -a --format json", capture_output=True)
     if completedProcess.returncode != 0:
-      return flask.make_response(f"Failed to query app", 500)
+      return flask.make_response(f"Failed to query app\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
     output_list = completedProcess.stdout.decode().strip().split("\n")
     output_list = [json.dumps(json.loads(s)) for s in output_list]
@@ -40,7 +40,7 @@ def getAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
     # executing system command
     completedProcess = subprocess.run(f"docker ps -a -f id={app_id} --format json", capture_output=True)
     if completedProcess.returncode != 0:
-      return flask.make_response(f"Failed to query app", 500)
+      return flask.make_response(f"Failed to query app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
     output_list = completedProcess.stdout.decode().split("\n")
     output_list = map(json.loads, output_list)

@@ -21,7 +21,7 @@ def requestImage(facility_id) -> flask.Response:
   # *insert security verification here*
 
   # try to pull app from docker hub
-  completedResponse = subprocess.run(f"docker pull {image_name}", capture_output=True)
-  if completedResponse.returncode != 0:
-    return flask.make_response(f"Could not pull image '{image_name}'", 400)
+  completedProcess = subprocess.run(f"docker pull {image_name}", capture_output=True)
+  if completedProcess.returncode != 0:
+    return flask.make_response(f"Could not pull image '{image_name}':\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 400)
   return flask.make_response("Success", 200)
