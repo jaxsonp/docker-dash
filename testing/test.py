@@ -45,11 +45,11 @@ if __name__ == "__main__":
 
   APP_NAME = f"{IMAGE_NAME}.{USER_NAME}"
 
-  def startApp(app_name): subprocess.run(f"docker start {app_name}", capture_output=True)
-  def killApp(app_name): subprocess.run(f"docker kill {app_name}", capture_output=True)
-  def removeImage(image): subprocess.run(f"docker rmi {image}", capture_output=True)
-  def createApp(image, user): subprocess.run(f"docker create --name {image}.{user} {image}", capture_output=True)
-  def deleteApp(app_name): subprocess.run(f"docker rm {app_name}", capture_output=True)
+  def startApp(app_name): subprocess.run(f"docker start {app_name}", shell=True, capture_output=True)
+  def killApp(app_name): subprocess.run(f"docker kill {app_name}", shell=True, capture_output=True)
+  def removeImage(image): subprocess.run(f"docker rmi {image}", shell=True, capture_output=True)
+  def createApp(image, user): subprocess.run(f"docker create --name {image}.{user} {image}", shell=True, capture_output=True)
+  def deleteApp(app_name): subprocess.run(f"docker rm {app_name}", shell=True, capture_output=True)
 
   print("\nStarting testing...")
   startTime = datetime.now()

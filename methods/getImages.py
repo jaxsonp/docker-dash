@@ -15,7 +15,7 @@ def getImages(facility_id) -> flask.Response:
   """
 
   # executing system command
-  completedProcess = subprocess.run(f"docker images --format json", capture_output=True)
+  completedProcess = subprocess.run(f"docker images --format json", shell=True, capture_output=True)
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

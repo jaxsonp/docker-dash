@@ -20,7 +20,7 @@ def getAppInfo(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # executing system command
-  completedProcess = subprocess.run(f"docker inspect --type=container {app_id}", capture_output=True)
+  completedProcess = subprocess.run(f"docker inspect --type=container {app_id}", shell=True, capture_output=True)
   if completedProcess.returncode != 0:
     # undefined error
     return flask.make_response("Failed to inspect app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)

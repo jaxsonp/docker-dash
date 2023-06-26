@@ -9,7 +9,7 @@ def getContainerID(app_name:str):
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", capture_output=True)
+  completedResponse = subprocess.run(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", shell=True, capture_output=True)
   if completedResponse.returncode != 0: return None
 
   if completedResponse.stdout == b'': return None
@@ -55,7 +55,7 @@ def verifyDockerEngine(function):
   """
   def decoratorFunction(*args, **kwargs):
 
-    completedResponse = subprocess.run("docker ps", capture_output=True)
+    completedResponse = subprocess.run("docker ps", shell=True, capture_output=True)
     if completedResponse.returncode != 0:
       return flask.make_response("Docker daemon not responding", 500)
 

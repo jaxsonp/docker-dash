@@ -35,7 +35,7 @@ def loggingThreadFunc() -> None:
       fileHandler.setFormatter(formatter)
       logger.addHandler(fileHandler)
 
-      completedProcess = subprocess.run(f"docker ps -a -f name={container} --format json", capture_output=True)
+      completedProcess = subprocess.run("docker ps -a -f name={container} --format json", shell=True, capture_output=True)
       info = json.loads(completedProcess.stdout.decode().split("\n")[0])
       logger.info(f"{info['State']} [{info['Status']}]")
 
@@ -45,7 +45,7 @@ def loggingThreadFunc() -> None:
 
 
 def _getContainers() -> list:
-  completedResponse = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", capture_output=True)
+  completedResponse = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", shell=True, capture_output=True)
   return [s for s in completedResponse.stdout.decode().split("\n") if s]
 
 
