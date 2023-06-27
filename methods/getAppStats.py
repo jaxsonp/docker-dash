@@ -18,7 +18,7 @@ def getAppStats(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # executing system command
-  completedProcess = subprocess.run(f"docker stats -a --no-stream --format json", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker stats -a --no-stream --format json", shell=True, capture_output=True)
   if completedProcess.returncode != 0:
       return flask.make_response(f"Failed to query app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

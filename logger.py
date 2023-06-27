@@ -3,7 +3,7 @@ import json
 import time
 import logging
 import subprocess
-from datetime import datetime, timedelta
+from methods import internal_methods
 from flask import request
 
 
@@ -35,7 +35,7 @@ def loggingThreadFunc() -> None:
       fileHandler.setFormatter(formatter)
       logger.addHandler(fileHandler)
 
-      completedProcess = subprocess.run("docker ps -a -f name={container} --format json", shell=True, capture_output=True)
+      completedProcess = internal_methods.subprocessRun("docker ps -a -f name={container} --format json", shell=True, capture_output=True)
       info = json.loads(completedProcess.stdout.decode().split("\n")[0])
       logger.info(f"{info['State']} [{info['Status']}]")
 
@@ -45,7 +45,7 @@ def loggingThreadFunc() -> None:
 
 
 def _getContainers() -> list:
-  completedResponse = subprocess.run(f"docker ps -a --format \"{{{{.Names}}}}\"", shell=True, capture_output=True)
+  completedResponse = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Names}}}}\"", shell=True, capture_output=True)
   return [s for s in completedResponse.stdout.decode().split("\n") if s]
 
 

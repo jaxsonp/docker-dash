@@ -1,6 +1,6 @@
 import flask
 import subprocess
-
+import platform
 
 def getContainerID(app_name:str):
   """
@@ -9,7 +9,7 @@ def getContainerID(app_name:str):
   """
 
   # executing system command
-  completedResponse = subprocess.run(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", shell=True, capture_output=True)
+  completedResponse = subprocessRun(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", shell=True, capture_output=True)
   if completedResponse.returncode != 0: return None
 
   if completedResponse.stdout == b'': return None
@@ -55,7 +55,7 @@ def verifyDockerEngine(function):
   """
   def decoratorFunction(*args, **kwargs):
 
-    completedResponse = subprocess.run("docker ps", shell=True, capture_output=True)
+    completedResponse = subprocessRun("docker ps", shell=True, capture_output=True)
     if completedResponse.returncode != 0:
       return flask.make_response("Docker daemon not responding", 500)
 
@@ -112,3 +112,12 @@ def handleAppName(function):
 
   decoratorFunction.__name__ = function.__name__
   return decoratorFunction
+
+
+def subprocessRun(cmd_str: str, capture_output=True, shell=True) -> subprocess.CompletedProcess:
+  """
+  This wrapper function adds sudo in front of docker commands on unix systems
+  """
+  if platform.system() != "Windows":
+    cmd_str = "sudo " + cmd_str
+  return subprocess.run(cmd_str, capture_output=capture_output, shell=shell)
