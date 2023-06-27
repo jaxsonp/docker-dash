@@ -8,29 +8,6 @@ import logger
 app = flask.Flask(__name__)
 
 
-from methods.startApp import startApp
-@app.route('/<facility_id>/start-app', methods=['POST'])
-def startAppWrapper(facility_id) -> flask.Response:
-  return startApp(facility_id)
-
-
-from methods.stopApp import stopApp
-@app.route('/<facility_id>/stop-app', methods=['POST'])
-def stopAppWrapper(facility_id) -> flask.Response:
-  return stopApp(facility_id)
-
-
-from methods.pauseApp import pauseApp
-@app.route('/<facility_id>/pause-app', methods=['POST'])
-def pauseAppWrapper(facility_id) -> flask.Response:
-  return pauseApp(facility_id)
-
-
-from methods.unpauseApp import unpauseApp
-@app.route('/<facility_id>/unpause-app', methods=['POST'])
-def unpauseAppWrapper(facility_id) -> flask.Response:
-  return unpauseApp(facility_id)
-
 
 from methods.restartApp import restartApp
 @app.route('/<facility_id>/restart-app', methods=['POST'])
@@ -112,3 +89,29 @@ if __name__ == '__main__':
   logThread.start()
   print("Starting flask server")
   app.run()
+
+
+
+# OBSOLETE
+"""from methods.startApp import startApp
+@app.route('/<facility_id>/start-app', methods=['POST'])
+def startAppWrapper(facility_id) -> flask.Response:
+  return startApp(facility_id)
+
+
+from methods.stopApp import stopApp
+@app.route('/<facility_id>/stop-app', methods=['POST'])
+def stopAppWrapper(facility_id) -> flask.Response:
+  return stopApp(facility_id)
+
+
+from methods.pauseApp import pauseApp
+@app.route('/<facility_id>/pause-app', methods=['POST'])
+def pauseAppWrapper(facility_id) -> flask.Response:
+  return pauseApp(facility_id)
+
+
+from methods.unpauseApp import unpauseApp
+@app.route('/<facility_id>/unpause-app', methods=['POST'])
+def unpauseAppWrapper(facility_id) -> flask.Response:
+  return unpauseApp(facility_id)"""
