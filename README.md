@@ -44,7 +44,7 @@ Each method performs checks in the same order. First it checks if the facility I
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/startApp?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/start-app?name=[APP_NAME]
 ```
 
 ### Description:
@@ -62,7 +62,7 @@ Starts the specified app/apps using the `docker start` command. Trying to start 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/stopApp?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/stop-app?name=[APP_NAME]
 
 ```
 
@@ -81,7 +81,7 @@ Signals for the specified app/apps to exit using the `docker stop` command. If t
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/pauseApp?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/pause-app?name=[APP_NAME]
 ```
 
 ### Description:
@@ -99,7 +99,7 @@ Pauses the specified app/apps using the `docker pause` command. An app must be a
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/unpauseApp?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/unpause-app?name=[APP_NAME]
 ```
 
 ### Description:
@@ -117,7 +117,7 @@ Unpauses the specified app/apps using the `docker unpause` command. An app must 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/restartApp?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/restart-app?name=[APP_NAME]
 ```
 
 ### Description:
@@ -135,7 +135,7 @@ Restarts the specified app/apps using the `docker restart` command. This command
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/killApp?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
 ```
 
 ### Description:
@@ -153,7 +153,7 @@ Kills the specified app/apps by sending it a `SIGKILL` signal using the `docker 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/createApp?image=[IMAGE_NAME]&user=[USER_NAME]
+https://placeholder.url/[FACILITY_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
 ```
 
 ### Description:
@@ -173,7 +173,7 @@ Creates an app instance using the image specified. The image must have already b
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/killApp?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
 ```
 
 ### Description:
@@ -191,7 +191,7 @@ Deletes the specified app/apps, removing ALL related data.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/hardResetApp?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/hard-reset-app?name=[APP_NAME]
 ```
 
 ### Description:
@@ -209,7 +209,7 @@ Resets the specified app/apps, clearing ALL data and restoring it from the origi
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getAppNames
+https://placeholder.url/[FACILITY_ID]/get-app-names
 ```
 
 ### Description:
@@ -231,7 +231,7 @@ Returns an array of all existing apps on the specified DSRC, regardless of its s
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getAppStatus?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/get-app-status?name=[APP_NAME]
 
 ```
 
@@ -271,7 +271,7 @@ Returns basic information and status, in json format. Under the hood, this metho
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getAppStats?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/get-app-stats?name=[APP_NAME]
 
 ```
 
@@ -306,7 +306,7 @@ Returns hardware information in json format, using the `docker stats` commmand.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getAppInfo?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/get-app-info?name=[APP_NAME]
 ```
 
 ### Description:
@@ -361,7 +361,7 @@ _Note: For the sake of consistency, this method will accept batch requests simil
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getHUptimeSummary?name=[APP_NAME]&duration=[DURATION]
+https://placeholder.url/[FACILITY_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
 ```
 
 ### Description:
@@ -398,7 +398,7 @@ _Note: For the sake of consistency, this method will accept batch requests simil
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/requestImage?image=[IMAGE_NAME]
+https://placeholder.url/[FACILITY_ID]/request-image?image=[IMAGE_NAME]
 ```
 
 ### Description:
@@ -416,7 +416,7 @@ Request an image to be pulled from docker hub.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/getImages
+https://placeholder.url/[FACILITY_ID]/get-images
 ```
 
 ### Description:

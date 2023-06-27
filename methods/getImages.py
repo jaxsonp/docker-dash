@@ -20,6 +20,7 @@ def getImages(facility_id) -> flask.Response:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   output_list = completedProcess.stdout.decode().strip().split("\n")
-  output_list = [json.dumps(json.loads(s)) for s in output_list]
+  print(output_list)
+  output_list = [json.dumps(json.loads(s)) if s != '' else s for s in output_list]
 
   return flask.make_response(f"[{', '.join(output_list)}]", 200)
