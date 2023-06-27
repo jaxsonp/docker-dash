@@ -27,19 +27,21 @@ def loggingThreadFunc() -> None:
 
   while True:
     for container in _getContainers():
-      logger = logging.getLogger(container)
-      logger.setLevel(logging.INFO)
-
-      # file logging
-      fileHandler = logging.FileHandler(f"{dir_path}/logs/{container}.log", mode='a')
-      fileHandler.setFormatter(formatter)
-      logger.addHandler(fileHandler)
 
       completedProcess = internal_methods.subprocessRun("docker ps -a -f name={container} --format json", shell=True, capture_output=True)
-      info = json.loads(completedProcess.stdout.decode().split("\n")[0])
-      logger.info(f"{info['State']} [{info['Status']}]")
+      info_str = completedProcess.stdout.decode().split("\n")[0]
+      if info_str != "":
+        logger = logging.getLogger(container)
+        logger.setLevel(logging.INFO)
 
-      logger.removeHandler(fileHandler)
+        # file logging
+        fileHandler = logging.FileHandler(f"{dir_path}/logs/{container}.log", mode='a')
+        fileHandler.setFormatter(formatter)
+        logger.addHandler(fileHandler)
+        info = json.loads(info_str)
+        logger.info(f"{info['State']} [{info['Status']}]")
+
+        logger.removeHandler(fileHandler)
 
     time.sleep(600)
 

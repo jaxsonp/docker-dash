@@ -21,21 +21,22 @@ Each method performs checks in the same order. First it checks if the facility I
 ## API Endpoints:
 
 1. [Start App](#start-app)
-1. [Stop App](#stop-app)
-1. [Pause App](#pause-app)
-1. [Unpause App](#unpause-app)
-1. [Restart App](#restart-app)
-1. [Kill App](#kill-app)
-1. [Create App](#create-app)
-1. [Delete App](#delete-app)
-1. [Hard Reset App](#hard-reset-app)
-1. [Get App Names](#get-app-names)
-1. [Get App Status](#get-app-status)
-1. [Get App Stats](#get-app-stats)
-1. [Get App Information](#get-app-information)
-1. [Get App Health Summary](#get-app-health-summary)
-1. [Request Image](#request-image)
-1. [Get Images](#get-images)
+2. [Stop App](#stop-app)
+3. [Pause App](#pause-app)
+4. [Unpause App](#unpause-app)
+5. [Restart App](#restart-app)
+6. [Kill App](#kill-app)
+7. [Create App](#create-app)
+8. [Delete App](#delete-app)
+9. [Hard Reset App](#hard-reset-app)
+10. [Get App Names](#get-app-names)
+11. [Get App Status](#get-app-status)
+12. [Get App Stats](#get-app-stats)
+13. [Get App Information](#get-app-information)
+14. [Get App Health Summary](#get-app-health-summary)
+15. [Request Image](#request-image)
+16. [Get Images](#get-images)
+
 
 ---
 
@@ -44,16 +45,17 @@ Each method performs checks in the same order. First it checks if the facility I
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/start-app?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/startApp?name=[APP_NAME]
+
 ```
 
 ### Description:
 
-Starts the specified app/apps using the `docker start` command. Trying to start an app that is paused will return an error, a paused app must be unpaused.
+Starts the specified app using the `docker start` command. Trying to start an app that is paused will return an error, a paused app must be unpaused.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app(s) to start, must follow [naming convention](#naming-convention). To start multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
+`APP_NAME` - Name of app to start, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -62,17 +64,17 @@ Starts the specified app/apps using the `docker start` command. Trying to start 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/stop-app?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/stopApp?name=[APP_NAME]
 
 ```
 
 ### Description:
 
-Signals for the specified app/apps to exit using the `docker stop` command. If the container does not respond to the `SIGTERM` signal within a 10 second grace period, it will kill the container forcefully with `SIGKILL`.
+Signals for the specified app to exit using the `docker stop` command. If the container does not respond to the `SIGTERM` signal within a 10 second grace period, it will kill the container forcefully with `SIGKILL`.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to stop, must follow [naming convention](#naming-convention). To stop multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
+`APP_NAME` - Name of app to stop, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -81,16 +83,17 @@ Signals for the specified app/apps to exit using the `docker stop` command. If t
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/pause-app?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/pauseApp?name=[APP_NAME]
+
 ```
 
 ### Description:
 
-Pauses the specified app/apps using the `docker pause` command. An app must be already running in order to be paused, otherwise the api will return error. While an app is paused, it can be unpaused, stopped, restarted, or killed.
+Pauses the specified app using the `docker pause` command. An app must be already running in order to be paused, otherwise the api will return error. While an app is paused, it can be unpaused, stopped, restarted, or killed.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to pause, must follow [naming convention](#naming-convention). To pause multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
+`APP_NAME` - Name of app to pause, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -99,16 +102,17 @@ Pauses the specified app/apps using the `docker pause` command. An app must be a
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/unpause-app?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/unpauseApp?name=[APP_NAME]
+
 ```
 
 ### Description:
 
-Unpauses the specified app/apps using the `docker unpause` command. An app must be paused, otherwise the api will return error.
+Unauses the specified app using the `docker unpause` command. An app must be paused, otherwise the api will return error.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to unpause, must follow [naming convention](#naming-convention). To unpause multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
+`APP_NAME` - Name of app to unpause, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -117,16 +121,17 @@ Unpauses the specified app/apps using the `docker unpause` command. An app must 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/restart-app?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/restartApp?name=[APP_NAME]
+
 ```
 
 ### Description:
 
-Restarts the specified app/apps using the `docker restart` command. This command behaves similarly to a `docker stop` then a `docker start` command.
+Restarts the specified app using the `docker restart` command. This command behaves similarly to a `docker stop` then a `docker start` command.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to restart, must follow [naming convention](#naming-convention). To restart multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
+`APP_NAME` - Name of app to restart, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -135,16 +140,17 @@ Restarts the specified app/apps using the `docker restart` command. This command
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/killApp?name=[APP_NAME]
+
 ```
 
 ### Description:
 
-Kills the specified app/apps by sending it a `SIGKILL` signal using the `docker kill` command.
+Kills the specified app by sending it a `SIGKILL` signal using the `docker kill` command.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to kill, must follow [naming convention](#naming-convention). To kill multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
+`APP_NAME` - Name of app to kill, must follow [naming convention](#naming-convention).
 
 ---
 
@@ -153,7 +159,8 @@ Kills the specified app/apps by sending it a `SIGKILL` signal using the `docker 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
+https://placeholder.url/[FACILITY_ID]/createApp?image=[IMAGE_NAME]&user=[USER_NAME]
+
 ```
 
 ### Description:
@@ -173,16 +180,17 @@ Creates an app instance using the image specified. The image must have already b
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/killApp?name=[APP_NAME]
+
 ```
 
 ### Description:
 
-Deletes the specified app/apps, removing ALL related data.
+Deletes the specified app, removing ALL related data.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app(s) to delete. To delete multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
+`APP_NAME` - Name of app to delete
 
 ---
 
@@ -191,16 +199,17 @@ Deletes the specified app/apps, removing ALL related data.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/hard-reset-app?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/hardResetApp?name=[APP_NAME]
+
 ```
 
 ### Description:
 
-Resets the specified app/apps, clearing ALL data and restoring it from the original image. Use this endpoint with caution, it is meant to be thought of as a factory reset. Under the hood this method stops and deletes the app instance, then recreates it from the source image.
+Resets the specified app, clearing ALL data and restoring it from the original image. Under the hood this method stops and deletes the app instance, then recreates it from the source image.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app(s) to hard reset. To reset multiple apps, provide the names seperated by a comma (e.g. `app1,app2,app3...`)
+`APP_NAME` - Name of app to reset
 
 ---
 
@@ -209,7 +218,8 @@ Resets the specified app/apps, clearing ALL data and restoring it from the origi
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-app-names
+https://placeholder.url/[FACILITY_ID]/getAppNames
+
 ```
 
 ### Description:
@@ -222,6 +232,7 @@ Returns an array of all existing apps on the specified DSRC, regardless of its s
 
 ``` json
 ["jupyter-lab", "xterm"]
+
 ```
 
 ---
@@ -231,7 +242,7 @@ Returns an array of all existing apps on the specified DSRC, regardless of its s
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-app-status?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/getAppStatus?name=[APP_NAME]
 
 ```
 
@@ -262,6 +273,7 @@ Returns basic information and status, in json format. Under the hood, this metho
   "State": "running",
   "Status": "Up 3 seconds"
 }
+
 ```
 
 ---
@@ -271,7 +283,7 @@ Returns basic information and status, in json format. Under the hood, this metho
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-app-stats?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/getAppStats?name=[APP_NAME]
 
 ```
 
@@ -297,6 +309,7 @@ Returns hardware information in json format, using the `docker stats` commmand.
   "NetIO": "1.01kB / 0B",
   "PIDs": "82"
 }
+
 ```
 
 ---
@@ -306,7 +319,8 @@ Returns hardware information in json format, using the `docker stats` commmand.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-app-info?name=[APP_NAME]
+https://placeholder.url/[FACILITY_ID]/getAppInfo?name=[APP_NAME]
+
 ```
 
 ### Description:
@@ -316,8 +330,6 @@ Returns detailed information of specified app, in json format. Under the hood, t
 `FACILITY_ID` - Facility-specific identifier
 
 `APP_NAME` - Name of app to query, must follow [naming convention](#naming-convention).
-
-_Note: For the sake of consistency, this method will accept batch requests similar to the other post methods, however it will not return any useful data and is therefore completely useless_
 
 ### Example Response:
 
@@ -350,18 +362,19 @@ _Note: For the sake of consistency, this method will accept batch requests simil
     "SandboxKey": "/var/run/docker/netns/6b4851d1903e",
     "SecondaryIPAddresses": null,
     "SecondaryIPv6Addresses": null,
-
 ... continues for >100 lines ...
-```
----
 
+```
+
+---
 
 # Get App Uptime Summary
 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
+https://placeholder.url/[FACILITY_ID]/getHUptimeSummary?name=[APP_NAME]&duration=[DURATION]
+
 ```
 
 ### Description:
@@ -373,8 +386,6 @@ Returns timestamped log data representing uptime since the duration specified in
 `APP_NAME` - Facility-specific identifier
 
 `DURATION` - String to specify duration of log data to return. (hour, day, week, or month)
-
-_Note: For the sake of consistency, this method will accept batch requests similar to the other post methods, however it will not return any useful data and is therefore completely useless_
 
 ### Example Response:
 
@@ -398,7 +409,8 @@ _Note: For the sake of consistency, this method will accept batch requests simil
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/request-image?image=[IMAGE_NAME]
+https://placeholder.url/[FACILITY_ID]/requestImage?image=[IMAGE_NAME]
+
 ```
 
 ### Description:
@@ -416,12 +428,13 @@ Request an image to be pulled from docker hub.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-images
+https://placeholder.url/[FACILITY_ID]/getImages
+
 ```
 
 ### Description:
 
-Returns an array of all existing images on the specified DSRC
+Returns an array of all existing images on the specified DSRC. On top of the image information given by docker, another field called `CreatedContainerCount` will give the number of existing containers that were created from that image.
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -440,7 +453,8 @@ Returns an array of all existing images on the specified DSRC
     "Size": "168MB",
     "Tag": "latest",
     "UniqueSize": "N/A",
-    "VirtualSize": "168.1MB"
+    "VirtualSize": "168.1MB",
+    "CreatedContainerCount": 2
   },
   {
     "Containers": "N/A",
@@ -453,7 +467,9 @@ Returns an array of all existing images on the specified DSRC
     "Size": "1.01GB",
     "Tag": "latest",
     "UniqueSize": "N/A",
-    "VirtualSize": "1.008GB"
+    "VirtualSize": "1.008GB",
+    "CreatedContainerCount": 1
   }
 ]
+
 ```
