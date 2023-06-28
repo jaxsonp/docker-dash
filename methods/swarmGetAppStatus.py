@@ -21,9 +21,9 @@ def getAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
   if app_name == None:
 
     # executing system command
-    completedProcess = internal_methods.subprocessRun(f"docker ps -a --format json", shell=True, capture_output=True)
+    completedProcess = internal_methods.subprocessRun(f"docker service ls --format json", shell=True, capture_output=True)
     if completedProcess.returncode != 0:
-      return flask.make_response(f"Failed to query app\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+      return flask.make_response(f"Failed to query apps\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
     output_list = completedProcess.stdout.decode().strip().split("\n")
     output_list = [json.dumps(json.loads(s)) for s in output_list]
@@ -33,12 +33,12 @@ def getAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
   else:
 
     # verify name
-    app_id = internal_methods.getContainerID(app_name)
+    app_id = internal_methods.getServiceID(app_name)
     if app_id == None:
       return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
 
     # executing system command
-    completedProcess = internal_methods.subprocessRun(f"docker ps -a -f id={app_id} --format json", shell=True, capture_output=True)
+    completedProcess = internal_methods.subprocessRun(f"docker service ls -f id={app_id} --format json", shell=True, capture_output=True)
     if completedProcess.returncode != 0:
       return flask.make_response(f"Failed to query app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
@@ -48,7 +48,7 @@ def getAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
     # docker ps returns a list of containers with matching names, so we must search
     # for the one that matches exactly
     for entry in output_list:
-      if entry["Names"] == app_name:
+      if entry["Name"] == app_name:
         return flask.make_response(json.dumps(entry), 200)
 
     return flask.make_response("This should not be reached", 500)

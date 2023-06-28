@@ -146,7 +146,7 @@ https://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
 
 ### Description:
 
-Kills the specified app by sending it a `SIGKILL` signal using the `docker kill` command.
+Kills the specified app by ending the relevant service, which removes all related data. Therefore, this method can be thought of as both killing and deleting.
 
 `FACILITY_ID` - Facility-specific identifier
 

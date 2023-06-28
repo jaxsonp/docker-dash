@@ -1,4 +1,3 @@
-import subprocess
 import json
 import flask
 from . import internal_methods

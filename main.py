@@ -8,52 +8,18 @@ import logger
 app = flask.Flask(__name__)
 
 
-from methods.startApp import startApp
-@app.route('/<facility_id>/start-app', methods=['POST'])
-def startAppWrapper(facility_id) -> flask.Response:
-  return startApp(facility_id)
 
 
-from methods.stopApp import stopApp
-@app.route('/<facility_id>/stop-app', methods=['POST'])
-def stopAppWrapper(facility_id) -> flask.Response:
-  return stopApp(facility_id)
-
-
-from methods.pauseApp import pauseApp
-@app.route('/<facility_id>/pause-app', methods=['POST'])
-def pauseAppWrapper(facility_id) -> flask.Response:
-  return pauseApp(facility_id)
-
-
-from methods.unpauseApp import unpauseApp
-@app.route('/<facility_id>/unpause-app', methods=['POST'])
-def unpauseAppWrapper(facility_id) -> flask.Response:
-  return unpauseApp(facility_id)
-
-
-from methods.restartApp import restartApp
-@app.route('/<facility_id>/restart-app', methods=['POST'])
-def restartAppWrapper(facility_id) -> flask.Response:
-  return restartApp(facility_id)
-
-
-from methods.killApp import killApp
+from methods.swarmKillApp import killApp
 @app.route('/<facility_id>/kill-app', methods=['POST'])
 def killAppWrapper(facility_id) -> flask.Response:
   return killApp(facility_id)
 
 
-from methods.createApp import createApp
+from methods.swarmCreateApp import createApp
 @app.route('/<facility_id>/create-app', methods=['POST'])
 def createAppWrapper(facility_id) -> flask.Response:
   return createApp(facility_id)
-
-
-from methods.deleteApp import deleteApp
-@app.route('/<facility_id>/delete-app', methods=['POST'])
-def deleteAppWrapper(facility_id) -> flask.Response:
-  return deleteApp(facility_id)
 
 
 from methods.hardResetApp import hardResetApp
@@ -62,25 +28,25 @@ def hardResetAppWrapper(facility_id) -> flask.Response:
   return hardResetApp(facility_id)
 
 
-from methods.getAppNames import getAppNames
+from methods.swarmGetAppNames import getAppNames
 @app.route('/<facility_id>/get-app-names', methods=['GET'])
 def getAppNamesWrapper(facility_id) -> flask.Response:
   return getAppNames(facility_id)
 
 
-from methods.getAppStatus import getAppStatus
+from methods.swarmGetAppStatus import getAppStatus
 @app.route('/<facility_id>/get-app-status', methods=['GET'])
 def getAppStatusWrapper(facility_id) -> flask.Response:
   return getAppStatus(facility_id)
 
 
-from methods.getAppStats import getAppStats
+from methods.swarmGetAppStats import getAppStats
 @app.route('/<facility_id>/get-app-stats', methods=['GET'])
 def getAppStatsWrapper(facility_id) -> flask.Response:
   return getAppStats(facility_id)
 
 
-from methods.getAppInfo import getAppInfo
+from methods.swarmGetAppInfo import getAppInfo
 @app.route('/<facility_id>/get-app-info', methods=['GET'])
 def getAppInfoWrapper(facility_id) -> flask.Response:
   return getAppInfo(facility_id)
@@ -112,3 +78,44 @@ if __name__ == '__main__':
   logThread.start()
   print("Starting flask server")
   app.run()
+
+
+
+"""
+OBSOLETE METHODS
+
+from methods.startApp import startApp
+@app.route('/<facility_id>/start-app', methods=['POST'])
+def startAppWrapper(facility_id) -> flask.Response:
+  return startApp(facility_id)
+
+
+from methods.stopApp import stopApp
+@app.route('/<facility_id>/stop-app', methods=['POST'])
+def stopAppWrapper(facility_id) -> flask.Response:
+  return stopApp(facility_id)
+
+
+from methods.pauseApp import pauseApp
+@app.route('/<facility_id>/pause-app', methods=['POST'])
+def pauseAppWrapper(facility_id) -> flask.Response:
+  return pauseApp(facility_id)
+
+
+from methods.unpauseApp import unpauseApp
+@app.route('/<facility_id>/unpause-app', methods=['POST'])
+def unpauseAppWrapper(facility_id) -> flask.Response:
+  return unpauseApp(facility_id)
+
+
+from methods.deleteApp import deleteApp
+@app.route('/<facility_id>/delete-app', methods=['POST'])
+def deleteAppWrapper(facility_id) -> flask.Response:
+  return deleteApp(facility_id)  
+  
+
+from methods.restartApp import restartApp
+@app.route('/<facility_id>/restart-app', methods=['POST'])
+def restartAppWrapper(facility_id) -> flask.Response:
+  return restartApp(facility_id)
+"""
