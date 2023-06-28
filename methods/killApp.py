@@ -8,7 +8,7 @@ from . import internal_methods
 @internal_methods.handleAppName
 def killApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
-  Sends a command to docker to restart the specified app
+  Sends a command to docker to kill the specified app
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
