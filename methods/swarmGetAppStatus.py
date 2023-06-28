@@ -33,7 +33,7 @@ def getAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
   else:
 
     # verify name
-    app_id = internal_methods.getContainerID(app_name)
+    app_id = internal_methods.getServiceID(app_name)
     if app_id == None:
       return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
 
