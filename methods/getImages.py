@@ -15,7 +15,8 @@ def getImages(facility_id) -> flask.Response:
   """
 
   # getting containers to count
-  completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
+  # SWARM MODE completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
   imageCounter = Counter([s.split(":")[0] for s in completedProcess.stdout.decode().split("\n")])
