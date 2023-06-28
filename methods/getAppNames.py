@@ -1,4 +1,3 @@
-import subprocess
 import json
 import flask
 from . import internal_methods
@@ -15,13 +14,10 @@ def getAppNames(facility_id) -> flask.Response:
   """
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Names}}}}\"", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Name}}}}\"", shell=True, capture_output=True)
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
-  arr = []
-  for string in completedProcess.stdout.decode().split("\n"):
-    if string != "":
-      arr.append(string)
+  arr = [s for s in completedProcess.stdout.decode().split("\n") if s != ""]
 
   return flask.make_response(json.dumps(arr), 200)
