@@ -65,7 +65,7 @@ def verifyDockerEngine(function):
 
 
 
-def handleAppName(function):
+def handleSwarmAppName(function):
   """
   this decorator verifies that the given function received an app name argument,
   and that the container given is on the machine.
