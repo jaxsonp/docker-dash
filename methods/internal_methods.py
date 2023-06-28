@@ -10,7 +10,6 @@ def getServiceID(app_name:str):
 
   # executing system command
   completedResponse = subprocessRun(f"docker service ls --filter name={app_name} --format \"{{{{.Name}}}} {{{{.ID}}}}\"", shell=True, capture_output=True)
-  print(completedResponse.stderr.decode())
   if completedResponse.returncode != 0: return None
   if completedResponse.stdout == b'': return None
 
