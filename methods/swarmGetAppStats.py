@@ -6,7 +6,7 @@ from . import internal_methods
 @internal_methods.verifyDockerEngine
 def swarmGetAppStats(facility_id, app_name="", app_id="") -> flask.Response:
   """
-  Returns computing stats of the specified app, or all apps if no name is provided.
+  Returns hardware stats of the specified app, or all apps if no name is provided.
 
   parameters:
     facility_id (optional) - this value is passed in the API route, for demo purposes this should always be "demo"

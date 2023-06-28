@@ -137,6 +137,24 @@ def swarmKillAppWrapper(facility_id) -> flask.Response:
   return swarmKillApp(facility_id)
 
 
+from methods.swarmGetNodeNames import swarmGetNodeNames
+@app.route('/<facility_id>/swarm-get-node-names', methods=['GET'])
+def swarmGetNodeNamesWrapper(facility_id) -> flask.Response:
+  return swarmGetNodeNames(facility_id)
+
+
+from methods.swarmGetNodeStatus import swarmGetNodeStatus
+@app.route('/<facility_id>/swarm-get-node-status', methods=['GET'])
+def swarmGetNodeStatusWrapper(facility_id) -> flask.Response:
+  return swarmGetNodeStatus(facility_id)
+
+
+from methods.swarmGetNodeInfo import swarmGetNodeInfo
+@app.route('/<facility_id>/swarm-get-node-info', methods=['GET'])
+def swarmGetNodeInfoWrapper(facility_id) -> flask.Response:
+  return swarmGetNodeInfo(facility_id)
+
+
 if __name__ == '__main__':
   print("\n\n\n")
 

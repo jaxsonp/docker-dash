@@ -7,7 +7,7 @@ from . import internal_methods
 @internal_methods.verifyDockerEngine
 def swarmGetAppNames(facility_id) -> flask.Response:
   """
-  Returns an array of all apps, running or not
+  Returns an array of all running apps
 
   parameters:
     facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
