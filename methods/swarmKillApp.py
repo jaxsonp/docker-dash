@@ -1,4 +1,3 @@
-import subprocess
 import flask
 from . import internal_methods
 

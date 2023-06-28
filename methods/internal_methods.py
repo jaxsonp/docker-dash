@@ -12,11 +12,10 @@ def getContainerID(app_name:str):
   # executing system command
   completedResponse = subprocessRun(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", shell=True, capture_output=True)
   if completedResponse.returncode != 0: return None
-
   if completedResponse.stdout == b'': return None
 
   # make list of names and ids
-  nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n")]
+  nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n") if line != ""]
 
   # check if app_name is in list
   for name, id in nameList:
@@ -38,7 +37,7 @@ def getServiceID(app_name:str):
   if completedResponse.stdout == b'': return None
 
   # make list of names and ids
-  nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n")]
+  nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n") if line != ""]
 
   # check if app_name is in list
   for name, id in nameList:
