@@ -1,6 +1,7 @@
 import flask
 import subprocess
 import os
+import json
 
 
 def getContainerID(app_name:str):
@@ -71,21 +72,28 @@ def verifyFacilityID(function):
 
 
 
-def verifyDockerEngine(function):
-  """
-  this decorator verifies that docker engine is running and responsive
-  """
-  def decoratorFunction(*args, **kwargs):
+def verifyDockerEngine(swarm_method: bool):
+  def decorator(function):
+    """
+    this decorator verifies that docker engine is running and responsive
+    """
+    def decoratorFunction(*args, **kwargs):
 
-    completedResponse = subprocessRun("docker ps", shell=True, capture_output=True)
-    if completedResponse.returncode != 0:
-      return flask.make_response("Docker daemon not responding", 500)
+      completedResponse = subprocessRun("docker info --format json", shell=True, capture_output=True)
+      if completedResponse.returncode != 0:
+        return flask.make_response("Docker daemon not responding", 500)
+      
+      if swarm_method == (json.loads(completedResponse.stdout.decode())["Swarm"]["LocalNodeState"] == "active"):
+        return function(*args, **kwargs)
+      
+      if swarm_method:
+        return flask.make_response("Cannot use swarm method on non-swarm node", 400)
+      else:
+        return flask.make_response("Cannot use non-swarm method on swarm node", 400)
 
-    return function(*args, **kwargs)
-
-  decoratorFunction.__name__ = function.__name__
-  return decoratorFunction
-
+    decoratorFunction.__name__ = function.__name__
+    return decoratorFunction
+  return decorator
 
 
 def handleAppName(function):

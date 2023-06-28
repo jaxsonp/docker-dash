@@ -5,7 +5,7 @@ from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
-@internal_methods.verifyDockerEngine
+@internal_methods.verifyDockerEngine(swarm_method=False)
 def getAppNames(facility_id) -> flask.Response:
   """
   Returns an array of all apps, running or not

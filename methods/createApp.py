@@ -3,7 +3,7 @@ from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
-@internal_methods.verifyDockerEngine
+@internal_methods.verifyDockerEngine(swarm_method=False)
 def createApp(facility_id) -> flask.Response:
   """
   Creates an app container from a given image name

@@ -3,7 +3,7 @@ from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
-@internal_methods.verifyDockerEngine
+@internal_methods.verifyDockerEngine(swarm_method=True)
 @internal_methods.handleSwarmAppName
 def swarmKillApp(facility_id, app_name="", app_id="") -> flask.Response:
   """

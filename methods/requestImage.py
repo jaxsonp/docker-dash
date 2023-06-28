@@ -3,7 +3,7 @@ from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
-@internal_methods.verifyDockerEngine
+@internal_methods.verifyDockerEngine(swarm_method=False)
 def requestImage(facility_id) -> flask.Response:
   """
   Request an image to be pulled from docker hub
