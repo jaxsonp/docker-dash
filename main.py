@@ -44,12 +44,6 @@ def killAppWrapper(facility_id) -> flask.Response:
   return killApp(facility_id)
 
 
-from methods.createApp import createApp
-@app.route('/<facility_id>/create-app', methods=['POST'])
-def createAppWrapper(facility_id) -> flask.Response:
-  return createApp(facility_id)
-
-
 from methods.deleteApp import deleteApp
 @app.route('/<facility_id>/delete-app', methods=['POST'])
 def deleteAppWrapper(facility_id) -> flask.Response:
@@ -102,6 +96,45 @@ from methods.getImages import getImages
 @app.route('/<facility_id>/get-images', methods=['GET'])
 def getImagesWrapper(facility_id):
   return getImages(facility_id)
+
+
+# SWARM METHODS ================================================================
+
+
+from methods.swarmCreateApp import swarmCreateApp
+@app.route('/<facility_id>/swarm-create-app', methods=['POST'])
+def swarmCreateAppWrapper(facility_id) -> flask.Response:
+  return swarmCreateApp(facility_id)
+
+
+from methods.swarmGetAppInfo import swarmGetAppInfo
+@app.route('/<facility_id>/swarm-get-app-info', methods=['GET'])
+def swarmGetAppInfoWrapper(facility_id) -> flask.Response:
+  return swarmGetAppInfo(facility_id)
+
+
+from methods.swarmGetAppNames import swarmGetAppNames
+@app.route('/<facility_id>/get-app-names', methods=['GET'])
+def swarmGetAppNamesWrapper(facility_id) -> flask.Response:
+  return swarmGetAppNames(facility_id)
+
+
+from methods.swarmGetAppStats import swarmGetAppStats
+@app.route('/<facility_id>/swarm-get-app-status', methods=['GET'])
+def swarmGetAppStatsWrapper(facility_id) -> flask.Response:
+  return swarmGetAppStats(facility_id)
+
+
+from methods.swarmGetAppStatus import swarmGetAppStatus
+@app.route('/<facility_id>/swarm-get-app-status', methods=['GET'])
+def swarmGetAppStatusWrapper(facility_id) -> flask.Response:
+  return swarmGetAppStatus(facility_id)
+
+
+from methods.swarmKillApp import swarmKillApp
+@app.route('/<facility_id>/swarm-kill-app', methods=['POST'])
+def swarmKillAppWrapper(facility_id) -> flask.Response:
+  return swarmKillApp(facility_id)
 
 
 if __name__ == '__main__':

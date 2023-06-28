@@ -5,7 +5,7 @@ from . import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
-def getAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
+def swarmGetAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Returns basic information and status of the specified app, or all apps if no name is provided.
 

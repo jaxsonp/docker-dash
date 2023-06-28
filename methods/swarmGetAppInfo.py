@@ -7,7 +7,7 @@ from . import internal_methods
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine
 @internal_methods.handleAppName
-def getAppInfo(facility_id, app_name="", app_id="") -> flask.Response:
+def swarmGetAppInfo(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Returns detailed information of the specified app.
 

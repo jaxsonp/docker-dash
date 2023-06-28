@@ -89,54 +89,6 @@ def verifyDockerEngine(function):
 
 
 
-def handleSwarmAppName(function):
-  """
-  this decorator verifies that the given function received an app name argument,
-  and that the container given is on the machine.
-  """
-  def decoratorFunction(*args, **kwargs):
-
-    app_name = flask.request.args.get("name")
-    if app_name == None:
-      return flask.make_response("No container name provided", 400)
-
-    app_names = app_name.split(",")
-
-    if len(app_names) == 1:
-      app_id = getServiceID(app_name)
-      if app_id == None:
-        return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
-
-      kwargs["app_name"] = app_name
-      kwargs["app_id"] = app_id
-
-      return function(*args, **kwargs)
-    else: # batch methods
-      successes = 0
-      total = 0
-      for app_name in app_names:
-        print("app:", app_name)
-        if app_name == "":
-          continue
-
-        total += 1
-        app_id = getServiceID(app_name)
-        if app_id == None:
-          continue
-
-        kwargs["app_name"] = app_name
-        kwargs["app_id"] = app_id
-
-        response = function(*args, **kwargs)
-        if response.status_code == 200:
-          successes += 1
-
-      return flask.make_response(f"{successes}/{total} succeeded", 200 if successes == total else 400)
-
-  decoratorFunction.__name__ = function.__name__
-  return decoratorFunction
-
-
 def handleAppName(function):
   """
   this decorator verifies that the given function received an app name argument,
@@ -169,6 +121,54 @@ def handleAppName(function):
 
         total += 1
         app_id = getContainerID(app_name)
+        if app_id == None:
+          continue
+
+        kwargs["app_name"] = app_name
+        kwargs["app_id"] = app_id
+
+        response = function(*args, **kwargs)
+        if response.status_code == 200:
+          successes += 1
+
+      return flask.make_response(f"{successes}/{total} succeeded", 200 if successes == total else 400)
+
+  decoratorFunction.__name__ = function.__name__
+  return decoratorFunction
+
+
+def handleSwarmAppName(function):
+  """
+  this decorator verifies that the given function received an app name argument,
+  and that the container given is on the machine.
+  """
+  def decoratorFunction(*args, **kwargs):
+
+    app_name = flask.request.args.get("name")
+    if app_name == None:
+      return flask.make_response("No container name provided", 400)
+
+    app_names = app_name.split(",")
+
+    if len(app_names) == 1:
+      app_id = getServiceID(app_name)
+      if app_id == None:
+        return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
+
+      kwargs["app_name"] = app_name
+      kwargs["app_id"] = app_id
+
+      return function(*args, **kwargs)
+    else: # batch methods
+      successes = 0
+      total = 0
+      for app_name in app_names:
+        print("app:", app_name)
+        if app_name == "":
+          continue
+
+        total += 1
+        app_id = getServiceID(app_name)
         if app_id == None:
           continue
 
