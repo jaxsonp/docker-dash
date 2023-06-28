@@ -104,6 +104,12 @@ def getImagesWrapper(facility_id):
   return getImages(facility_id)
 
 
+from methods.swarmGetAppStats import swarmGetAppStats
+@app.route('/<facility_id>/swarm-get-app-stats', methods=['GET'])
+def swarmGetAppStatsWrapper(facility_id) -> flask.Response:
+  return swarmGetAppStats(facility_id)
+
+
 if __name__ == '__main__':
   print("\n\n\n")
 
