@@ -2,16 +2,15 @@ import flask
 import subprocess
 import os
 
-def getContainerID(app_name:str):
+def getServiceID(app_name:str):
   """
-  this helper function that returns the id of the container matching the given name
+  this helper function that returns the id of the service matching the given name
   Returns None if unsuccessful
   """
 
   # executing system command
-  completedResponse = subprocessRun(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"", shell=True, capture_output=True)
+  completedResponse = subprocessRun(f"docker service ls --filter name={app_name} --format \"{{{{.Name}}}} {{{{.ID}}}}\"", shell=True, capture_output=True)
   if completedResponse.returncode != 0: return None
-
   if completedResponse.stdout == b'': return None
 
   # make list of names and ids
@@ -80,7 +79,7 @@ def handleAppName(function):
     app_names = app_name.split(",")
 
     if len(app_names) == 1:
-      app_id = getContainerID(app_name)
+      app_id = getServiceID(app_name)
       if app_id == None:
         return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
 
@@ -97,7 +96,7 @@ def handleAppName(function):
           continue
 
         total += 1
-        app_id = getContainerID(app_name)
+        app_id = getServiceID(app_name)
         if app_id == None:
           continue
 
