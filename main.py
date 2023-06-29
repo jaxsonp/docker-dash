@@ -120,7 +120,7 @@ def swarmGetAppNamesWrapper(facility_id) -> flask.Response:
 
 
 from methods.swarmGetAppStats import swarmGetAppStats
-@app.route('/<facility_id>/swarm-get-app-status', methods=['GET'])
+@app.route('/<facility_id>/swarm-get-app-stats', methods=['GET'])
 def swarmGetAppStatsWrapper(facility_id) -> flask.Response:
   return swarmGetAppStats(facility_id)
 

@@ -1,4 +1,3 @@
-import subprocess
 import json
 import flask
 from . import internal_methods
@@ -6,17 +5,18 @@ from . import internal_methods
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=True)
 def swarmGetAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
+  
   """
   Returns basic information and status of the specified app, or all apps if no name is provided.
 
   parameters:
-    facility_id (optional) - this value is passed in the API route, for demo purposes this should always be "demo"
-    app_name - this value is passed as an http parameter
+    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    app_name (optional) - this value is passed as an http parameter
 
   returns:
     if successful, returns app information in json format
   """
-
+  
   app_name = flask.request.args.get("name")
   if app_name == None:
 
@@ -45,8 +45,6 @@ def swarmGetAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
     output_list = completedProcess.stdout.decode().split("\n")
     output_list = map(json.loads, output_list)
 
-    # docker ps returns a list of containers with matching names, so we must search
-    # for the one that matches exactly
     for entry in output_list:
       if entry["Name"] == app_name:
         return flask.make_response(json.dumps(entry), 200)
