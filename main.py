@@ -44,6 +44,12 @@ def killAppWrapper(facility_id) -> flask.Response:
   return killApp(facility_id)
 
 
+from methods.createApp import createApp
+@app.route('/<facility_id>/create-app', methods=['POST'])
+def createAppWrapper(facility_id) -> flask.Response:
+  return createApp(facility_id)
+
+
 from methods.deleteApp import deleteApp
 @app.route('/<facility_id>/delete-app', methods=['POST'])
 def deleteAppWrapper(facility_id) -> flask.Response:
