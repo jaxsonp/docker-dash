@@ -30,7 +30,7 @@ def createApp(facility_id) -> flask.Response:
   if image_name not in completedProcess.stdout.decode().split("\n"):
     return flask.Response(f"Could not find image \"{image_name}\"", status=400)
 
-  container_name = image_name + "." + user_name
+  container_name = image_name + "--" + user_name
 
   # checking if container already exists
   completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Names}}}}\"", shell=True, capture_output=True)

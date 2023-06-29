@@ -72,24 +72,32 @@ def verifyFacilityID(function):
 
 
 
-def verifyDockerEngine(swarm_method: bool):
+def verifyDockerEngine(swarm_method=None):
   def decorator(function):
     """
-    this decorator verifies that docker engine is running and responsive
+    this decorator verifies that docker engine is running and responsive, and also checks that
+    you aren't using a swarm function on a non-swarm mode and vice versa
+
+    - swarm_method: True or False if a method is exclusively a swarm method or not a swarm method
+        respectively, or None if it is swarm agnostic
     """
     def decoratorFunction(*args, **kwargs):
 
-      completedResponse = subprocessRun("docker info --format json", shell=True, capture_output=True)
-      if completedResponse.returncode != 0:
+      completedProcess = subprocessRun("docker info --format json", shell=True, capture_output=True)
+      if completedProcess.returncode != 0:
         return flask.make_response("Docker daemon not responding", 500)
       
-      if swarm_method == (json.loads(completedResponse.stdout.decode())["Swarm"]["LocalNodeState"] == "active"):
-        return function(*args, **kwargs)
-      
-      if swarm_method:
-        return flask.make_response("Cannot use swarm method on non-swarm node", 400)
+      # checking swarm mode
+      if swarm_method != None:
+        if swarm_method == (json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active"):
+          return function(*args, **kwargs)
+        
+        if swarm_method:
+          return flask.make_response("Cannot use swarm method on non-swarm node", 400)
+        else:
+          return flask.make_response("Cannot use non-swarm method on swarm node", 400)
       else:
-        return flask.make_response("Cannot use non-swarm method on swarm node", 400)
+        return function(*args, **kwargs)
 
     decoratorFunction.__name__ = function.__name__
     return decoratorFunction

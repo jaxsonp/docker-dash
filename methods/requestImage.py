@@ -3,7 +3,7 @@ from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
-@internal_methods.verifyDockerEngine(swarm_method=False)
+@internal_methods.verifyDockerEngine()
 def requestImage(facility_id) -> flask.Response:
   """
   Request an image to be pulled from docker hub
@@ -17,7 +17,9 @@ def requestImage(facility_id) -> flask.Response:
   if image_name == None:
     return flask.make_response("No image name provided", 400)
 
-  # *insert security verification here*
+  """
+  ===== insert security verification here =====
+  """
 
   # try to pull app from docker hub
   completedProcess = internal_methods.subprocessRun(f"docker pull {image_name}", shell=True, capture_output=True)

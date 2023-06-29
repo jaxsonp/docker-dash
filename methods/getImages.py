@@ -5,7 +5,7 @@ from . import internal_methods
 
 
 @internal_methods.verifyFacilityID
-@internal_methods.verifyDockerEngine(swarm_method=False)
+@internal_methods.verifyDockerEngine()
 def getImages(facility_id) -> flask.Response:
   """
   Returns an array of all local images
@@ -15,10 +15,14 @@ def getImages(facility_id) -> flask.Response:
   """
 
   # getting containers to count
-  completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
-  # SWARM MODE completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun("docker info --format json", shell=True, capture_output=True)
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+  
+  if json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active":
+    completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
+  else:
+    completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
   imageCounter = Counter([s.split(":")[0] for s in completedProcess.stdout.decode().split("\n")])
 
   # executing system command
