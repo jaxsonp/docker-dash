@@ -3,7 +3,7 @@ import flask
 from . import internal_methods
 
 @internal_methods.verifyFacilityID
-@internal_methods.verifyDockerEngine
+@internal_methods.verifyDockerEngine(swarm_method=False)
 def swarmGetNodeStatus(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Returns status of specified node, or all nodes if not specified
