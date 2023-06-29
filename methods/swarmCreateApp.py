@@ -25,19 +25,19 @@ def swarmCreateApp(facility_id) -> flask.Response:
     version = "latest"
 
   # checking if image exists
-  completedProcess = internal_methods.subprocessRun(f"docker image ls --format \"{{{{.Repository}}}}\"", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker image ls --format \"{{{{.Repository}}}}\"")
   if image_name not in completedProcess.stdout.decode().split("\n"):
     return flask.Response(f"Could not find image \"{image_name}\"", status=400)
 
   service_name = image_name + "--" + user_name
 
   # checking if container already exists
-  completedProcess = internal_methods.subprocessRun(f"docker service ls--format \"{{{{.Name}}}}\"", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker service ls--format \"{{{{.Name}}}}\"")
   if service_name in completedProcess.stdout.decode().split("\n"):
     return flask.Response("App already exists", status=400)
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker service create --name \"{service_name}\" --detach {image_name}", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker service create --name \"{service_name}\" --detach {image_name}")
   if completedProcess.returncode != 0:
     # uncaught error
     return flask.make_response("Failed to create app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)

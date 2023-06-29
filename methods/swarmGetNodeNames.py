@@ -15,7 +15,7 @@ def swarmGetNodeNames(facility_id, app_name="", app_id="") -> flask.Response:
     if successful, returns node names in json format
   """
 
-  completedProcess = internal_methods.subprocessRun("docker node ls --format {{.Hostname}}", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun("docker node ls --format {{.Hostname}}")
   if completedProcess.returncode != 0:
       return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

@@ -21,7 +21,7 @@ def swarmGetAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
   if app_name == None:
 
     # executing system command
-    completedProcess = internal_methods.subprocessRun(f"docker service ls --format json", shell=True, capture_output=True)
+    completedProcess = internal_methods.subprocessRun(f"docker service ls --format json")
     if completedProcess.returncode != 0:
       return flask.make_response(f"Failed to query apps\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
@@ -38,7 +38,7 @@ def swarmGetAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
       return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
 
     # executing system command
-    completedProcess = internal_methods.subprocessRun(f"docker service ls -f id={app_id} --format json", shell=True, capture_output=True)
+    completedProcess = internal_methods.subprocessRun(f"docker service ls -f id={app_id} --format json")
     if completedProcess.returncode != 0:
       return flask.make_response(f"Failed to query app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

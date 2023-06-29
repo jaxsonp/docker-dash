@@ -15,18 +15,18 @@ def getImages(facility_id) -> flask.Response:
   """
 
   # getting containers to count
-  completedProcess = internal_methods.subprocessRun("docker info --format json", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun("docker info --format json")
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
   
   if json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active":
-    completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
+    completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Image}}}}\"")
   else:
-    completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Image}}}}\"", shell=True, capture_output=True)
+    completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Image}}}}\"")
   imageCounter = Counter([s.split(":")[0] for s in completedProcess.stdout.decode().split("\n")])
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker images --format json", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker images --format json")
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

@@ -15,7 +15,7 @@ def swarmKillApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker service rm {app_id}", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker service rm {app_id}")
   if completedProcess.returncode != 0:
     return flask.make_response("Failed to kill app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
