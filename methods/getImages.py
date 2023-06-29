@@ -30,7 +30,6 @@ def getImages(facility_id) -> flask.Response:
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
-  print(completedProcess.stdout.decode().strip().split("\n"))
   output_list = []
   for image in completedProcess.stdout.decode().strip().split("\n"):
     if image == "":

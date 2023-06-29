@@ -51,7 +51,7 @@ if __name__ == "__main__":
   def createApp(image, user): subprocess.run(f"docker create --name {image}.{user} {image}", shell=True, capture_output=True)
   def deleteApp(app_name): subprocess.run(f"docker rm {app_name}", shell=True, capture_output=True)
 
-  print("\nStarting testing...")
+  print("\nStarting swarm testing...")
   start_time = datetime.now()
 
   print()
@@ -63,10 +63,32 @@ if __name__ == "__main__":
   test("Create app - no user name",                      "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-create-app?image={IMAGE_NAME}", 400)
   
   print()
-  test("Kill container - success",                       "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app?name={APP_NAME}", 200)
-  test("Kill container - invalid facility ID",           "POST", f"{BASE_URL}/iaminvalid/swarm-kill-app?name={APP_NAME}", 400)
-  test("Kill container - invalid app name",              "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app?name=iaminvalid", 400)
-  test("Kill container - no app name",                   "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app", 400)
+  test("Get app names - success",                        "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-names", 200)
+  test("Get app names - invalid facility ID",            "GET", f"{BASE_URL}/iaminvalid/swarm-get-app-names", 400)
+
+  print()
+  test("Get service status - success",                   "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-status", 200)
+  test("Get service status - success (specific app)",    "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-status?name={APP_NAME}", 200)
+  test("Get service status - invalid facility ID",       "GET", f"{BASE_URL}/iaminvalid/swarm-get-app-status?name={APP_NAME}", 400)
+  test("Get service status - invalid app name",          "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-status?name=iaminvalid", 400)
+
+  print()
+  test("Get service stats - success",                    "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-stats", 200)
+  test("Get service stats - success (specific app)",     "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-stats?name={APP_NAME}", 200)
+  test("Get service stats - invalid facility ID",        "GET", f"{BASE_URL}/iaminvalid/swarm-get-app-stats?name={APP_NAME}", 400)
+  test("Get service stats - invalid app name",           "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-stats?name=iaminvalid", 400)
+
+  print()
+  test("Get service info - success",                     "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-info?name={APP_NAME}", 200)
+  test("Get service info - invalid facility ID",         "GET", f"{BASE_URL}/iaminvalid/swarm-get-app-info?name={APP_NAME}", 400)
+  test("Get service info - invalid app name",            "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-info?name=iaminvalid", 400)
+  test("Get service info - no app name",                 "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-info", 400)
+
+  print()
+  test("Kill service - invalid facility ID",             "POST", f"{BASE_URL}/iaminvalid/swarm-kill-app?name={APP_NAME}", 400)
+  test("Kill service - invalid app name",                "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app?name=iaminvalid", 400)
+  test("Kill service - no app name",                     "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app", 400)
+  test("Kill service - success",                         "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app?name={APP_NAME}", 200)
   #startApp(APP_NAME)
 
   print()

@@ -19,7 +19,7 @@ def swarmGetAppInfo(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker inspect --type=container {app_id}")
+  completedProcess = internal_methods.subprocessRun(f"docker service inspect --format json {app_id}")
   if completedProcess.returncode != 0:
     # undefined error
     return flask.make_response("Failed to inspect app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
@@ -28,7 +28,7 @@ def swarmGetAppInfo(facility_id, app_name="", app_id="") -> flask.Response:
   # docker inspect returns a list of containers, so we must search for the one
   # with a matching app name
   for entry in output_list:
-    if entry["Name"].replace("/", "") == app_name:
+    if entry["Spec"]["Name"] == app_name:
       return flask.make_response(json.dumps(entry), 200)
 
   return flask.make_response("", 500)
