@@ -4,7 +4,7 @@ from . import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=True)
-@internal_methods.handleSwarmAppName
+@internal_methods.handleAppName
 def swarmKillApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Sends a command to docker to kill and remove the specified app

@@ -1,6 +1,5 @@
 import flask
 import subprocess
-import os
 import json
 
 
@@ -10,35 +9,17 @@ def getContainerID(app_name:str):
   Returns None if unsuccessful
   """
 
-  # executing system command
-  completedResponse = subprocessRun(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"")
-  if completedResponse.returncode != 0: return None
-  if completedResponse.stdout == b'': return None
+  # checking if its in swarm mode
+  completedProcess = subprocessRun("docker info --format json")
+  if json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active":
+    completedProcess = subprocessRun(f"docker service ls --filter name={app_name} --format \"{{{{.Name}}}} {{{{.ID}}}}\"")
+  else:
+    completedProcess = subprocessRun(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"")
+  if completedProcess.returncode != 0: return None
+  if completedProcess.stdout == b'': return None
 
   # make list of names and ids
-  nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n") if line != ""]
-
-  # check if app_name is in list
-  for name, id in nameList:
-    if name == app_name:
-      return id
-
-  return None
-
-
-def getServiceID(app_name:str):
-  """
-  this helper function that returns the id of the service matching the given name
-  Returns None if unsuccessful
-  """
-
-  # executing system command
-  completedResponse = subprocessRun(f"docker service ls --filter name={app_name} --format \"{{{{.Name}}}} {{{{.ID}}}}\"")
-  if completedResponse.returncode != 0: return None
-  if completedResponse.stdout == b'': return None
-
-  # make list of names and ids
-  nameList = [tuple(line.split()) for line in completedResponse.stdout.decode().split("\n") if line != ""]
+  nameList = [tuple(line.split()) for line in completedProcess.stdout.decode().split("\n") if line != ""]
 
   # check if app_name is in list
   for name, id in nameList:
@@ -118,6 +99,7 @@ def handleAppName(function):
     app_names = app_name.split(",")
 
     if len(app_names) == 1:
+      # non-batch calls
       app_id = getContainerID(app_name)
       if app_id == None:
         return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
@@ -126,7 +108,8 @@ def handleAppName(function):
       kwargs["app_id"] = app_id
 
       return function(*args, **kwargs)
-    else: # batch methods
+    else:
+      # handling batch calls 
       successes = 0
       total = 0
       for app_name in app_names:
@@ -142,54 +125,7 @@ def handleAppName(function):
         kwargs["app_name"] = app_name
         kwargs["app_id"] = app_id
 
-        response = function(*args, **kwargs)
-        if response.status_code == 200:
-          successes += 1
-
-      return flask.make_response(f"{successes}/{total} succeeded", 200 if successes == total else 400)
-
-  decoratorFunction.__name__ = function.__name__
-  return decoratorFunction
-
-
-def handleSwarmAppName(function):
-  """
-  this decorator verifies that the given function received an app name argument,
-  and that the container given is on the machine.
-  """
-  def decoratorFunction(*args, **kwargs):
-
-    app_name = flask.request.args.get("name")
-    if app_name == None:
-      return flask.make_response("No container name provided", 400)
-
-    app_names = app_name.split(",")
-
-    if len(app_names) == 1:
-      app_id = getServiceID(app_name)
-      if app_id == None:
-        return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
-
-      kwargs["app_name"] = app_name
-      kwargs["app_id"] = app_id
-
-      return function(*args, **kwargs)
-    else: # batch methods
-      successes = 0
-      total = 0
-      for app_name in app_names:
-        print("app:", app_name)
-        if app_name == "":
-          continue
-
-        total += 1
-        app_id = getServiceID(app_name)
-        if app_id == None:
-          continue
-
-        kwargs["app_name"] = app_name
-        kwargs["app_id"] = app_id
-
+        # running the functions
         response = function(*args, **kwargs)
         if response.status_code == 200:
           successes += 1
@@ -202,7 +138,7 @@ def handleSwarmAppName(function):
 
 def subprocessRun(cmd_str: str, capture_output=True, shell=True) -> subprocess.CompletedProcess:
   """
-  This wrapper function adds sudo in front of docker commands on unix systems
+  Wrapper for subprocess.run
   """
 
   return subprocess.run(cmd_str, capture_output=capture_output, shell=shell)
