@@ -1,4 +1,4 @@
-#from flask import Flask, request, Response
+import sys
 import flask
 import threading
 
@@ -160,12 +160,23 @@ from methods.swarmGetNodeInfo import swarmGetNodeInfo
 def swarmGetNodeInfoWrapper(facility_id) -> flask.Response:
   return swarmGetNodeInfo(facility_id)
 
-
+# main
 if __name__ == '__main__':
   print("\n\n\n")
 
   print("Starting logging thread")
   logThread = threading.Thread(target=logger.loggingThreadFunc, daemon=True)
   logThread.start()
-  print("Starting flask server")
-  app.run()
+
+  port = 5000 # default port
+  # getting port argument
+  for i in range(len(sys.argv)):
+    if (sys.argv[i] == "-p" or sys.argv[i] == "-port") and i + 1 < len(sys.argv):
+      try:
+        port = int(sys.argv[i + 1])
+      except ValueError:
+        pass
+      finally:
+        break
+  print(f"Starting flask server on port {port}")
+  app.run(port=port)
