@@ -32,7 +32,7 @@ def swarmCreateApp(facility_id) -> flask.Response:
   service_name = image_name + "--" + user_name
 
   # checking if container already exists
-  completedProcess = internal_methods.subprocessRun(f"docker service ls--format \"{{{{.Name}}}}\"")
+  completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Name}}}}\"")
   if service_name in completedProcess.stdout.decode().split("\n"):
     return flask.Response("App already exists", status=400)
 

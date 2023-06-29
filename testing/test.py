@@ -43,7 +43,7 @@ if __name__ == "__main__":
   IMAGE_NAME = "httpd" # <-- this should already be installed
   TEST_IMAGE = "hello-world" # <-- this one should not be installed
 
-  APP_NAME = f"{IMAGE_NAME}.{USER_NAME}"
+  APP_NAME = f"{IMAGE_NAME}--{USER_NAME}"
 
   def startApp(app_name): subprocess.run(f"docker start {app_name}", shell=True, capture_output=True)
   def killApp(app_name): subprocess.run(f"docker kill {app_name}", shell=True, capture_output=True)
