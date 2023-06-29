@@ -204,6 +204,5 @@ def subprocessRun(cmd_str: str, capture_output=True, shell=True) -> subprocess.C
   """
   This wrapper function adds sudo in front of docker commands on unix systems
   """
-  if not os.name == "nt":
-    cmd_str = "sudo " + cmd_str
+
   return subprocess.run(cmd_str, capture_output=capture_output, shell=shell)
