@@ -64,11 +64,12 @@ def verifyDockerEngine(swarm_method=None):
     """
     def decoratorFunction(*args, **kwargs):
 
-      completedProcess = subprocessRun("docker info --format json")
+      completedProcess = subprocessRun("docker ps")
       if completedProcess.returncode != 0:
         return flask.make_response("Docker daemon not responding", 500)
       
       # checking swarm mode
+      completedProcess = subprocessRun("docker info --format json")
       if swarm_method != None:
         if swarm_method == (json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active"):
           return function(*args, **kwargs)
