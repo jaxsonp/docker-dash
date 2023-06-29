@@ -15,7 +15,7 @@ def getAppNames(facility_id) -> flask.Response:
   """
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Names}}}}\"", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Names}}}}\"")
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

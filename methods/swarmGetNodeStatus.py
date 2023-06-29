@@ -17,7 +17,7 @@ def swarmGetNodeStatus(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # get list of node names
-  completedProcess = internal_methods.subprocessRun("docker node ls --format {{.Hostname}}", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun("docker node ls --format {{.Hostname}}")
   if completedProcess.returncode != 0:
       return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
   name_list = completedProcess.stdout.decode().strip().split("\n")
@@ -27,7 +27,7 @@ def swarmGetNodeStatus(facility_id, app_name="", app_id="") -> flask.Response:
   if hostname == None:
 
     # get all node statuses
-    completedProcess = internal_methods.subprocessRun(f"docker node ls --format json", shell=True, capture_output=True)
+    completedProcess = internal_methods.subprocessRun(f"docker node ls --format json")
     if completedProcess.returncode != 0:
       return flask.make_response(f"Failed to query apps\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

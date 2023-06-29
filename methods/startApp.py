@@ -16,12 +16,12 @@ def startApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
 
   # verify that app is not paused
-  completedProcess = internal_methods.subprocessRun(f"docker ps -a -f id={app_id} --format \"{{{{.State}}}}\"", capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker ps -a -f id={app_id} --format \"{{{{.State}}}}\"")
   if completedProcess.stdout.decode() == "paused\n":
     return flask.make_response("App is paused", 409)
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker start {app_id}", capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker start {app_id}")
   if completedProcess.returncode != 0:
     return flask.make_response("Failed to start app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

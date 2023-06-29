@@ -14,7 +14,7 @@ def swarmGetAppNames(facility_id) -> flask.Response:
   """
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Name}}}}\"", shell=True, capture_output=True)
+  completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Name}}}}\"")
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 

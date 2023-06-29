@@ -3,14 +3,14 @@ from colorama import Fore
 from datetime import datetime
 import subprocess
 
-totalTests = 0
-successfulTests = 0
+total_tests = 0
+successful_tests = 0
 
-def test(testname:str, method:str, url:str, expectedCode:int):
-  global totalTests, successfulTests
+def test(testname:str, method:str, url:str, expected_code:int):
+  global total_tests, successful_tests
 
-  startTime = datetime.now()
-  totalTests += 1
+  start_time = datetime.now()
+  total_tests += 1
   print(f"{'{:47.47}'.format(testname):}: ", end='')
   response = None
   if method == "GET":
@@ -21,13 +21,13 @@ def test(testname:str, method:str, url:str, expectedCode:int):
     print("test error")
     return False
 
-  duration = (datetime.now() - startTime).microseconds // 1000
-  if response.status_code == expectedCode:
+  duration = (datetime.now() - start_time).microseconds // 1000
+  if response.status_code == expected_code:
     print(f"{Fore.GREEN}SUCCESS {Fore.RESET}" + f"({duration}ms)".rjust(8))
-    successfulTests += 1
+    successful_tests += 1
     return True
   else:
-    print(f"{Fore.RED}FAIL     {Fore.RESET}({str(duration).rjust(3)}ms) - expected {expectedCode}, got {response.status_code}")
+    print(f"{Fore.RED}FAIL     {Fore.RESET}({str(duration).rjust(3)}ms) - expected {expected_code}, got {response.status_code}")
     print("-" * 60)
     print(response.text[:300])
     print("-" * 60)
@@ -52,7 +52,7 @@ if __name__ == "__main__":
   def deleteApp(app_name): subprocess.run(f"docker rm {app_name}", shell=True, capture_output=True)
 
   print("\nStarting testing...")
-  startTime = datetime.now()
+  start_time = datetime.now()
 
   print()
   test("Create app - success",                           "POST", f"{BASE_URL}/{FACILITY_ID}/create-app?image={IMAGE_NAME}&user={USER_NAME}", 200)
@@ -155,5 +155,5 @@ if __name__ == "__main__":
   test("Delete container - no app name",                 "POST", f"{BASE_URL}/{FACILITY_ID}/delete-app", 400)
   test("Delete container - success",                     "POST", f"{BASE_URL}/{FACILITY_ID}/delete-app?name={APP_NAME}", 200)
 
-  duration = datetime.now() - startTime
-  print(f"\n\nCompleted testing, {successfulTests}/{totalTests} tests successful (took {round(duration.total_seconds(), 2)} seconds)")
+  duration = datetime.now() - start_time
+  print(f"\n\nCompleted testing, {successful_tests}/{total_tests} tests successful (took {round(duration.total_seconds(), 2)} seconds)")
