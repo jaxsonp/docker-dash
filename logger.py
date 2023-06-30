@@ -67,7 +67,6 @@ def _getContainers() -> list:
     completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Name}}}}\"")
   else:
     completedProcess = internal_methods.subprocessRun(f"docker ps -a --format \"{{{{.Names}}}}\"")
-  print([s for s in completedProcess.stdout.decode().split("\n") if s])
   return [s for s in completedProcess.stdout.decode().split("\n") if s]
 
 

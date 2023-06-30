@@ -1,4 +1,5 @@
 import flask
+import json
 from methods import internal_methods
 
 @internal_methods.verifyFacilityID
@@ -31,10 +32,16 @@ def swarmCreateApp(facility_id) -> flask.Response:
 
   service_name = image_name + "--" + user_name
 
-  # checking if container already exists
+  # checking if service already exists
   completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Name}}}}\"")
   if service_name in completedProcess.stdout.decode().split("\n"):
-    return flask.Response("App already exists", status=400)
+    completedProcess = internal_methods.subprocessRun(f"docker service ps --format json {service_name}")
+    if "running" in json.loads(completedProcess.stdout.decode())["CurrentState"].lower():
+      return flask.Response("App already exists", status=400)
+    
+    # removing old service
+    internal_methods.subprocessRun(f"docker service rm {service_name}")
+
 
   # executing system command
   completedProcess = internal_methods.subprocessRun(f"docker service create --name \"{service_name}\" --detach --mode replicated-job {image_name}")
