@@ -48,7 +48,7 @@ if __name__ == "__main__":
   def startApp(app_name): subprocess.run(f"docker start {app_name}", shell=True, capture_output=True)
   def killApp(app_name): subprocess.run(f"docker kill {app_name}", shell=True, capture_output=True)
   def removeImage(image): subprocess.run(f"docker rmi {image}", shell=True, capture_output=True)
-  def createApp(image, user): subprocess.run(f"docker create --name {image}.{user} {image}", shell=True, capture_output=True)
+  def createApp(image, user): subprocess.run(f"docker create --name {image}--{user} {image}", shell=True, capture_output=True)
   def deleteApp(app_name): subprocess.run(f"docker rm {app_name}", shell=True, capture_output=True)
 
   print("\nStarting testing...")
@@ -75,7 +75,6 @@ if __name__ == "__main__":
   test("Batch stop container",                           "POST", f"{BASE_URL}/{FACILITY_ID}/stop-app?name={APP_NAME},{APP_NAME}2,{APP_NAME}3", 200)
   deleteApp(APP_NAME + "2")
   deleteApp(APP_NAME + "3")
-
 
   print()
   test("Stop container - success",                       "POST", f"{BASE_URL}/{FACILITY_ID}/stop-app?name={APP_NAME}", 200)

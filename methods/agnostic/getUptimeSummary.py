@@ -38,21 +38,28 @@ def getUptimeSummary(facility_id, app_name="", app_id="") -> flask.Response:
 
     with open(f"{logger.dir_path}/logs/{app_name}.log", "r") as log:
       for line in log.readlines():
-        timestamp = datetime.strptime(line.split(": ")[0], logger.format_str)
+        timestamp = datetime.strptime(line.split(": ")[0], logger.date_format_str)
         state = line.split(" ")[1]
+        
+        def updateOutput():
+          completedProcess = internal_methods.subprocessRun("docker info --format json")
+          if json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active":
+            output.update({timestamp.isoformat(): "running" in state.lower()})
+          else:
+            output.update({timestamp.isoformat(): state == "running"})
 
         if duration == "hour":
           if timestamp + timedelta(hours=1) > datetime.now():
-            output.update({timestamp.isoformat(): state == "running"})
+            updateOutput()
         elif duration == "day":
           if timestamp + timedelta(days=1) > datetime.now():
-            output.update({timestamp.isoformat(): state == "running"})
+            updateOutput()
         elif duration == "week":
           if timestamp + timedelta(days=7) > datetime.now():
-            output.update({timestamp.isoformat(): state == "running"})
+            updateOutput()
         elif duration == "month":
           if timestamp + timedelta(days=30) > datetime.now():
-            output.update({timestamp.isoformat(): state == "running"})
+            updateOutput()
 
     return flask.make_response(json.dumps(output), 200)
 
