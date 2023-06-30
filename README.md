@@ -45,7 +45,7 @@ Each method performs checks in the same order. First it checks if the facility I
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/start-app?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/start-app?name=[APP_NAME]
 
 ```
 
@@ -64,7 +64,7 @@ Starts the specified app using the `docker start` command. Trying to start an ap
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/stop-app?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/stop-app?name=[APP_NAME]
 
 ```
 
@@ -83,7 +83,7 @@ Signals for the specified app to exit using the `docker stop` command. If the co
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/pause-app?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/pause-app?name=[APP_NAME]
 
 ```
 
@@ -102,13 +102,13 @@ Pauses the specified app using the `docker pause` command. An app must be alread
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/unpause-app?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/unpause-app?name=[APP_NAME]
 
 ```
 
 ### Description:
 
-Unauses the specified app using the `docker unpause` command. An app must be paused, otherwise the api will return error.
+Unpauses the specified app using the `docker unpause` command. An app must be paused, otherwise the api will return error.
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -121,7 +121,7 @@ Unauses the specified app using the `docker unpause` command. An app must be pau
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/restart-app?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/restart-app?name=[APP_NAME]
 
 ```
 
@@ -140,7 +140,7 @@ Restarts the specified app using the `docker restart` command. This command beha
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
 
 ```
 
@@ -159,7 +159,7 @@ Kills the specified app by ending the relevant service, which removes all relate
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
+http://placeholder.url/[FACILITY_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
 
 ```
 
@@ -180,7 +180,7 @@ Creates an app instance using the image specified. The image must have already b
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/delete-app?name=[APP_NAME]
 
 ```
 
@@ -199,7 +199,7 @@ Deletes the specified app, removing ALL related data.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/hard-reset-app?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/hard-reset-app?name=[APP_NAME]
 
 ```
 
@@ -218,20 +218,20 @@ Resets the specified app, clearing ALL data and restoring it from the original i
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-app-names
+http://placeholder.url/[FACILITY_ID]/get-app-names
 
 ```
 
 ### Description:
 
-Returns an array of all existing apps on the specified DSRC, regardless of its status (e.g. running, exited)
+Returns an array of all existing apps on the specified SRC, regardless of its status (e.g. running, exited)
 
 `FACILITY_ID` - Facility-specific identifier
 
 ### Example Response:
 
 ``` json
-["jupyter-lab", "xterm"]
+["jupyter-lab--jaxsonp", "xterm--admin"]
 
 ```
 
@@ -242,13 +242,13 @@ Returns an array of all existing apps on the specified DSRC, regardless of its s
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-app-status?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/get-app-status?name=[APP_NAME]
 
 ```
 
 ### Description:
 
-Returns basic information and status, in json format. Under the hood, this method uses the `docker ps` commmand.
+Returns basic information and status, in json format. Under the hood, this method just returns the output of the `docker ps` commmand.
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -283,7 +283,7 @@ Returns basic information and status, in json format. Under the hood, this metho
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-app-stats?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/get-app-stats?name=[APP_NAME]
 
 ```
 
@@ -319,7 +319,7 @@ Returns hardware information in json format, using the `docker stats` commmand.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-app-info?name=[APP_NAME]
+http://placeholder.url/[FACILITY_ID]/get-app-info?name=[APP_NAME]
 
 ```
 
@@ -368,12 +368,12 @@ Returns detailed information of specified app, in json format. Under the hood, t
 
 ---
 
-# Get App Uptime Summary
+# Get Uptime Summary
 
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
+http://placeholder.url/[FACILITY_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
 
 ```
 
@@ -409,7 +409,7 @@ Returns timestamped log data representing uptime since the duration specified in
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/request-image?image=[IMAGE_NAME]
+http://placeholder.url/[FACILITY_ID]/request-image?image=[IMAGE_NAME]
 
 ```
 
@@ -428,13 +428,13 @@ Request an image to be pulled from docker hub.
 ### Usage:
 
 ```
-https://placeholder.url/[FACILITY_ID]/get-images
+http://placeholder.url/[FACILITY_ID]/get-images
 
 ```
 
 ### Description:
 
-Returns an array of all existing images on the specified DSRC. On top of the image information given by docker, another field called `CreatedContainerCount` will give the number of existing containers that were created from that image.
+Returns an array of all existing images on the specified SRC. On top of the image information given by docker, another field called `CreatedContainerCount` will give the number of existing containers that were created from that image.
 
 `FACILITY_ID` - Facility-specific identifier
 

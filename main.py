@@ -8,6 +8,13 @@ import logger
 app = flask.Flask(__name__)
 
 
+@app.route('/')
+@app.route('/<facility_id>/')
+def helper(facility_id) -> flask.Response:
+  with open("help_page.html", "r") as f:
+    return flask.make_response(f.read())
+
+
 from methods.startApp import startApp
 @app.route('/<facility_id>/start-app', methods=['POST'])
 def startAppWrapper(facility_id) -> flask.Response:
