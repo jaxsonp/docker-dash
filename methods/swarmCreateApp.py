@@ -37,7 +37,7 @@ def swarmCreateApp(facility_id) -> flask.Response:
     return flask.Response("App already exists", status=400)
 
   # executing system command
-  completedProcess = internal_methods.subprocessRun(f"docker service create --name \"{service_name}\" --detach {image_name}")
+  completedProcess = internal_methods.subprocessRun(f"docker service create --name \"{service_name}\" --detach --mode replicated-job {image_name}")
   if completedProcess.returncode != 0:
     # uncaught error
     return flask.make_response("Failed to create app:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
