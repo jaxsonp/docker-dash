@@ -1,0 +1,88 @@
+<< SRC Container API - Outline >>
+
+This is a very crude help page outlining of the endpoints this API provides. Thorough documentation of each endpoint can be found on Github at the link below.
+http://github.com/JaxsonP/src-container-api
+
+
+
+==== SOLO MODE METHODS =======================
+
+Start App - <POST> http://placeholder.url/[FACILITY_ID]/start-app?name=[APP_NAME]
+  Starts the specified app
+
+Pause App - <POST> http://placeholder.url/[FACILITY_ID]/pause-app?name=[APP_NAME]
+  Pauses the specified app. The app must be running in order to pause
+
+Unpause App - <POST> http://placeholder.url/[FACILITY_ID]/unpause-app?name=[APP_NAME]
+  Unpauses the specified app. The app must be paused in order to unpause
+
+Restart App - <POST> http://placeholder.url/[FACILITY_ID]/restart-app?name=[APP_NAME]
+  Restarts the specified app.
+
+Kill App - <POST> http://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
+  Forcefully kills the specified app.
+
+Create App - <POST> http://placeholder.url/[FACILITY_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
+  Creates an app using the specified image.
+
+Delete App - <POST> http://placeholder.url/[FACILITY_ID]/delete-app?name=[APP_NAME]
+  Deletes the specified app, removing its data.
+
+Hard Reset App - <POST> http://placeholder.url/[FACILITY_ID]/hard-reset-app?name=[APP_NAME]
+  Resets the specified app, removing its data.
+
+Get App Names - <GET> http://placeholder.url/[FACILITY_ID]/get-app-names
+  Returns an array of all apps on the specified SRC whether running or not.
+
+Get App Status - <GET> http://placeholder.url/[FACILITY_ID]/get-app-status?name=[APP_NAME]
+  Returns basic status information about an app.
+
+Get App Stats - <GET> http://placeholder.url/[FACILITY_ID]/get-app-stats?name=[APP_NAME]
+  Returns lower-level hardware information about an app.
+
+Get App Info - <GET> http://placeholder.url/[FACILITY_ID]/get-app-info?name=[APP_NAME]
+  Return more detailed information about an app.
+
+
+
+==== SWARM MODE METHODS =======================
+
+Swarm Create App - <POST> http://placeholder.url/[FACILITY_ID]/swarm-create-app?image=[IMAGE_NAME]&user=[USER_NAME]
+  Creates an app on a swarm network using the specified image.
+
+Swarm Kill App - <POST> http://placeholder.url/[FACILITY_ID]/swarm-kill-app?name=[APP_NAME]
+  Forcefully kills an app on a swarm network.
+
+Swarm Get App Names - <GET> http://placeholder.url/[FACILITY_ID]/swarm-get-app-names
+  Returns an array of all apps on the specified swarm-mode SRC whether running or not.
+
+Swarm Get App Status - <GET> http://placeholder.url/[FACILITY_ID]/swarm-get-app-status?name=[APP_NAME]
+  Returns basic status information about an app on a swarm network
+
+Swarm Get App Stats - <GET> http://placeholder.url/[FACILITY_ID]/swarm-get-app-status?name=[APP_NAME]
+  Returns lower-level hardware information about an app on a swarm network.
+
+Swarm Get App Info - <GET> http://placeholder.url/[FACILITY_ID]/swarm-get-app-status?name=[APP_NAME]
+  Returns more detailed information about an app on a swarm network.
+
+Swarm Get Node Names - <GET> http://placeholder.url/[FACILITY_ID]/swarm-get-node-names
+  Returns an array of the hostnames of the nodes in a swarm network.
+
+Swarm Get Node Status - <GET> http://placeholder.url/[FACILITY_ID]/swarm-get-node-status?hostname={{hostName}}
+  Returns basic status info about a node in a swarm network.
+
+Swarm Get Node Info - <GET> http://placeholder.url/[FACILITY_ID]/swarm-get-node-info?hostname={{hostName}}
+  Returns detailed lower-level info about a node in a swarm network.
+
+
+
+==== MODE-AGNOSTIC METHODS =======================
+
+Request Image - <POST> http://placeholder.url/[FACILITY_ID]/request-image?image=[IMAGE_NAME]
+  Requests an image to be "verified" and pulled from Docker Hub.
+
+Get Images - <GET> http://placeholder.url/[FACILITY_ID]/get-images
+  Returns an array of JSON objects representing all existing images on the specified SRC and their data.
+
+Get Uptime Summary - <GET> http://placeholder.url/[FACILITY_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
+  Returns log data about the uptime of an app, over the specified duration (hour, day, week, or month)

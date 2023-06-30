@@ -9,9 +9,9 @@ app = flask.Flask(__name__)
 
 
 @app.route('/')
-def helper(facility_id) -> flask.Response:
-  with open("help_page.html", "r") as f:
-    return flask.make_response(f.read())
+def helper() -> flask.Response:
+  with open("root_page.txt", "r") as f:
+    return flask.Response(f.read(), mimetype='text/plain')
 
 
 from methods.solo.startApp import startApp
