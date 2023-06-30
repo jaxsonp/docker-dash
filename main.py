@@ -9,7 +9,6 @@ app = flask.Flask(__name__)
 
 
 @app.route('/')
-@app.route('/<facility_id>/')
 def helper(facility_id) -> flask.Response:
   with open("help_page.html", "r") as f:
     return flask.make_response(f.read())
@@ -101,13 +100,13 @@ def getUptimeSummaryWrapper(facility_id) -> flask.Response:
 
 from methods.requestImage import requestImage
 @app.route('/<facility_id>/request-image', methods=['POST'])
-def requestImageWrapper(facility_id):
+def requestImageWrapper(facility_id) -> flask.Response:
   return requestImage(facility_id)
 
 
 from methods.getImages import getImages
 @app.route('/<facility_id>/get-images', methods=['GET'])
-def getImagesWrapper(facility_id):
+def getImagesWrapper(facility_id) -> flask.Response:
   return getImages(facility_id)
 
 
@@ -166,6 +165,8 @@ from methods.swarmGetNodeInfo import swarmGetNodeInfo
 @app.route('/<facility_id>/swarm-get-node-info', methods=['GET'])
 def swarmGetNodeInfoWrapper(facility_id) -> flask.Response:
   return swarmGetNodeInfo(facility_id)
+
+
 
 # main
 if __name__ == '__main__':
