@@ -23,11 +23,11 @@ def test(testname:str, method:str, url:str, expected_code:int):
 
   duration = (datetime.now() - start_time).microseconds // 1000
   if response.status_code == expected_code:
-    print(f"{Fore.GREEN}SUCCESS {Fore.RESET}" + f"({duration}ms)".rjust(8))
+    print(f"{Fore.GREEN}PASS {Fore.RESET}" + f"({duration}ms)".rjust(8))
     successful_tests += 1
     return True
   else:
-    print(f"{Fore.RED}FAIL     {Fore.RESET}({str(duration).rjust(3)}ms) - expected {expected_code}, got {response.status_code}")
+    print(f"{Fore.RED}FAIL {Fore.RESET}({str(duration).rjust(3)}ms) - expected {expected_code}, got {response.status_code}")
     print("-" * 60)
     print(response.text[:300])
     print("-" * 60)
@@ -42,14 +42,13 @@ if __name__ == "__main__":
   USER_NAME = "test"
   IMAGE_NAME = "httpd" # <-- this should already be installed
   TEST_IMAGE = "hello-world" # <-- this one should not be installed
+  NODE_NAME = "localhost.server2"
 
   APP_NAME = f"{IMAGE_NAME}--{USER_NAME}"
 
-  def startApp(app_name): subprocess.run(f"docker start {app_name}", shell=True, capture_output=True)
-  def killApp(app_name): subprocess.run(f"docker kill {app_name}", shell=True, capture_output=True)
   def removeImage(image): subprocess.run(f"docker rmi {image}", shell=True, capture_output=True)
-  def createApp(image, user): subprocess.run(f"docker create --name {image}.{user} {image}", shell=True, capture_output=True)
-  def deleteApp(app_name): subprocess.run(f"docker rm {app_name}", shell=True, capture_output=True)
+  def createApp(image, user): subprocess.run(f"docker service create --name {image}--{user} --mode replicated-job -d {image}", shell=True, capture_output=True)
+  def deleteApp(app_name): subprocess.run(f"docker service rm {app_name}", shell=True, capture_output=True)
 
   print("\nStarting swarm testing...")
   start_time = datetime.now()
@@ -61,6 +60,8 @@ if __name__ == "__main__":
   test("Create app - invalid image name",                "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-create-app?image=iaminvalid&user={USER_NAME}", 400)
   test("Create app - no image name",                     "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-create-app?user={USER_NAME}", 400)
   test("Create app - no user name",                      "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-create-app?image={IMAGE_NAME}", 400)
+  createApp(IMAGE_NAME, USER_NAME+"2")
+  createApp(IMAGE_NAME, USER_NAME+"3")
   
   print()
   test("Get app names - success",                        "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-names", 200)
@@ -77,6 +78,8 @@ if __name__ == "__main__":
   test("Get service stats - success (specific app)",     "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-stats?name={APP_NAME}", 200)
   test("Get service stats - invalid facility ID",        "GET", f"{BASE_URL}/iaminvalid/swarm-get-app-stats?name={APP_NAME}", 400)
   test("Get service stats - invalid app name",           "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-stats?name=iaminvalid", 400)
+  deleteApp(f"{IMAGE_NAME}--{USER_NAME}2")
+  deleteApp(f"{IMAGE_NAME}--{USER_NAME}3")
 
   print()
   test("Get service info - success",                     "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-app-info?name={APP_NAME}", 200)
@@ -89,8 +92,23 @@ if __name__ == "__main__":
   test("Kill service - invalid app name",                "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app?name=iaminvalid", 400)
   test("Kill service - no app name",                     "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app", 400)
   test("Kill service - success",                         "POST", f"{BASE_URL}/{FACILITY_ID}/swarm-kill-app?name={APP_NAME}", 200)
-  #startApp(APP_NAME)
 
+  print()
+  test("Get node names - success",                       "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-node-names", 200)
+  test("Get node names - invalid facility ID",           "GET", f"{BASE_URL}/iaminvalid/swarm-get-node-names", 400)
+
+  print()
+  test("Get node status - success",                      "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-node-status", 200)
+  test("Get node status - success (specific node)",      "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-node-status?hostname={NODE_NAME}", 200)
+  test("Get node status - invalid facility ID",          "GET", f"{BASE_URL}/iaminvalid/swarm-get-node-status?hostname={NODE_NAME}", 400)
+  test("Get node status - invalid app name",             "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-node-status?hostname=iaminvalid", 400)
+
+  print()
+  test("Get node info - success",                        "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-node-info?hostname={NODE_NAME}", 200)
+  test("Get node info - invalid facility ID",            "GET", f"{BASE_URL}/iaminvalid/swarm-get-node-info?hostname={NODE_NAME}", 400)
+  test("Get node info - invalid app name",               "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-node-info?hostname=iaminvalid", 400)
+  test("Get node info - no app name",                    "GET", f"{BASE_URL}/{FACILITY_ID}/swarm-get-node-info", 400)
+  
   print()
   test("Request Image - success",                        "POST", f"{BASE_URL}/{FACILITY_ID}/request-image?image={TEST_IMAGE}", 200)
   test("Request Image - invalid facility ID",            "POST", f"{BASE_URL}/iaminvalid/request-image?image={TEST_IMAGE}", 400)

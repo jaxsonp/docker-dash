@@ -23,11 +23,11 @@ def test(testname:str, method:str, url:str, expected_code:int):
 
   duration = (datetime.now() - start_time).microseconds // 1000
   if response.status_code == expected_code:
-    print(f"{Fore.GREEN}SUCCESS {Fore.RESET}" + f"({duration}ms)".rjust(8))
+    print(f"{Fore.GREEN}PASS {Fore.RESET}" + f"({duration}ms)".rjust(8))
     successful_tests += 1
     return True
   else:
-    print(f"{Fore.RED}FAIL     {Fore.RESET}({str(duration).rjust(3)}ms) - expected {expected_code}, got {response.status_code}")
+    print(f"{Fore.RED}FAIL {Fore.RESET}({str(duration).rjust(3)}ms) - expected {expected_code}, got {response.status_code}")
     print("-" * 60)
     print(response.text[:300])
     print("-" * 60)
