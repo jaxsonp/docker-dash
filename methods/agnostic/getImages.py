@@ -1,7 +1,7 @@
 from collections import Counter
 import json
 import flask
-from . import internal_methods
+from methods import internal_methods
 
 
 @internal_methods.verifyFacilityID

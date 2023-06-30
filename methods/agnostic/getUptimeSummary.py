@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import flask
 
 
-from . import internal_methods
+from methods import internal_methods
 import logger
 
 

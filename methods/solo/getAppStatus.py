@@ -1,7 +1,7 @@
 import subprocess
 import json
 import flask
-from . import internal_methods
+from methods import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=False)
