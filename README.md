@@ -2,6 +2,8 @@
 
 This API can be used to manage apps running as Docker containers on SRC (supercomputing research center) servers. Functionality includes creating, running, and killing apps, as well as getting an app's status, resource usage, and uptime logs. This API also supports Docker in swarm mode, which runs on a cluster of servers that shares tasks with automatic load balancing. This API was created for demo purposes, so it is not intended to run on systems where security is paramount.
 
+This is a comprehensive guide of the entire API but a quick plaintext outline of all endpoints can be found at the base url.
+
 ## Table of Contents:
 
 1. [General Notes](#general-notes)
