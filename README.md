@@ -1,45 +1,134 @@
 # SRC Container API
 
-This API can be used to control and access information about apps running as Docker containers on SRC (supercomputing research center) servers. Each method uses the app name to specify the container, so this name should match the container name exactly. Names should also follow the naming convention in order to work properly with Docker.
+This API can be used to manage apps running as Docker containers on SRC (supercomputing research center) servers. Functionality includes creating, running, and killing apps, as well as getting an app's status, resource usage, and uptime logs. This API also supports Docker in swarm mode, which runs on a cluster of servers that shares tasks with automatic load balancing. This API was created for demo purposes, so it is not intended to run on systems where security is paramount.
 
-_Note: The words 'app' and 'container' both refer to the Docker container that the app is running on._
+## Table of Contents:
 
----
+1. [General Notes](#general-notes)
+1. [Setup Guide](#setup-guide)
+1. [API Endpoints (usage and examples)](#api-endpoints)
 
-## General notes
+</br>
+</br>
+
+# General notes
 
 ### Naming Conventions
 
-When an app is created, the image and user name are provided, then the container is made with the name `"[IMAGE_NAME]--[USER_NAME]"`. All subsequent references to this container will use this name.
+When an app is created, the image and user name are provided, then the Docker container is made with the name `"[IMAGE_NAME]--[USER_NAME]"`. All subsequent references to this container will use this name.
 
-Usernames and image names can include uppercase and lowercase letters and numbers, as well as dashes, underscores and periods. However, usernames cannot have double dashes, nor can they start with a dash because a double dash is used to deliminate the username from the image name in the container naming convention. Image names in docker hub are already unique, but user names must be unique as well.
+Usernames and image names can include uppercase and lowercase letters and numbers, as well as dashes, underscores. However, usernames cannot have double dashes, nor can they start with a dash because a double dash is used to deliminate the username from the image name in the container naming convention. Image names in docker hub are already unique, but user names must be unique as well.
 
 ### Facility ID
 
-Each facility will be identified by a unique key in order to specify which SRC to interface with. For demo purposes, this API only responds to a placeholder facility with the ID "demo", however in production this is how you would specify your specific dsrc.
+Each facility will be identified by a unique key in order to specify which SRC to interface with. For demo purposes, this API only responds to a placeholder facility with the ID "demo", however in production this is how you would specify your specific SRC.
 
-### Solo mode vs Swarm mode
+### Solo Mode vs Swarm Mode
 
-This API has methods for working with a standard docker setup as well as as docker's swarm mode. Swarm mode is a way to load balance apps across multiple servers, where one manager node delegates tasks amongst itself and its worker nodes. Solo mode is the term used for docker's standard functionality, with just one node hosting containers. There are many key differences between these two modes:
+This API has methods for working with a standard docker setup as well as as docker's swarm mode. Swarm mode is a way to load balance apps across a cluster of servers, where one manager node delegates tasks amongst itself and its worker nodes. You can read more about Docker swarm mode [here](#https://docs.docker.com/engine/swarm/key-concepts/). Solo mode is the term used for docker's standard functionality, with just one node hosting containers. Because swarm mode uses services instead of standard containers, there are many key differences between these two modes:
 
 | | Solo mode | Swarm mode |
 |:-|:-|:-|
 | Starting/stopping/restarting | Yes | No |
 | Pausing/unpausing | Yes | No |
+| Created apps are started | Manually | Upon creation |
 | Persistent state after completion | Yes | No |
-| Supports creation without running | Yes | No |
 
 *Note: The word "container" is generally associated with solo mode, and the word "service" is generally associated with swarm mode, however both are interchangeable with the word "app"*
 
 ### Get Request Output
 
-Most (if not all) GET methods this API provides will just return data from a corresponding docker command. If you want more information about a method or what it returns, check out the [docker documentation](https://docs.docker.com/engine/reference/commandline/cli/) about that command for a more direct explanation.
+Most GET methods this API provides return data from a corresponding docker command. If you want more information about a method or what it returns, check out the [docker documentation](https://docs.docker.com/engine/reference/commandline/cli/) about that command for a more direct explanation.
 
-### Error Handling
+</br>
+</br>
 
-Each method performs checks in the same order. First it checks if the facility ID was provided and is valid. Next, it checks if the docker engine is online by running a `docker ps` command. Finally it checks if an app name was provided and if it exists, and if so, starts with the actual job.
+# Setup Guide:
 
----
+## Prerequisites:
+
+- Docker installed and running
+- Python 3.9+ installed
+- This repository is cloned 
+
+## For Solo Mode:
+
+### 1. Allow Docker as Non-Root User
+
+If you are running this API as root user, skip this step.  
+In order to run docker commands without having to use 'sudo', you must add your user to the docker group. Run this command:
+```
+sudo usermod -aG docker $USER
+```
+Then you must restart the system. You can use:
+```
+sudo shutdown -r 0
+```
+
+### 2. Install Required Modules
+
+Install all Python modules listed in `requirements.txt`. All modules can be installed at once with the command:
+```
+pip install -r "requirements.txt"
+```
+_Note: All module versions must match exactly_
+
+### 3. Start the API
+
+Start the API by running the `main.py` script. You can use the optional flags `-p` or `-port` to specify a port to use (default is 5000). This will start the flask server at `http://127.0.0.1:5000` (or whichever port was specified).
+
+## For Swarm Mode:
+
+### 1. Allow Docker as Non-Root User
+
+If you are running this API as root user on all nodes, skip this step.  
+In order to run docker commands without having to use 'sudo', you must add your user to the docker group. Run this command **on each machine** that you will add to the swarm:
+```
+sudo usermod -aG docker $USER
+```
+Then you must restart each system. You can use:
+```
+sudo shutdown -r 0
+```
+
+### 2. Set up a Docker Swarm
+
+Follow [these](https://docs.docker.com/engine/swarm/swarm-tutorial/) instructions to set up a Docker swarm.
+
+_Note: This API only supports one manager node_
+
+### 3. Configure SSH
+
+This step is not required to run the API, but the 'swarmGetAppStats' method will not work without it.  
+First, the manager node must be authorized to ssh into the worker nodes without a password. On the manager node, generate a new ssh key:
+```
+ssh-keygen
+```
+When prompted, use the default path (highly recommended), and leave the passphrase empty.  
+Now for each worker node, copy the public ssh key:
+```
+ssh-copy-id [NODE_USERNAME]@[NODE_IP_ADDRESS]
+```
+Enter each user's password when prompted for each node. Now the manager node should not be asked for a password when ssh'ing into a worker node.  
+Next, each worker node's username must be added as a Docker label. This is so that the manager node knows which username to ssh with. Run this command on each worker node:
+```
+docker node update --label-add username=[NODE_USERNAME] [NODE_HOSTNAME]
+```
+
+### 4. Install Required Modules
+
+Install all Python modules listed in `requirements.txt` on the manager node. All modules can be installed at once with the command:
+```
+pip install -r "requirements.txt"
+```
+_Note: All module versions must match exactly_
+
+### 5. Start the API
+
+Start the API on the manager node by running the `main.py` script. You can use the optional flags `-p` or `-port` to specify a port to use (default is 5000). This will start the flask server at `http://127.0.0.1:5000` (or whichever port was specified).
+
+</br>
+</br>
 
 # API Endpoints:
 
@@ -62,23 +151,25 @@ Each method performs checks in the same order. First it checks if the facility I
 ### Swarm mode methods:
 
 14. [Swarm Create App](#swarm-create-app)
-6. [Swarm Kill App](#swarm-kill-app)
-7. [Swarm Get App Names](#swarm-get-app-names)
-7. [Swarm Get App Status](#swarm-get-app-status)
-7. [Swarm Get App Stats](#swarm-get-app-stats)
-7. [Swarm Get App Info](#swarm-get-app-info)
-7. [Swarm Get Node Names](#swarm-get-app-names)
-7. [Swarm Get Node Status](#swarm-get-app-status)
-7. [Swarm Get Node Info](#swarm-get-app-info)
+15. [Swarm Kill App](#swarm-kill-app)
+16. [Swarm Get App Names](#swarm-get-app-names)
+17. [Swarm Get App Status](#swarm-get-app-status)
+18. [Swarm Get App Stats](#swarm-get-app-stats)
+19. [Swarm Get App Info](#swarm-get-app-info)
+20. [Swarm Get Node Names](#swarm-get-app-names)
+21. [Swarm Get Node Status](#swarm-get-app-status)
+22. [Swarm Get Node Info](#swarm-get-app-info)
 
 ### Mode-agnostic methods:
 
 23. [Get App Uptime Summary](#get-app-uptime-summary)
-15. [Request Image](#request-image)
-16. [Get Images](#get-images)
+24. [Request Image](#request-image)
+25. [Get Images](#get-images)
 
 
----
+
+</br>
+
 # Solo methods
 
 ## Start App
@@ -97,7 +188,7 @@ Starts the specified app using the `docker start` command. Trying to start an ap
 
 `APP_NAME` - Name of app to start, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Stop App
 
@@ -115,7 +206,7 @@ Signals for the specified app to exit using the `docker stop` command. If the co
 
 `APP_NAME` - Name of app to stop, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Pause App
 
@@ -133,7 +224,7 @@ Pauses the specified app using the `docker pause` command. An app must be alread
 
 `APP_NAME` - Name of app to pause, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Unpause App
 
@@ -151,7 +242,7 @@ Unpauses the specified app using the `docker unpause` command. An app must be pa
 
 `APP_NAME` - Name of app to unpause, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Restart App
 
@@ -169,7 +260,7 @@ Restarts the specified app using the `docker restart` command. This command beha
 
 `APP_NAME` - Name of app to restart, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Kill App
 
@@ -181,13 +272,13 @@ Restarts the specified app using the `docker restart` command. This command beha
 
 ### Description:
 
-Kills the specified app by forcefully stopping the container. Not as graceful as the [Stop App](#stop-app) method, and therefore not recommended.
+Kills the specified app by forcefully stopping the container with a `SIGKILL` signal. Not as graceful as the [Stop App](#stop-app) method, and therefore not recommended.
 
 `FACILITY_ID` - Facility-specific identifier
 
 `APP_NAME` - Name of app to kill, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Create App
 
@@ -199,7 +290,7 @@ Kills the specified app by forcefully stopping the container. Not as graceful as
 
 ### Description:
 
-Creates an app instance using the image specified. The image must have already been requested and approved in order to be used to create an app.
+Creates an app instance using the image specified. Once created, the container will be called '`IMAGE_NAME`--`USER_NAME`'. The image must have already been requested and approved in order to be used to create an app.
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -207,7 +298,7 @@ Creates an app instance using the image specified. The image must have already b
 
 `USER_NAME` - Name of the user who is using the app
 
----
+</br>
 
 # Delete App
 
@@ -223,9 +314,9 @@ Deletes the specified app, removing ALL related data.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to delete
+`APP_NAME` - Name of app to delete, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Hard Reset App
 
@@ -241,9 +332,9 @@ Resets the specified app, clearing ALL data and restoring it from the original i
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` - Name of app to reset
+`APP_NAME` - Name of app to reset, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Get App Names
 
@@ -255,7 +346,7 @@ Resets the specified app, clearing ALL data and restoring it from the original i
 
 ### Description:
 
-Returns an array of all existing apps on the specified SRC, regardless of its status (e.g. running, exited)
+Returns an array of all existing apps on the specified SRC, regardless of its state (e.g. running, exited).
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -264,7 +355,7 @@ Returns an array of all existing apps on the specified SRC, regardless of its st
 ["jupyter-lab--john", "xterm--admin", "httpd--sarah"]
 ```
 
----
+</br>
 
 ## Get App Status
 
@@ -276,11 +367,11 @@ Returns an array of all existing apps on the specified SRC, regardless of its st
 
 ### Description:
 
-Returns basic information and status, in json format. Under the hood, this method just returns the output of the `docker ps` commmand.
+Returns basic information and status, in json format. This method returns the output of the `docker ps` commmand.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` **(Optional)**: Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
+`APP_NAME` _(optional)_ : Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
 
 ### Example Response:
 ``` json
@@ -302,7 +393,7 @@ Returns basic information and status, in json format. Under the hood, this metho
 }
 ```
 
----
+</br>
 
 ## Get App Stats
 
@@ -314,11 +405,11 @@ Returns basic information and status, in json format. Under the hood, this metho
 
 ### Description:
 
-Returns hardware information in json format, using the `docker stats` commmand.
+Returns app resource information in json format, using the `docker stats` commmand.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` **(Optional)**: Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
+`APP_NAME` _(optional)_ : Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps' information.
 
 ### Example Response:
 ``` json
@@ -335,7 +426,7 @@ Returns hardware information in json format, using the `docker stats` commmand.
 }
 ```
 
----
+</br>
 
 ## Get App Info
 
@@ -347,7 +438,7 @@ Returns hardware information in json format, using the `docker stats` commmand.
 
 ### Description:
 
-Returns detailed information of specified app, in json format. Under the hood, this method uses the `docker inspect` commmand, it will return identical data.
+Returns detailed information of specified app, in json format. This method uses the `docker inspect` commmand, it will return identical data.
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -386,6 +477,8 @@ Returns detailed information of specified app, in json format. Under the hood, t
 ... continues for >100 lines ...
 ```
 
+</br>
+
 # Swarm mode methods
 
 ## Swarm Create App
@@ -398,7 +491,7 @@ Returns detailed information of specified app, in json format. Under the hood, t
 
 ### Description:
 
-Creates an app instance using the image specified. The image must have already been requested and approved in order to be used to create an app.
+Creates an app instance using the image specified. Because of the way services work, the app runs immediately after creation. If the app already exists and is completed or shutdown, it will be removed and created again. If the app already exists and is currently running, the API will return an error. The image must have already been requested and approved in order to be used to create an app. 
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -406,7 +499,7 @@ Creates an app instance using the image specified. The image must have already b
 
 `USER_NAME` - Name of the user who is using the app
 
----
+</br>
 
 ## Swarm Kill App
 
@@ -418,13 +511,13 @@ Creates an app instance using the image specified. The image must have already b
 
 ### Description:
 
-Kills the specified app by ending the relevant service, which removes all related data. Therefore, this method can be thought of as both killing and deleting.
+Kills the specified app by ending the relevant service, which removes all related data. Keep in mind that when an app completes normally, it will still exist, just in a complete state. This command will stop and completely delete the app.
 
 `FACILITY_ID` - Facility-specific identifier
 
 `APP_NAME` - Name of app to kill, following the [naming conventions](#naming-conventions).
 
----
+</br>
 
 ## Swarm Get App Names
 
@@ -436,7 +529,7 @@ Kills the specified app by ending the relevant service, which removes all relate
 
 ### Description:
 
-Returns an array of all existing apps on the swarm network, regardless of its status (e.g. running, finished)
+Returns an array of all existing apps on the swarm network, regardless of its status (e.g. running, completed).
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -445,7 +538,7 @@ Returns an array of all existing apps on the swarm network, regardless of its st
 ["jupyter-lab--john", "xterm--admin", "httpd--sarah"]
 ```
 
----
+</br>
 
 ## Swarm Get App Status
 
@@ -457,11 +550,11 @@ Returns an array of all existing apps on the swarm network, regardless of its st
 
 ### Description:
 
-Returns basic information and status, in json format. Under the hood, this method just returns the output of the `docker ps` commmand.
+Returns basic information and status, in json format. Under the hood, this method returns the output of the `docker ps` commmand.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` **(Optional)**: Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
+`APP_NAME` _(optional)_ : Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
 
 ### Example Response:
 ``` json
@@ -475,7 +568,7 @@ Returns basic information and status, in json format. Under the hood, this metho
 }
 ```
 
----
+</br>
 
 ## Swarm Get App Stats
 
@@ -487,11 +580,11 @@ Returns basic information and status, in json format. Under the hood, this metho
 
 ### Description:
 
-Returns hardware information in json format, using the `docker stats` commmand. 
+Returns app resource information in json format, using the `docker stats` commmand. `docker stats` only shows information about containers, so the API looks at the container that was spawned from the specified service. `docker stats` also only shows containers running on the local machine, so the manager node uses ssh to run the command on the worker nodes and obtain its container stats. This method only works if ssh and labels were configured correctly (see [Swarm Setup Step 3](#3-configure-ssh)).
 
 `FACILITY_ID` - Facility-specific identifier
 
-`APP_NAME` **(Optional)**: Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
+`APP_NAME` _(optional)_ : Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
 
 ### Example Response:
 ``` json
@@ -508,7 +601,7 @@ Returns hardware information in json format, using the `docker stats` commmand.
 }
 ```
 
----
+</br>
 
 ## Swarm Get App Info
 
@@ -520,7 +613,7 @@ Returns hardware information in json format, using the `docker stats` commmand.
 
 ### Description:
 
-Returns detailed information of specified app, in json format. Under the hood, this method uses the `docker inspect` commmand, it will return identical data.
+Returns detailed information of specified app, in json format. Under the hood, this method returns the ouput of the `docker service inspect` commmand.
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -564,7 +657,7 @@ Returns detailed information of specified app, in json format. Under the hood, t
 ... continues for >70 lines ...
 ```
 
----
+</br>
 
 ## Swarm Get Node Names
 
@@ -576,7 +669,7 @@ Returns detailed information of specified app, in json format. Under the hood, t
 
 ### Description:
 
-Returns an array of the hostnames of all nodes in the swarm network.
+Returns an array of the hostnames of all nodes in the swarm.
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -585,7 +678,7 @@ Returns an array of the hostnames of all nodes in the swarm network.
 ["localhost.server1", "localhost.server2", "localhost.server3"]
 ```
 
----
+</br>
 
 ## Swarm Get Node Status
 
@@ -597,18 +690,27 @@ Returns an array of the hostnames of all nodes in the swarm network.
 
 ### Description:
 
-Returns basic status info about a specific node in a swarm network, in json format. Under the hood, this method just returns the output of the `docker service ls` commmand.
+Returns basic status info about nodes in a swarm network, in json format. Under the hood, this method returns the output of `docker node ls`.
 
 `FACILITY_ID` - Facility-specific identifier
 
-`HOSTNAME` - Hostname of the node to query
+`HOSTNAME` _(optional)_ - Hostname of the node to query. If omitted, will return a list of all nodes and their statuses.
 
 ### Example Response:
 ``` json
-["localhost.server1", "localhost.server2", "localhost.server3"]
+{
+   "Availability":"Active",
+   "EngineVersion":"24.0.2",
+   "Hostname":"localhost.server2",
+   "ID":"wp2k6b0ynftjhgj4simuge5a4",
+   "ManagerStatus":"",
+   "Self":false,
+   "Status":"Ready",
+   "TLSStatus":"Ready"
+}
 ```
 
----
+</br>
 
 ## Swarm Get Node Info
 
@@ -667,7 +769,7 @@ Returns detailed information of a specific node in the swarm network, in json fo
 ... continues for >70 lines ...
 ```
 
----
+</br>
 
 # Mode-agnostic methods
 
@@ -702,7 +804,7 @@ Returns timestamped log data representing uptime since the duration specified in
 }
 ```
 
----
+</br>
 
 ## Request Image
 
@@ -720,7 +822,7 @@ Request an image to be pulled from docker hub.
 
 `IMAGE_NAME` - Name of requested image
 
----
+</br>
 
 ## Get Images
 

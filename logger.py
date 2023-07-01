@@ -32,8 +32,8 @@ def loggingThreadFunc() -> None:
       completedProcess = internal_methods.subprocessRun("docker info --format json")
       if json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active":
         # swarm mode
-        completedProcess = internal_methods.subprocessRun(f"docker service ps {container} --format json")
-        info = json.loads(completedProcess.stdout.decode())
+        completedProcess = internal_methods.subprocessRun(f"docker service ps -f desired-state=complete --format json {container}")
+        info = json.loads(completedProcess.stdout.decode().split("\n")[0])
         if info == {}:
           continue
         log_str = info['CurrentState']
