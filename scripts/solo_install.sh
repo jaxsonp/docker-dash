@@ -1,5 +1,7 @@
 #!/bin/bash
 
+echo -e "\nStarting install..."
+
 # checking if dir exists
 if [ -d "src-container-api/" ]; then
   # prompting yes or no for overwrite
