@@ -12,7 +12,7 @@ echo done
 echo -n "Extracting... "
 rm -rf src-container-api/
 mkdir src-container-api/
-tar -sxf ./src-container-api.tar -C ./src-container-api/ --strip-components=1
+tar -sxf ./src-container-api.tar -C ./src-container-api/ --strip-components=1 > /dev/null
 rm src-container-api.tar
 echo done
 
