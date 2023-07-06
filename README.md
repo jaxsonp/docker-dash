@@ -47,6 +47,10 @@ Most GET methods this API provides return data from a corresponding docker comma
 
 # Setup Guide:
 
+```
+sudo bash < <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/install.sh)
+```
+
 ## Prerequisites:
 
 - Docker installed and running
