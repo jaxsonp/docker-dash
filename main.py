@@ -1,6 +1,8 @@
 import sys
 import flask
 import threading
+from colorama import Fore, Style
+from methods import internal_methods
 
 import logger
 
@@ -172,7 +174,7 @@ def swarmGetNodeInfoWrapper(facility_id) -> flask.Response:
 if __name__ == '__main__':
   print("\n\n\n")
 
-  print("Starting logging thread")
+  print(" * Starting logging thread")
   logThread = threading.Thread(target=logger.loggingThreadFunc, daemon=True)
   logThread.start()
 
@@ -186,5 +188,9 @@ if __name__ == '__main__':
         pass
       finally:
         break
-  print(f"Starting flask server on port {port}")
+
+  completedProcess = internal_methods.subprocessRun("docker ps")
+  if completedProcess.returncode != 0:
+    print(Style.BRIGHT + Fore.RED + "WARNING: Docker does not appear to be running " + Style.RESET_ALL)
+
   app.run(port=port)

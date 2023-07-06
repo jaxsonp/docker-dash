@@ -25,36 +25,39 @@ def loggingThreadFunc() -> None:
     os.makedirs(f'{dir_path}/logs')
 
   while True:
-    for container in _getContainers():
+    # check that docker is running, only log if yes
+    completedProcess = internal_methods.subprocessRun("docker ps")
+    if completedProcess.returncode == 0:
+      for container in _getContainers():
 
-      # checking if its in swarm mode
-      log_str = ""
-      completedProcess = internal_methods.subprocessRun("docker info --format json")
-      if json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active":
-        # swarm mode
-        completedProcess = internal_methods.subprocessRun(f"docker service ps -f desired-state=complete --format json {container}")
-        info = json.loads(completedProcess.stdout.decode().split("\n")[0])
-        if info == {}:
-          continue
-        log_str = info['CurrentState']
-      else:
-        # solo mode
-        completedProcess = internal_methods.subprocessRun(f"docker ps -a -f name={container} --format json")
-        info = json.loads(completedProcess.stdout.decode().split("\n")[0])
-        if info == {}:
-          continue
-        log_str = f"{info['State']} [{info['Status']}]"
+        # checking if its in swarm mode
+        log_str = ""
+        completedProcess = internal_methods.subprocessRun("docker info --format json")
+        if json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active":
+          # swarm mode
+          completedProcess = internal_methods.subprocessRun(f"docker service ps -f desired-state=complete --format json {container}")
+          info = json.loads(completedProcess.stdout.decode().split("\n")[0])
+          if info == {}:
+            continue
+          log_str = info['CurrentState']
+        else:
+          # solo mode
+          completedProcess = internal_methods.subprocessRun(f"docker ps -a -f name={container} --format json")
+          info = json.loads(completedProcess.stdout.decode().split("\n")[0])
+          if info == {}:
+            continue
+          log_str = f"{info['State']} [{info['Status']}]"
 
-      # logging file setup
-      logger = logging.getLogger(container)
-      logger.setLevel(logging.INFO)
+        # logging file setup
+        logger = logging.getLogger(container)
+        logger.setLevel(logging.INFO)
 
-      fileHandler = logging.FileHandler(f"{dir_path}/logs/{container}.log", mode='a')
-      fileHandler.setFormatter(formatter)
-      logger.addHandler(fileHandler)
-      logger.info(log_str)
+        fileHandler = logging.FileHandler(f"{dir_path}/logs/{container}.log", mode='a')
+        fileHandler.setFormatter(formatter)
+        logger.addHandler(fileHandler)
+        logger.info(log_str)
 
-      logger.removeHandler(fileHandler)
+        logger.removeHandler(fileHandler)
 
     time.sleep(600)
 
