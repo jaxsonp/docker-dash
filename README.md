@@ -47,91 +47,26 @@ Most GET methods this API provides return data from a corresponding docker comma
 
 # Setup Guide:
 
-```
-sudo bash < <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/install.sh)
-```
-
 ## Prerequisites:
 
-- Docker installed and running
-- Python 3.9+ installed
-- This repository is cloned 
+- CentOS 7
+- Internet connection
 
 ## For Solo Mode:
 
-### 1. Allow Docker as Non-Root User
-
-If you are running this API as root user, skip this step.  
-In order to run docker commands without having to use 'sudo', you must add your user to the docker group. Run this command:
+Run this command (you may be asked for sudo password):
 ```
-sudo usermod -aG docker $USER
+bash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/install.sh)
 ```
-Then you must restart the system. You can use:
+This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, then you can start the server with:
 ```
-sudo shutdown -r 0
+venv/bin/python main.py
 ```
-
-### 2. Install Required Modules
-
-Install all Python modules listed in `requirements.txt`. All modules can be installed at once with the command:
-```
-pip install -r "requirements.txt"
-```
-_Note: All module versions must match exactly_
-
-### 3. Start the API
-
-Start the API by running the `main.py` script. You can use the optional flags `-p` or `-port` to specify a port to use (default is 5000). This will start the flask server at `http://127.0.0.1:5000` (or whichever port was specified).
+*Note: In order to run main.py, you must either explicitly use venv/bin/python (like shown) or manually activate the virtual environment with `source venv/bin/activate` (deactivate with `deactivate`).*
 
 ## For Swarm Mode:
 
-### 1. Allow Docker as Non-Root User
-
-If you are running this API as root user on all nodes, skip this step.  
-In order to run docker commands without having to use 'sudo', you must add your user to the docker group. Run this command **on each machine** that you will add to the swarm:
-```
-sudo usermod -aG docker $USER
-```
-Then you must restart each system. You can use:
-```
-sudo shutdown -r 0
-```
-
-### 2. Set up a Docker Swarm
-
-Follow [these](https://docs.docker.com/engine/swarm/swarm-tutorial/) instructions to set up a Docker swarm.
-
-_Note: This API only supports one manager node_
-
-### 3. Configure SSH
-
-This step is not required to run the API, but the 'swarmGetAppStats' method will not work without it.  
-First, the manager node must be authorized to ssh into the worker nodes without a password. On the manager node, generate a new ssh key:
-```
-ssh-keygen
-```
-When prompted, use the default path (highly recommended), and leave the passphrase empty.  
-Now for each worker node, copy the public ssh key:
-```
-ssh-copy-id [NODE_USERNAME]@[NODE_IP_ADDRESS]
-```
-Enter each user's password when prompted for each node. Now the manager node should not be asked for a password when ssh'ing into a worker node.  
-Next, each worker node's username must be added as a Docker label. This is so that the manager node knows which username to ssh with. Run this command on each worker node:
-```
-docker node update --label-add username=[NODE_USERNAME] [NODE_HOSTNAME]
-```
-
-### 4. Install Required Modules
-
-Install all Python modules listed in `requirements.txt` on the manager node. All modules can be installed at once with the command:
-```
-pip install -r "requirements.txt"
-```
-_Note: All module versions must match exactly_
-
-### 5. Start the API
-
-Start the API on the manager node by running the `main.py` script. You can use the optional flags `-p` or `-port` to specify a port to use (default is 5000). This will start the flask server at `http://127.0.0.1:5000` (or whichever port was specified).
+*will be added soon...*
 
 </br>
 </br>
