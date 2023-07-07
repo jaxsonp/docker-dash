@@ -4,7 +4,7 @@ from methods import internal_methods
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=False)
 @internal_methods.handleAppName
-def hardResetApp(facility_id, app_name="", app_id="") -> flask.Response:
+def soloHardResetApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
   This method deletes then re-creates a container, clearing all data
 

@@ -114,7 +114,7 @@ def handleAppName(function):
       successes = 0
       total = 0
       for app_name in app_names:
-        print("app:", app_name)
+        #print("app:", app_name)
         if app_name == "":
           continue
 

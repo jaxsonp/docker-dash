@@ -4,7 +4,7 @@ from methods import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=False)
-def getAppStats(facility_id, app_name="", app_id="") -> flask.Response:
+def soloGetAppStats(facility_id, app_name="", app_id="") -> flask.Response:
   """
   Returns computing stats of the specified app, or all apps if no name is provided.
 

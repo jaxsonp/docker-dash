@@ -1,4 +1,3 @@
-import subprocess
 import json
 import flask
 from methods import internal_methods
@@ -6,7 +5,7 @@ from methods import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=False)
-def getAppNames(facility_id) -> flask.Response:
+def soloGetAppNames(facility_id) -> flask.Response:
   """
   Returns an array of all apps, running or not
 

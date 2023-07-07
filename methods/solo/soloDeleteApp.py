@@ -5,7 +5,7 @@ from methods import internal_methods
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=False)
 @internal_methods.handleAppName
-def deleteApp(facility_id, app_name="", app_id="") -> flask.Response:
+def soloDeleteApp(facility_id, app_name="", app_id="") -> flask.Response:
   """
   This method stops and deletes a container
 
