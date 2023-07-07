@@ -57,6 +57,8 @@ echo "done"
 
 # joining swarm
 echo -n "  > Joining swarm... "
+sudo firewall-cmd --add-port=2377/tcp --permanent &> /dev/null
+sudo firewall-cmd --reload &> /dev/null
 sudo docker swarm join --token $token $ip_addr
 
 
