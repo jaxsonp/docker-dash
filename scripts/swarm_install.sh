@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # node.csv format:
-# hostname,username,
+# ip,username,password
 
-echo -e "\nStarting install"
+echo -e "\n  > Starting install"
 
 # verifying sudo
 sudo true
+
 
 # checking if repo dir already exists
 if [ -d "src-container-api/" ]; then
@@ -18,29 +19,32 @@ if [ -d "src-container-api/" ]; then
         break
         ;;
       [nN] ) 
-        echo Exiting...; exit
+        echo "  > Exiting..."; exit
         ;;
       * ) 
-        echo invalid response
+        echo "Invalid response"
         ;;
     esac
   done
 fi
 
+
 # downloading github repo
-echo -n "Downloading repository... "
+echo -n "  > Downloading repository... "
 curl -sSLo ./src-container-api.tar https://api.github.com/repos/JaxsonP/src-container-api/tarball
-echo done
+echo "done"
+
 
 # extracting tar archive
-echo -n "Extracting... "
+echo -n "  > Extracting... "
 sudo rm -rf src-container-api/
 mkdir src-container-api/
 tar -sxf ./src-container-api.tar -C ./src-container-api/ --strip-components=1 &> /dev/null
 sudo rm src-container-api.tar
-echo done
+echo "done"
 
 cd src-container-api
+
 
 # query number of worker nodes
 while true; do
@@ -50,8 +54,9 @@ while true; do
   fi
 done
 
+
 # get node information
-echo -n "" > nodes.csv
+echo -n ""  > nodes.csv
 for (( i = 1 ; i < $numWorkers+1 ; i++ )); do
 
   # prompt for node ip address
@@ -76,13 +81,28 @@ for (( i = 1 ; i < $numWorkers+1 ; i++ )); do
     fi
   done
   echo ""
-
   echo "$ip,$username,$password" >> nodes.csv
-
 done
 
+
+# configuring ssh
+echo -n "  > Configuring ssh... "
+# generate key
+keypath="/home/$USER/.ssh/id_srccontainerapi"
+rm -f "$keypath" &> /dev/null
+rm -f "$keypath.pub" &> /dev/null
+ssh-keygen -b 2048 -f "$keypath" -N "" &> /dev/null
+# copy key to workers
+while IFS=, read -u 10 -r ip username password
+do
+  ./scripts/ssh_authorize "$username@$ip" "$keypath.pub" "$password" &> /dev/null
+done 10< nodes.csv
+sudo rm -f nodes.csv
+echo "done"
+
+
 # checking for docker
-echo -n "Verifying docker... "
+echo -n "  > Verifying docker... "
 sudo docker ps &> /dev/null
 if [ $? -gt 0 ]; then
   echo "not found"
@@ -97,31 +117,30 @@ if [ $? -gt 0 ]; then
         echo Exiting...; exit
         ;;
       * ) 
-        echo invalid response
+        echo "Invalid response"
         ;;
     esac
   done
 
   # installing docker
-  echo -n "Installing docker... "
+  echo -n "  > Installing docker... "
   sudo yum install -y yum-utils &> /dev/null
   sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo &> /dev/null
   sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin &> /dev/null
 fi
-echo done
+echo "done"
+
 
 # configuring docker
-echo -n "Configuring docker... "
+echo -n "  > Configuring docker... "
 sudo systemctl start docker
 sudo systemctl enable docker &> /dev/null
 sudo usermod -aG docker $USER
-echo done
+echo "done"
 
-# sshing here i think
-sudo rm -f nodes.csv
 
 # verifying python
-echo -n "Verifying python... "
+echo -n "  > Verifying python... "
 if [ "$(python3.9 --version 2>&1)" != "Python 3.9.16" ]; then
   echo "not found"
   # prompting yes or no for python installation
@@ -132,16 +151,16 @@ if [ "$(python3.9 --version 2>&1)" != "Python 3.9.16" ]; then
         break
         ;;
       [nN] ) 
-        echo Exiting...; exit
+        echo "  > Exiting..."; exit
         ;;
       * ) 
-        echo invalid response
+        echo "Invalid response"
         ;;
     esac
   done
 
   # installing python
-  echo -n "Installing python (this may take a few minutes)... "
+  echo -n "  > Installing python (this may take a few minutes)... "
   sudo yum install -y gcc openssl-devel bzip2-devel libffi-devel zlib-devel &> /dev/null
   curl -sOL https://www.python.org/ftp/python/3.9.16/Python-3.9.16.tgz &> /dev/null
   tar -xzf Python-3.9.16.tgz &> /dev/null
@@ -152,10 +171,21 @@ if [ "$(python3.9 --version 2>&1)" != "Python 3.9.16" ]; then
   sudo rm Python-3.9.16.tgz
   sudo rm -rf Python-3.9.16
 fi
-echo done
+echo "done"
 
-echo -e "\nTo complete installation, a restart is required"
-# prompting yes or no for restart
+
+# create docker swarm
+joinfile="join_command.txt"
+echo -n "  > Creating Docker swarm... "
+sudo docker swarm init &> /dev/null
+jointoken=$(sudo docker swarm join-token worker)
+echo "run this command on each worker node:\nbash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/swarm_install_worker.sh) ${jointoken:89}" > $joinfile
+echo "done"
+echo "  > NOTE: run the command found at 'src-containers-api/$joinfile' to set up the worker nodes"
+
+
+# prompt for restart
+echo -e "  > To complete installation, a restart is required"
 while true; do
   read -p "Do you want to restart now? (y/n) " yn
   case $yn in 
@@ -163,32 +193,31 @@ while true; do
       sudo shutdown -r now; exit
       ;;
     [nN] ) 
-      echo Exiting...; exit
+      echo "  > Exiting...\n"; exit
       ;;
     * ) 
-      echo invalid response
+      echo "Invalid response"
       ;;
   esac
 done
 
 exit
 
-
 # prompt for node hostname
-while true; do
-  read -p "Hostname of worker #$i: " hostname
-  if [[ ! -z "$hostname" ]]; then
-    # check that hostname is unique
-    unique=true
-    while read -u 10 line; do
-      if grep -q -E "^($hostname),[^,]*,[^,]*,[^,]*\$" nodes.csv; then
-        unique=false
-        break
-      fi
-    done 10<nodes.csv
-    if $unique; then
-      break
-    fi
-    echo "Hostname must be unique!"
-  fi
-done
+# while true; do
+#   read -p "Hostname of worker #$i: " hostname
+#   if [[ ! -z "$hostname" ]]; then
+#     # check that hostname is unique
+#     unique=true
+#     while read -u 10 line; do
+#       if grep -q -E "^($hostname),[^,]*,[^,]*,[^,]*\$" nodes.csv; then
+#         unique=false
+#         break
+#       fi
+#     done 10<nodes.csv
+#     if $unique; then
+#       break
+#     fi
+#     echo "Hostname must be unique!"
+#   fi
+# done
