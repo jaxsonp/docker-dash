@@ -2,6 +2,7 @@
 
 echo -e "\n  > Starting install (worker node)"
 
+
 if [ $# -le 0 ]; then
   echo "Missing token argument"; exit
 fi
@@ -11,8 +12,10 @@ fi
 token=$1
 ip_addr=$2
 
+
 # verifying sudo
 sudo true
+
 
 # checking for docker
 echo -n "  > Verifying docker... "
@@ -43,6 +46,7 @@ if [ $? -gt 0 ]; then
 fi
 echo "done"
 
+
 # configuring docker
 echo -n "  > Configuring docker... "
 sudo systemctl start docker
@@ -50,9 +54,17 @@ sudo systemctl enable docker &> /dev/null
 sudo usermod -aG docker $USER
 echo "done"
 
+
 # joining swarm
 echo -n "  > Joining swarm... "
 sudo docker swarm join --token $token $ip_addr
+
+
+# configure node
+echo -n "  > Configuring node... "
+sudo docker node update --label-add username=$USER self &> /dev/null
+sudo docker node demote self &> /dev/null
+echo "done"
 
 
 echo "  > To complete installation, a restart is required"
