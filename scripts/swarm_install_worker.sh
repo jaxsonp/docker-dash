@@ -64,8 +64,8 @@ sudo docker swarm join --token $token $ip_addr
 
 # configure node
 echo -n "  > Configuring node... "
-sudo docker node update --label-add username=$USER $(hostname)
-sudo docker node demote $(hostname)
+sudo docker node update --label-add username=$USER $(hostname) &> /dev/null
+sudo docker node demote $(hostname) &> /dev/null
 echo "done"
 
 
