@@ -10,8 +10,8 @@ def getContainerID(app_name:str):
   """
 
   # checking if its in swarm mode
-  completedProcess = subprocessRun("docker info --format json")
-  if json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active":
+  completedProcess = None
+  if checkSwarmMode():
     completedProcess = subprocessRun(f"docker service ls --filter name={app_name} --format \"{{{{.Name}}}} {{{{.ID}}}}\"")
   else:
     completedProcess = subprocessRun(f"docker ps -a --filter name={app_name} --format \"{{{{.Names}}}} {{{{.ID}}}}\"")
@@ -27,6 +27,21 @@ def getContainerID(app_name:str):
       return id
 
   return None
+
+
+def checkSwarmMode() -> bool:
+  """
+  This helper function returns True if current node has swarm mode active, and False if not
+  """
+  completedProcess = subprocessRun("docker info --format json")
+  return json.loads(completedProcess.stdout.decode())["Swarm"]["LocalNodeState"] == "active"
+
+def subprocessRun(cmd_str: str, capture_output=True, shell=True, timeout=None) -> subprocess.CompletedProcess:
+  """
+  Wrapper for subprocess.run
+  """
+
+  return subprocess.run(cmd_str, capture_output=capture_output, shell=shell, timeout=timeout)
 
 
 def verifyFacilityID(function):
@@ -50,7 +65,6 @@ def verifyFacilityID(function):
 
   decoratorFunction.__name__ = function.__name__
   return decoratorFunction
-
 
 
 def verifyDockerEngine(swarm_method=None):
@@ -135,11 +149,3 @@ def handleAppName(function):
 
   decoratorFunction.__name__ = function.__name__
   return decoratorFunction
-
-
-def subprocessRun(cmd_str: str, capture_output=True, shell=True, timeout=None) -> subprocess.CompletedProcess:
-  """
-  Wrapper for subprocess.run
-  """
-
-  return subprocess.run(cmd_str, capture_output=capture_output, shell=shell, timeout=timeout)
