@@ -53,11 +53,16 @@ echo done
 
 echo $token
 echo $ip
+echo $1
+echo $2
+echo $3
+echo $4
+echo hello
 
 # joining swarm
 echo -n "Joining swarm... "
 sudo docker swarm join --token $token $ip
-echo !!
+
 
 echo -e "\nTo complete installation, a restart is required"
 # prompting yes or no for restart
