@@ -16,82 +16,82 @@ def helper() -> flask.Response:
     return flask.Response(f.read(), mimetype='text/plain')
 
 
-from methods.solo.startApp import startApp
+from methods.solo.soloStartApp import soloStartApp
 @app.route('/<facility_id>/start-app', methods=['POST'])
-def startAppWrapper(facility_id) -> flask.Response:
-  return startApp(facility_id)
+def soloStartAppWrapper(facility_id) -> flask.Response:
+  return soloStartApp(facility_id)
 
 
-from methods.solo.stopApp import stopApp
+from methods.solo.soloStopApp import soloStopApp
 @app.route('/<facility_id>/stop-app', methods=['POST'])
-def stopAppWrapper(facility_id) -> flask.Response:
-  return stopApp(facility_id)
+def soloStopAppWrapper(facility_id) -> flask.Response:
+  return soloStopApp(facility_id)
 
 
-from methods.solo.pauseApp import pauseApp
+from methods.solo.soloPauseApp import soloPauseApp
 @app.route('/<facility_id>/pause-app', methods=['POST'])
-def pauseAppWrapper(facility_id) -> flask.Response:
-  return pauseApp(facility_id)
+def soloPauseAppWrapper(facility_id) -> flask.Response:
+  return soloPauseApp(facility_id)
 
 
-from methods.solo.unpauseApp import unpauseApp
+from methods.solo.soloUnpauseApp import soloUnpauseApp
 @app.route('/<facility_id>/unpause-app', methods=['POST'])
-def unpauseAppWrapper(facility_id) -> flask.Response:
-  return unpauseApp(facility_id)
+def soloUnpauseAppWrapper(facility_id) -> flask.Response:
+  return soloUnpauseApp(facility_id)
 
 
-from methods.solo.restartApp import restartApp
+from methods.solo.soloRestartApp import soloRestartApp
 @app.route('/<facility_id>/restart-app', methods=['POST'])
-def restartAppWrapper(facility_id) -> flask.Response:
-  return restartApp(facility_id)
+def soloRestartAppWrapper(facility_id) -> flask.Response:
+  return soloRestartApp(facility_id)
 
 
-from methods.solo.killApp import killApp
+from methods.solo.soloKillApp import soloKillApp
 @app.route('/<facility_id>/kill-app', methods=['POST'])
-def killAppWrapper(facility_id) -> flask.Response:
-  return killApp(facility_id)
+def soloKillAppWrapper(facility_id) -> flask.Response:
+  return soloKillApp(facility_id)
 
 
-from methods.solo.createApp import createApp
+from methods.solo.soloCreateApp import soloCreateApp
 @app.route('/<facility_id>/create-app', methods=['POST'])
-def createAppWrapper(facility_id) -> flask.Response:
-  return createApp(facility_id)
+def soloCreateAppWrapper(facility_id) -> flask.Response:
+  return soloCreateApp(facility_id)
 
 
-from methods.solo.deleteApp import deleteApp
+from methods.solo.soloDeleteApp import soloDeleteApp
 @app.route('/<facility_id>/delete-app', methods=['POST'])
-def deleteAppWrapper(facility_id) -> flask.Response:
-  return deleteApp(facility_id)
+def soloDeleteAppWrapper(facility_id) -> flask.Response:
+  return soloDeleteApp(facility_id)
 
 
-from methods.solo.hardResetApp import hardResetApp
+from methods.solo.soloHardResetApp import soloHardResetApp
 @app.route('/<facility_id>/hard-reset-app', methods=['POST'])
-def hardResetAppWrapper(facility_id) -> flask.Response:
-  return hardResetApp(facility_id)
+def soloHardResetAppWrapper(facility_id) -> flask.Response:
+  return soloHardResetApp(facility_id)
 
 
-from methods.solo.getAppNames import getAppNames
+from methods.solo.soloGetAppNames import soloGetAppNames
 @app.route('/<facility_id>/get-app-names', methods=['GET'])
-def getAppNamesWrapper(facility_id) -> flask.Response:
-  return getAppNames(facility_id)
+def soloGetAppNamesWrapper(facility_id) -> flask.Response:
+  return soloGetAppNames(facility_id)
 
 
-from methods.solo.getAppStatus import getAppStatus
+from methods.solo.soloGetAppStatus import soloGetAppStatus
 @app.route('/<facility_id>/get-app-status', methods=['GET'])
-def getAppStatusWrapper(facility_id) -> flask.Response:
-  return getAppStatus(facility_id)
+def soloGetAppStatusWrapper(facility_id) -> flask.Response:
+  return soloGetAppStatus(facility_id)
 
 
-from methods.solo.getAppStats import getAppStats
+from methods.solo.soloGetAppStats import soloGetAppStats
 @app.route('/<facility_id>/get-app-stats', methods=['GET'])
-def getAppStatsWrapper(facility_id) -> flask.Response:
-  return getAppStats(facility_id)
+def soloGetAppStatsWrapper(facility_id) -> flask.Response:
+  return soloGetAppStats(facility_id)
 
 
-from methods.solo.getAppInfo import getAppInfo
+from methods.solo.soloGetAppInfo import soloGetAppInfo
 @app.route('/<facility_id>/get-app-info', methods=['GET'])
-def getAppInfoWrapper(facility_id) -> flask.Response:
-  return getAppInfo(facility_id)
+def soloGetAppInfoWrapper(facility_id) -> flask.Response:
+  return soloGetAppInfo(facility_id)
 
 
 from methods.agnostic.getUptimeSummary import getUptimeSummary
