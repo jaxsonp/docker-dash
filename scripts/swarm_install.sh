@@ -92,6 +92,8 @@ keypath="/home/$USER/.ssh/id_srccontainerapi"
 rm -f "$keypath" &> /dev/null
 rm -f "$keypath.pub" &> /dev/null
 ssh-keygen -b 2048 -f "$keypath" -N "" &> /dev/null
+# install expect
+sudo yum install -y expect &> /dev/null
 # copy key to workers
 while IFS=, read -u 10 -r ip username password
 do
