@@ -50,12 +50,14 @@ sudo systemctl enable docker &> /dev/null
 sudo usermod -aG docker $USER
 echo done
 
+
+echo $token
+echo $ip
+
 # joining swarm
 echo -n "Joining swarm... "
 sudo docker swarm join --token $token $ip
-
 echo !!
-echo -n "\n\n\n"
 
 echo -e "\nTo complete installation, a restart is required"
 # prompting yes or no for restart
