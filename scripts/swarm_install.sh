@@ -1,37 +1,18 @@
 #!/bin/bash
 
-echo -e "\nStarting install..."
+# node.csv format:
+# hostname,username,
 
-# query number of worker nodes
-while true; do
-    read -p "How many worker nodes will be added? " numWorkers
-    if [[ $numWorkers =~ ^[0-9]+$ ]] ; then
-        break
-    fi
-done
+echo -e "\nStarting install"
 
-# get node information
-for (( i = 1 ; i < $numWorkers+1 ; i++ )); do
-    # prompt for node hostname
-    while true; do
-        read -p "Hostname of worker #$i: " hostname
-        if [[ ! -z "$hostname" ]]; then
-            break
-        fi
-    done
-    # check that hostname is unique
-    for (( j = 0 ; j < i-1 ; j++ )); do
-        echo "hi"
-    done
-    #read -p "Username of worker#$i: " username
+# verifying sudo
+sudo true
 
-done
-
-# checking if dir exists
+# checking if repo dir already exists
 if [ -d "src-container-api/" ]; then
   # prompting yes or no for overwrite
   while true; do
-    read -p "Directory \"src-container-api/\" already exists, overwrite? (y/n) " yn
+    read -p "Directory \"src-container-api/\" already exists and will be overwritten, continue? (y/n) " yn
     case $yn in 
       [yY] ) 
         break
@@ -45,11 +26,6 @@ if [ -d "src-container-api/" ]; then
     esac
   done
 fi
-# verifying sudo
-sudo true
-
-echo "exiting..."
-exit
 
 # downloading github repo
 echo -n "Downloading repository... "
@@ -64,6 +40,46 @@ tar -sxf ./src-container-api.tar -C ./src-container-api/ --strip-components=1 &>
 sudo rm src-container-api.tar
 echo done
 
+cd src-container-api
+
+# query number of worker nodes
+while true; do
+  read -p "How many worker nodes will be added? " numWorkers
+  if [[ $numWorkers =~ ^[0-9]+$ ]] ; then
+    break
+  fi
+done
+
+# get node information
+echo -n "" > nodes.csv
+for (( i = 1 ; i < $numWorkers+1 ; i++ )); do
+
+  # prompt for node ip address
+  while true; do
+    read -p "IP address of worker #$i: " ip
+    if [[ ! -z "$ip" ]]; then
+      break
+    fi
+  done
+  # prompt for node username
+  while true; do
+    read -p "Username of worker #$i: " username
+    if [[ ! -z "$username" ]]; then
+      break
+    fi
+  done
+  # prompt for node password
+  while true; do
+    read -s -p "Password of worker #$i: " password
+    if [[ ! -z "$password" ]]; then
+      break
+    fi
+  done
+  echo ""
+
+  echo "$ip,$username,$password" >> nodes.csv
+
+done
 
 # checking for docker
 echo -n "Verifying docker... "
@@ -100,6 +116,9 @@ sudo systemctl start docker
 sudo systemctl enable docker &> /dev/null
 sudo usermod -aG docker $USER
 echo done
+
+# sshing here i think
+sudo rm -f nodes.csv
 
 # verifying python
 echo -n "Verifying python... "
@@ -150,4 +169,26 @@ while true; do
       echo invalid response
       ;;
   esac
+done
+
+exit
+
+
+# prompt for node hostname
+while true; do
+  read -p "Hostname of worker #$i: " hostname
+  if [[ ! -z "$hostname" ]]; then
+    # check that hostname is unique
+    unique=true
+    while read -u 10 line; do
+      if grep -q -E "^($hostname),[^,]*,[^,]*,[^,]*\$" nodes.csv; then
+        unique=false
+        break
+      fi
+    done 10<nodes.csv
+    if $unique; then
+      break
+    fi
+    echo "Hostname must be unique!"
+  fi
 done

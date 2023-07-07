@@ -56,7 +56,7 @@ Most GET methods this API provides return data from a corresponding docker comma
 
 Run this command (you may be asked for sudo password):
 ```
-bash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/install.sh)
+bash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/solo_install.sh)
 ```
 This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, then you can start the server with:
 ```
