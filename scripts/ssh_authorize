@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+# this is used by swarm_install.sh for setting up ssh authentication
+#   usage: ./ssh_authorize [USERNAME@IPADDRESS] [PATHTOPUBLICKEY] [USERPASSWORD]
+
+spawn ssh-copy-id -i "[lindex $argv 1]" -o "StrictHostKeyChecking no" "[lindex $argv 0]"
+expect "password:"
+send "[lindex $argv 2]\n"
+expect eof
