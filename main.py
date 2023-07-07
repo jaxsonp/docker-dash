@@ -6,6 +6,7 @@ from methods import internal_methods
 
 import logger
 
+swarm_mode=False
 
 app = flask.Flask(__name__)
 
@@ -18,80 +19,154 @@ def helper() -> flask.Response:
 
 from methods.solo.soloStartApp import soloStartApp
 @app.route('/<facility_id>/start-app', methods=['POST'])
-def soloStartAppWrapper(facility_id) -> flask.Response:
-  return soloStartApp(facility_id)
+def startAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return flask.make_response("start-app endpoint incompatible with swarm mode", 400)
+  else:
+    return soloStartApp(facility_id)
 
 
 from methods.solo.soloStopApp import soloStopApp
 @app.route('/<facility_id>/stop-app', methods=['POST'])
-def soloStopAppWrapper(facility_id) -> flask.Response:
-  return soloStopApp(facility_id)
+def stopAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return flask.make_response("stop-app endpoint incompatible with swarm mode", 400)
+  else:
+    return soloStopApp(facility_id)
 
 
 from methods.solo.soloPauseApp import soloPauseApp
 @app.route('/<facility_id>/pause-app', methods=['POST'])
-def soloPauseAppWrapper(facility_id) -> flask.Response:
-  return soloPauseApp(facility_id)
+def pauseAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return flask.make_response("pause-app endpoint incompatible with swarm mode", 400)
+  else:
+    return soloPauseApp(facility_id)
 
 
 from methods.solo.soloUnpauseApp import soloUnpauseApp
 @app.route('/<facility_id>/unpause-app', methods=['POST'])
-def soloUnpauseAppWrapper(facility_id) -> flask.Response:
-  return soloUnpauseApp(facility_id)
+def unpauseAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return flask.make_response("unpause-app endpoint incompatible with swarm mode", 400)
+  else:
+    return soloUnpauseApp(facility_id)
 
 
 from methods.solo.soloRestartApp import soloRestartApp
 @app.route('/<facility_id>/restart-app', methods=['POST'])
-def soloRestartAppWrapper(facility_id) -> flask.Response:
-  return soloRestartApp(facility_id)
+def restartAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return flask.make_response("restart-app endpoint incompatible with swarm mode", 400)
+  else:
+    return soloRestartApp(facility_id)
 
 
 from methods.solo.soloKillApp import soloKillApp
+from methods.swarm.swarmKillApp import swarmKillApp
 @app.route('/<facility_id>/kill-app', methods=['POST'])
-def soloKillAppWrapper(facility_id) -> flask.Response:
-  return soloKillApp(facility_id)
+def killAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmKillApp(facility_id)
+  else:
+    return soloKillApp(facility_id)
 
 
 from methods.solo.soloCreateApp import soloCreateApp
+from methods.swarm.swarmCreateApp import swarmCreateApp
 @app.route('/<facility_id>/create-app', methods=['POST'])
-def soloCreateAppWrapper(facility_id) -> flask.Response:
-  return soloCreateApp(facility_id)
+def createAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmCreateApp(facility_id)
+  else:
+    return soloCreateApp(facility_id)
 
 
 from methods.solo.soloDeleteApp import soloDeleteApp
 @app.route('/<facility_id>/delete-app', methods=['POST'])
-def soloDeleteAppWrapper(facility_id) -> flask.Response:
-  return soloDeleteApp(facility_id)
+def deleteAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return flask.make_response("delete-app endpoint incompatible with swarm mode", 400)
+  else:
+    return soloDeleteApp(facility_id)
 
 
 from methods.solo.soloHardResetApp import soloHardResetApp
 @app.route('/<facility_id>/hard-reset-app', methods=['POST'])
-def soloHardResetAppWrapper(facility_id) -> flask.Response:
-  return soloHardResetApp(facility_id)
+def hardResetAppWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return flask.make_response("hard-reset-app endpoint incompatible with swarm mode", 400)
+  else:
+    return soloHardResetApp(facility_id)
 
 
 from methods.solo.soloGetAppNames import soloGetAppNames
+from methods.swarm.swarmGetAppNames import swarmGetAppNames
 @app.route('/<facility_id>/get-app-names', methods=['GET'])
-def soloGetAppNamesWrapper(facility_id) -> flask.Response:
-  return soloGetAppNames(facility_id)
+def getAppNamesWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetAppNames(facility_id)
+  else:
+    return soloGetAppNames(facility_id)
 
 
 from methods.solo.soloGetAppStatus import soloGetAppStatus
+from methods.swarm.swarmGetAppStatus import swarmGetAppStatus
 @app.route('/<facility_id>/get-app-status', methods=['GET'])
-def soloGetAppStatusWrapper(facility_id) -> flask.Response:
-  return soloGetAppStatus(facility_id)
+def getAppStatusWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetAppStatus(facility_id)
+  else:
+    return soloGetAppStatus(facility_id)
 
 
 from methods.solo.soloGetAppStats import soloGetAppStats
+from methods.swarm.swarmGetAppStats import swarmGetAppStats
 @app.route('/<facility_id>/get-app-stats', methods=['GET'])
-def soloGetAppStatsWrapper(facility_id) -> flask.Response:
-  return soloGetAppStats(facility_id)
+def getAppStatsWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetAppStats(facility_id)
+  else:
+    return soloGetAppStats(facility_id)
 
 
 from methods.solo.soloGetAppInfo import soloGetAppInfo
+from methods.swarm.swarmGetAppInfo import swarmGetAppInfo
 @app.route('/<facility_id>/get-app-info', methods=['GET'])
-def soloGetAppInfoWrapper(facility_id) -> flask.Response:
-  return soloGetAppInfo(facility_id)
+def getAppInfoWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetAppInfo(facility_id)
+  else:
+    return soloGetAppInfo(facility_id)
+
+
+from methods.swarm.swarmGetNodeNames import swarmGetNodeNames
+@app.route('/<facility_id>/swarm-get-node-names', methods=['GET'])
+def getNodeNamesWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetNodeNames(facility_id)
+  else:
+    return flask.make_response("get-node-names endpoint incompatible with solo mode", 400)
+
+from methods.swarm.swarmGetNodeStatus import swarmGetNodeStatus
+@app.route('/<facility_id>/swarm-get-node-status', methods=['GET'])
+def getNodeStatusWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetNodeStatus(facility_id)
+  else:
+    return flask.make_response("get-node-status endpoint incompatible with solo mode", 400)
+
+
+from methods.swarm.swarmGetNodeInfo import swarmGetNodeInfo
+@app.route('/<facility_id>/swarm-get-node-info', methods=['GET'])
+def getNodeInfoWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetNodeInfo(facility_id)
+  else:
+    return flask.make_response("get-node-info endpoint incompatible with solo mode", 400)
+  
+
+# AGNOSTIC METHODS ================================================================
 
 
 from methods.agnostic.getUptimeSummary import getUptimeSummary
@@ -112,67 +187,13 @@ def getImagesWrapper(facility_id) -> flask.Response:
   return getImages(facility_id)
 
 
-# SWARM METHODS ================================================================
-
-
-from methods.swarm.swarmCreateApp import swarmCreateApp
-@app.route('/<facility_id>/swarm-create-app', methods=['POST'])
-def swarmCreateAppWrapper(facility_id) -> flask.Response:
-  return swarmCreateApp(facility_id)
-
-
-from methods.swarm.swarmGetAppInfo import swarmGetAppInfo
-@app.route('/<facility_id>/swarm-get-app-info', methods=['GET'])
-def swarmGetAppInfoWrapper(facility_id) -> flask.Response:
-  return swarmGetAppInfo(facility_id)
-
-
-from methods.swarm.swarmGetAppNames import swarmGetAppNames
-@app.route('/<facility_id>/swarm-get-app-names', methods=['GET'])
-def swarmGetAppNamesWrapper(facility_id) -> flask.Response:
-  return swarmGetAppNames(facility_id)
-
-
-from methods.swarm.swarmGetAppStats import swarmGetAppStats
-@app.route('/<facility_id>/swarm-get-app-stats', methods=['GET'])
-def swarmGetAppStatsWrapper(facility_id) -> flask.Response:
-  return swarmGetAppStats(facility_id)
-
-
-from methods.swarm.swarmGetAppStatus import swarmGetAppStatus
-@app.route('/<facility_id>/swarm-get-app-status', methods=['GET'])
-def swarmGetAppStatusWrapper(facility_id) -> flask.Response:
-  return swarmGetAppStatus(facility_id)
-
-
-from methods.swarm.swarmKillApp import swarmKillApp
-@app.route('/<facility_id>/swarm-kill-app', methods=['POST'])
-def swarmKillAppWrapper(facility_id) -> flask.Response:
-  return swarmKillApp(facility_id)
-
-
-from methods.swarm.swarmGetNodeNames import swarmGetNodeNames
-@app.route('/<facility_id>/swarm-get-node-names', methods=['GET'])
-def swarmGetNodeNamesWrapper(facility_id) -> flask.Response:
-  return swarmGetNodeNames(facility_id)
-
-
-from methods.swarm.swarmGetNodeStatus import swarmGetNodeStatus
-@app.route('/<facility_id>/swarm-get-node-status', methods=['GET'])
-def swarmGetNodeStatusWrapper(facility_id) -> flask.Response:
-  return swarmGetNodeStatus(facility_id)
-
-
-from methods.swarm.swarmGetNodeInfo import swarmGetNodeInfo
-@app.route('/<facility_id>/swarm-get-node-info', methods=['GET'])
-def swarmGetNodeInfoWrapper(facility_id) -> flask.Response:
-  return swarmGetNodeInfo(facility_id)
-
-
-
 # main
 if __name__ == '__main__':
   print("\n\n\n")
+
+  print(" * Checking swarm mode: ", end="")
+  swarm_mode = internal_methods.checkSwarmMode()
+  print(swarm_mode)
 
   print(" * Starting logging thread")
   logThread = threading.Thread(target=logger.loggingThreadFunc, daemon=True)
