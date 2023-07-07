@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\nStarting install (worker node)"
+echo -e "\n  > Starting install (worker node)"
 
 if [ $# -le 0 ]; then
   echo "Missing token argument"; exit
@@ -15,7 +15,7 @@ ip_addr=$2
 sudo true
 
 # checking for docker
-echo -n "Verifying docker... "
+echo -n "  > Verifying docker... "
 sudo docker ps &> /dev/null
 if [ $? -gt 0 ]; then
   echo "not found"
@@ -27,35 +27,35 @@ if [ $? -gt 0 ]; then
         break
         ;;
       [nN] ) 
-        echo Exiting...; exit
+        echo "  > Exiting..."; exit
         ;;
       * ) 
-        echo invalid response
+        echo "Invalid response"
         ;;
     esac
   done
 
   # installing docker
-  echo -n "Installing docker... "
+  echo -n "  > Installing docker... "
   sudo yum install -y yum-utils &> /dev/null
   sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo &> /dev/null
   sudo yum install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin &> /dev/null
 fi
-echo done
+echo "done"
 
 # configuring docker
-echo -n "Configuring docker... "
+echo -n "  > Configuring docker... "
 sudo systemctl start docker
 sudo systemctl enable docker &> /dev/null
 sudo usermod -aG docker $USER
-echo done
+echo "done"
 
 # joining swarm
-echo -n "Joining swarm... "
+echo -n "  > Joining swarm... "
 sudo docker swarm join --token $token $ip_addr
 
 
-echo -e "\nTo complete installation, a restart is required"
+echo "  > To complete installation, a restart is required"
 # prompting yes or no for restart
 while true; do
   read -p "Do you want to restart now? (y/n) " yn
@@ -64,10 +64,10 @@ while true; do
       sudo shutdown -r now; exit
       ;;
     [nN] ) 
-      echo Exiting...; exit
+      echo "  > Exiting..."; exit
       ;;
     * ) 
-      echo invalid response
+      echo "Invalid response"
       ;;
   esac
 done
