@@ -179,7 +179,7 @@ joinfile="join_command.txt"
 echo -n "  > Creating Docker swarm... "
 sudo docker swarm init &> /dev/null
 jointoken=$(sudo docker swarm join-token worker)
-echo "run this command on each worker node:\nbash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/swarm_install_worker.sh) ${jointoken:89}" > $joinfile
+echo -e "run this command on each worker node:\nbash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/swarm_install_worker.sh) ${jointoken:89}" > $joinfile
 echo "done"
 echo "  > NOTE: run the command found at 'src-containers-api/$joinfile' to set up the worker nodes"
 
