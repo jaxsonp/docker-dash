@@ -23,4 +23,4 @@ def soloGetUsers(facility_id) -> flask.Response:
     if string != "":
       arr.append(string.split("--")[1])
 
-  return flask.make_response(json.dumps(arr), 200)
+  return flask.make_response(json.dumps(list(set(arr))), 200)
