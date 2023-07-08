@@ -20,4 +20,4 @@ def swarmGetUsers(facility_id) -> flask.Response:
 
   arr = [s.split("--")[1] for s in completedProcess.stdout.decode().split("\n") if s != ""]
 
-  return flask.make_response(json.dumps(arr), 200)
+  return flask.make_response(json.dumps(list(set(arr))), 200)
