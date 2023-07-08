@@ -316,7 +316,7 @@ Resets the specified app, clearing ALL data and restoring it from the original i
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-app-names
+<GET> http://placeholder.url/[FACILITY_ID]/get-users
 ```
 
 ### Mode:
@@ -325,13 +325,13 @@ This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns an array of all existing apps on the specified SRC, regardless of its state (e.g. running, exited).
+Returns an array of all users that have apps (either running or stopped) on the specified SRC
 
 `FACILITY_ID` - Facility-specific identifier
 
 ### Example Response:
 ``` json
-["jupyter-lab--john", "xterm--admin", "httpd--sarah"]
+["john", "admin", "sarah"]
 ```
 
 </br>
@@ -341,7 +341,7 @@ Returns an array of all existing apps on the specified SRC, regardless of its st
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-app-names
+<GET> http://placeholder.url/[FACILITY_ID]/get-app-names?user=[USER]
 ```
 
 ### Mode:
@@ -350,9 +350,11 @@ This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns an array of all existing apps on the specified SRC, regardless of its state (e.g. running, exited).
+Returns an array of all existing apps on the specified SRC, regardless of its state (e.g. running, exited). If the `USER` parameter is not omitted, only the apps belonging to the given user will be returned
 
 `FACILITY_ID` - Facility-specific identifier
+
+`USER` _(optional)_ : Name of user to query for
 
 ### Example Response:
 ``` json
