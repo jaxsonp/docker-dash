@@ -22,5 +22,9 @@ def soloGetAppNames(facility_id) -> flask.Response:
   for string in completedProcess.stdout.decode().split("\n"):
     if string != "":
       arr.append(string)
+  
+  user = flask.request.args.get('user')
+  if user != None:
+    arr = [app for app in arr if app.split("--")[1] == user]
 
   return flask.make_response(json.dumps(arr), 200)

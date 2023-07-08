@@ -20,4 +20,8 @@ def swarmGetAppNames(facility_id) -> flask.Response:
 
   arr = [s for s in completedProcess.stdout.decode().split("\n") if s != ""]
 
+  user = flask.request.args.get('user')
+  if user != None:
+    arr = [app for app in arr if app.split("--")[1] == user]
+
   return flask.make_response(json.dumps(arr), 200)
