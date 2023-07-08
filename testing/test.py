@@ -113,6 +113,10 @@ if __name__ == "__main__":
   test("Get container names - invalid facility ID",      "GET", f"{BASE_URL}/iaminvalid/get-app-names", 400)
 
   print()
+  test("Get container names - success",                  "GET", f"{BASE_URL}/{FACILITY_ID}/get-users", 200)
+  test("Get container names - invalid facility ID",      "GET", f"{BASE_URL}/iaminvalid/get-users", 400)
+
+  print()
   test("Get container status - success",                 "GET", f"{BASE_URL}/{FACILITY_ID}/get-app-status", 200)
   test("Get container status - success (specific app)",  "GET", f"{BASE_URL}/{FACILITY_ID}/get-app-status?name={APP_NAME}", 200)
   test("Get container status - invalid facility ID",     "GET", f"{BASE_URL}/iaminvalid/get-app-status?name={APP_NAME}", 400)

@@ -139,6 +139,16 @@ def createAppWrapper(facility_id) -> flask.Response:
   else:
     return soloCreateApp(facility_id)
 
+
+from methods.solo.soloGetUsers import soloGetUsers
+from methods.swarm.swarmGetUsers import swarmGetUsers
+@app.route('/<facility_id>/get-users', methods=['GET'])
+def getUsersWrapper(facility_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetUsers(facility_id)
+  else:
+    return soloGetUsers(facility_id)
+
 from methods.solo.soloGetAppNames import soloGetAppNames
 from methods.swarm.swarmGetAppNames import swarmGetAppNames
 @app.route('/<facility_id>/get-app-names', methods=['GET'])

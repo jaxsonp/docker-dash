@@ -5,7 +5,7 @@ from methods import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=True)
-def swarmGetAppNames(facility_id) -> flask.Response:
+def swarmGetUsers(facility_id) -> flask.Response:
   """
   Returns an array of all running apps
 
@@ -18,10 +18,6 @@ def swarmGetAppNames(facility_id) -> flask.Response:
   if completedProcess.returncode != 0:
     return flask.make_response("Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
-  arr = [s for s in completedProcess.stdout.decode().split("\n") if s != ""]
-
-  user = flask.request.args.get('user')
-  if user != None:
-    arr = [app for app in arr if app.split("--")[1] == user]
+  arr = [s.split("--")[1] for s in completedProcess.stdout.decode().split("\n") if s != ""]
 
   return flask.make_response(json.dumps(arr), 200)

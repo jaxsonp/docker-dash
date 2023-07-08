@@ -5,7 +5,7 @@ from methods import internal_methods
 
 @internal_methods.verifyFacilityID
 @internal_methods.verifyDockerEngine(swarm_method=False)
-def soloGetAppNames(facility_id) -> flask.Response:
+def soloGetUsers(facility_id) -> flask.Response:
   """
   Returns an array of all apps, running or not
 
@@ -21,10 +21,6 @@ def soloGetAppNames(facility_id) -> flask.Response:
   arr = []
   for string in completedProcess.stdout.decode().split("\n"):
     if string != "":
-      arr.append(string)
-  
-  user = flask.request.args.get('user')
-  if user != None:
-    arr = [app for app in arr if app.split("--")[1] == user]
+      arr.append(string.split("--")[1])
 
   return flask.make_response(json.dumps(arr), 200)
