@@ -68,6 +68,7 @@ def swarmGetAppStats(facility_id, app_name="", app_id="") -> flask.Response:
         
         # add all containers to list
         for app in completedProcess.stdout.decode().strip().split("\n"):
+          if app == "": continue
           output_list.append(json.loads(app))
     
     return flask.make_response(json.dumps(output_list), 200)
