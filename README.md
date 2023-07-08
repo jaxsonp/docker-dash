@@ -51,6 +51,7 @@ Most GET methods this API provides return data from a corresponding docker comma
 
 - CentOS 7
 - Internet connection
+- All nodes must have unique hostnames (swarm mode)
 
 ## For Solo Mode:
 
@@ -62,11 +63,23 @@ This will download all files and install and configure Docker and Python 3.9.16.
 ```
 venv/bin/python main.py
 ```
-*Note: In order to run main.py, you must either explicitly use venv/bin/python (like shown) or manually activate the virtual environment with `source venv/bin/activate` (deactivate with `deactivate`).*
+*Note: In order to run main.py, you must either explicitly use venv/bin/python (like shown) or manually activate the virtual environment with `source venv/bin/activate`.*
 
 ## For Swarm Mode:
 
-*will be added soon...*
+Run this command (you may be asked for sudo password):
+```
+bash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/swarm_install.sh)
+```
+This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, and you can start setting up the worker nodes. The specific command to use will be saved in a file called `join_command.txt`, but it should look something like:
+```
+bash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/swarm_install_worker.sh) [SWARM_TOKEN] [MANAGER_IP_ADDRESS]:2377
+```
+Run this command on each worker node to complete setup. This script will first add the node to the swarm as a manager so that it can configure itself, then it will demote itself to worker. Once that is done, you can start the server with:
+```
+venv/bin/python main.py
+```
+*Note: In order to run main.py, you must either explicitly use venv/bin/python (like shown) or manually activate the virtual environment with `source venv/bin/activate`.*
 
 </br>
 </br>
