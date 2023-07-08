@@ -375,7 +375,7 @@ This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns basic information and status, in json format. This method returns the output of the `docker ps` commmand.
+Returns basic information and status, in json format. This method returns the output of the `docker ps` commmand. Returns app resource information in json format, using the `docker stats` commmand. In swarm mode, it uses ssh to get info from the required node, so it may break if there are problems with the network or ssh configuration.
 
 `FACILITY_ID` - Facility-specific identifier
 
@@ -417,7 +417,7 @@ This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns app resource information in json format, using the `docker stats` commmand.
+Returns app resource information in json format, using the `docker stats` commmand. In swarm mode, this method uses ssh to get info from the required node, so it may break if there are problems with the network or ssh configuration.
 
 `FACILITY_ID` - Facility-specific identifier
 
