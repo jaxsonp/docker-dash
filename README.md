@@ -59,7 +59,7 @@ Run this command (you may be asked for sudo password):
 ```
 bash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/solo_install.sh)
 ```
-This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, then you can start the server with:
+This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, then after navigating back to the installed directory you can start the server with:
 ```
 venv/bin/python main.py
 ```
@@ -75,7 +75,7 @@ This will download all files and install and configure Docker and Python 3.9.16.
 ```
 bash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/swarm_install_worker.sh) [SWARM_TOKEN] [MANAGER_IP_ADDRESS]:2377
 ```
-Run this command on each worker node to complete setup. This script will first add the node to the swarm as a manager so that it can configure itself, then it will demote itself to worker. Once that is done, you can start the server with:
+Run this command on each worker node to complete setup. This script will first add the node to the swarm as a manager so that it can configure itself, then it will demote itself to worker. Once that is done, you can navigate to the api directory on the true manager node and start the server with:
 ```
 venv/bin/python main.py
 ```
@@ -86,8 +86,6 @@ venv/bin/python main.py
 
 # API Endpoints:
 
-### Solo mode methods
-
 1. [Start App](#start-app)
 2. [Stop App](#stop-app)
 3. [Pause App](#pause-app)
@@ -97,25 +95,14 @@ venv/bin/python main.py
 7. [Create App](#create-app)
 8. [Delete App](#delete-app)
 9. [Hard Reset App](#hard-reset-app)
+10. [Get Users](#get-users)
 10. [Get App Names](#get-app-names)
 11. [Get App Status](#get-app-status)
 12. [Get App Stats](#get-app-stats)
 13. [Get App Info](#get-app-info)
-
-### Swarm mode methods:
-
-14. [Swarm Create App](#swarm-create-app)
-15. [Swarm Kill App](#swarm-kill-app)
-16. [Swarm Get App Names](#swarm-get-app-names)
-17. [Swarm Get App Status](#swarm-get-app-status)
-18. [Swarm Get App Stats](#swarm-get-app-stats)
-19. [Swarm Get App Info](#swarm-get-app-info)
-20. [Swarm Get Node Names](#swarm-get-app-names)
-21. [Swarm Get Node Status](#swarm-get-app-status)
-22. [Swarm Get Node Info](#swarm-get-app-info)
-
-### Mode-agnostic methods:
-
+20. [Get Node Names](#get-app-names)
+21. [Get Node Status](#get-app-status)
+22. [Get Node Info](#get-app-info)
 23. [Get App Uptime Summary](#get-app-uptime-summary)
 24. [Request Image](#request-image)
 25. [Get Images](#get-images)
@@ -124,8 +111,6 @@ venv/bin/python main.py
 
 </br>
 
-# Solo methods
-
 ## Start App
 
 ### Usage:
@@ -133,6 +118,10 @@ venv/bin/python main.py
 ```
 <POST> http://placeholder.url/[FACILITY_ID]/start-app?name=[APP_NAME]
 ```
+
+### Mode:
+
+This method is compatible with solo mode only.
 
 ### Description:
 
@@ -152,6 +141,10 @@ Starts the specified app using the `docker start` command. Trying to start an ap
 <POST> http://placeholder.url/[FACILITY_ID]/stop-app?name=[APP_NAME]
 ```
 
+### Mode:
+
+This method is compatible with solo mode only.
+
 ### Description:
 
 Signals for the specified app to exit using the `docker stop` command. If the container does not respond to the `SIGTERM` signal within a 10 second grace period, it will kill the container forcefully with `SIGKILL`.
@@ -169,6 +162,10 @@ Signals for the specified app to exit using the `docker stop` command. If the co
 ```
 <POST> http://placeholder.url/[FACILITY_ID]/pause-app?name=[APP_NAME]
 ```
+
+### Mode:
+
+This method is compatible with solo mode only.
 
 ### Description:
 
@@ -188,6 +185,10 @@ Pauses the specified app using the `docker pause` command. An app must be alread
 <POST> http://placeholder.url/[FACILITY_ID]/unpause-app?name=[APP_NAME]
 ```
 
+### Mode:
+
+This method is compatible with solo mode only.
+
 ### Description:
 
 Unpauses the specified app using the `docker unpause` command. An app must be paused, otherwise the api will return error.
@@ -205,6 +206,10 @@ Unpauses the specified app using the `docker unpause` command. An app must be pa
 ```
 <POST> http://placeholder.url/[FACILITY_ID]/restart-app?name=[APP_NAME]
 ```
+
+### Mode:
+
+This method is compatible with solo mode only.
 
 ### Description:
 
@@ -224,6 +229,10 @@ Restarts the specified app using the `docker restart` command. This command beha
 <POST> http://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
 ```
 
+### Mode:
+
+This method is compatible with both solo and swarm mode.
+
 ### Description:
 
 Kills the specified app by forcefully stopping the container with a `SIGKILL` signal. Not as graceful as the [Stop App](#stop-app) method, and therefore not recommended.
@@ -242,6 +251,10 @@ Kills the specified app by forcefully stopping the container with a `SIGKILL` si
 <POST> http://placeholder.url/[FACILITY_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
 ```
 
+### Mode:
+
+This method is compatible with both solo and swarm mode.
+
 ### Description:
 
 Creates an app instance using the image specified. Once created, the container will be called '`IMAGE_NAME`--`USER_NAME`'. The image must have already been requested and approved in order to be used to create an app.
@@ -254,13 +267,17 @@ Creates an app instance using the image specified. Once created, the container w
 
 </br>
 
-# Delete App
+## Delete App
 
 ### Usage:
 
 ```
 <POST> http://placeholder.url/[FACILITY_ID]/delete-app?name=[APP_NAME]
 ```
+
+### Mode:
+
+This method is compatible with solo mode only.
 
 ### Description:
 
@@ -280,6 +297,10 @@ Deletes the specified app, removing ALL related data.
 <POST> http://placeholder.url/[FACILITY_ID]/hard-reset-app?name=[APP_NAME]
 ```
 
+### Mode:
+
+This method is compatible with solo mode only.
+
 ### Description:
 
 Resets the specified app, clearing ALL data and restoring it from the original image. Under the hood this method stops and deletes the app instance, then recreates it from the source image.
@@ -290,6 +311,31 @@ Resets the specified app, clearing ALL data and restoring it from the original i
 
 </br>
 
+## Get Users
+
+### Usage:
+
+```
+<GET> http://placeholder.url/[FACILITY_ID]/get-app-names
+```
+
+### Mode:
+
+This method is compatible with both solo and swarm mode.
+
+### Description:
+
+Returns an array of all existing apps on the specified SRC, regardless of its state (e.g. running, exited).
+
+`FACILITY_ID` - Facility-specific identifier
+
+### Example Response:
+``` json
+["jupyter-lab--john", "xterm--admin", "httpd--sarah"]
+```
+
+</br>
+
 ## Get App Names
 
 ### Usage:
@@ -297,6 +343,10 @@ Resets the specified app, clearing ALL data and restoring it from the original i
 ```
 <GET> http://placeholder.url/[FACILITY_ID]/get-app-names
 ```
+
+### Mode:
+
+This method is compatible with both solo and swarm mode.
 
 ### Description:
 
@@ -318,6 +368,10 @@ Returns an array of all existing apps on the specified SRC, regardless of its st
 ```
 <GET> http://placeholder.url/[FACILITY_ID]/get-app-status?name=[APP_NAME]
 ```
+
+### Mode:
+
+This method is compatible with both solo and swarm mode.
 
 ### Description:
 
@@ -357,6 +411,10 @@ Returns basic information and status, in json format. This method returns the ou
 <GET> http://placeholder.url/[FACILITY_ID]/get-app-stats?name=[APP_NAME]
 ```
 
+### Mode:
+
+This method is compatible with both solo and swarm mode.
+
 ### Description:
 
 Returns app resource information in json format, using the `docker stats` commmand.
@@ -389,6 +447,10 @@ Returns app resource information in json format, using the `docker stats` commma
 ```
 <GET> http://placeholder.url/[FACILITY_ID]/get-app-info?name=[APP_NAME]
 ```
+
+### Mode:
+
+This method is compatible with both solo and swarm mode.
 
 ### Description:
 
@@ -433,193 +495,17 @@ Returns detailed information of specified app, in json format. This method uses 
 
 </br>
 
-# Swarm mode methods
-
-## Swarm Create App
+## Get Node Names
 
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/swarm-create-app?image=[IMAGE_NAME]&user=[USER_NAME]
+<GET> http://placeholder.url/[FACILITY_ID]/get-node-names
 ```
 
-### Description:
+### Mode:
 
-Creates an app instance using the image specified. Because of the way services work, the app runs immediately after creation. If the app already exists and is completed or shutdown, it will be removed and created again. If the app already exists and is currently running, the API will return an error. The image must have already been requested and approved in order to be used to create an app. 
-
-`FACILITY_ID` - Facility-specific identifier
-
-`IMAGE_NAME` - Name of the image to load the app from
-
-`USER_NAME` - Name of the user who is using the app
-
-</br>
-
-## Swarm Kill App
-
-### Usage:
-
-```
-<POST> http://placeholder.url/[FACILITY_ID]/swarm-kill-app?name=[APP_NAME]
-```
-
-### Description:
-
-Kills the specified app by ending the relevant service, which removes all related data. Keep in mind that when an app completes normally, it will still exist, just in a complete state. This command will stop and completely delete the app.
-
-`FACILITY_ID` - Facility-specific identifier
-
-`APP_NAME` - Name of app to kill, following the [naming conventions](#naming-conventions).
-
-</br>
-
-## Swarm Get App Names
-
-### Usage:
-
-```
-<GET> http://placeholder.url/[FACILITY_ID]/swarm-get-app-names
-```
-
-### Description:
-
-Returns an array of all existing apps on the swarm network, regardless of its status (e.g. running, completed).
-
-`FACILITY_ID` - Facility-specific identifier
-
-### Example Response:
-``` json
-["jupyter-lab--john", "xterm--admin", "httpd--sarah"]
-```
-
-</br>
-
-## Swarm Get App Status
-
-### Usage:
-
-```
-<GET> http://placeholder.url/[FACILITY_ID]/swarm-get-app-status?name=[APP_NAME]
-```
-
-### Description:
-
-Returns basic information and status, in json format. Under the hood, this method returns the output of the `docker ps` commmand.
-
-`FACILITY_ID` - Facility-specific identifier
-
-`APP_NAME` _(optional)_ : Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
-
-### Example Response:
-``` json
-{
-  "ID": "1sys1eoot9rm",
-  "Image": "httpd:latest",
-  "Mode": "replicated",
-  "Name": "httpd--admin",
-  "Ports": "",
-  "Replicas": "1/1"
-}
-```
-
-</br>
-
-## Swarm Get App Stats
-
-### Usage:
-
-```
-<GET> http://placeholder.url/[FACILITY_ID]/swarm-get-app-stats?name=[APP_NAME]
-```
-
-### Description:
-
-Returns app resource information in json format, using the `docker stats` commmand. `docker stats` only shows information about containers, so the API looks at the container that was spawned from the specified service. `docker stats` also only shows containers running on the local machine, so the manager node uses ssh to run the command on the worker nodes and obtain its container stats. This method only works if ssh and labels were configured correctly (see [Swarm Setup Step 3](#3-configure-ssh)).
-
-`FACILITY_ID` - Facility-specific identifier
-
-`APP_NAME` _(optional)_ : Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
-
-### Example Response:
-``` json
-{
-  "BlockIO": "0B / 0B",
-  "CPUPerc": "0.02%",
-  "Container": "0203b8e9c65b",
-  "ID": "0203b8e9c65b",
-  "MemPerc": "0.38%",
-  "MemUsage": "29.92MiB / 7.668GiB",
-  "Name": "testcontainer",
-  "NetIO": "1.01kB / 0B",
-  "PIDs": "82"
-}
-```
-
-</br>
-
-## Swarm Get App Info
-
-### Usage:
-
-```
-<GET> http://placeholder.url/[FACILITY_ID]/swarm-get-app-info?name=[APP_NAME]
-```
-
-### Description:
-
-Returns detailed information of specified app, in json format. Under the hood, this method returns the ouput of the `docker service inspect` commmand.
-
-`FACILITY_ID` - Facility-specific identifier
-
-`APP_NAME` - Name of app to query, following the [naming conventions](#naming-conventions).
-
-### Example Response:
-``` json
-{
-  "ID": "rq5d6kvc2tkqyvlxqrfeicmxc",
-  "Version": {
-    "Index": 378
-  },
-  "CreatedAt": "2023-06-30T19:09:59.986216626Z",
-  "UpdatedAt": "2023-06-30T19:09:59.986216626Z",
-  "Spec": {
-    "Name": "httpd--admin",
-    "Labels": {
-      
-    },
-    "TaskTemplate": {
-      "ContainerSpec": {
-        "Image": "httpd:latest@sha256:f499227681dff576d6ae8c49550c57f11970b358ee720bb8557b9fa7daf3a06d",
-        "Init": false,
-        "StopGracePeriod": 10000000000,
-        "DNSConfig": {
-          
-        },
-        "Isolation": "default"
-      },
-      "Resources": {
-        "Limits": {
-          
-        },
-        "Reservations": {
-          
-        }
-      },
-      "RestartPolicy": {
-        "Condition": "any",
-        "Delay": 5000000000,
-... continues for >70 lines ...
-```
-
-</br>
-
-## Swarm Get Node Names
-
-### Usage:
-
-```
-<GET> http://placeholder.url/[FACILITY_ID]/swarm-get-node-names
-```
+This method is compatible with swarm mode only.
 
 ### Description:
 
@@ -634,13 +520,17 @@ Returns an array of the hostnames of all nodes in the swarm.
 
 </br>
 
-## Swarm Get Node Status
+## Get Node Status
 
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/swarm-get-node-status?hostname=[HOSTNAME]
+<GET> http://placeholder.url/[FACILITY_ID]/get-node-status?hostname=[HOSTNAME]
 ```
+
+### Mode:
+
+This method is compatible with swarm mode only.
 
 ### Description:
 
@@ -666,13 +556,17 @@ Returns basic status info about nodes in a swarm network, in json format. Under 
 
 </br>
 
-## Swarm Get Node Info
+## Get Node Info
 
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/swarm-get-node-info?hostname=[HOSTNAME]
+<GET> http://placeholder.url/[FACILITY_ID]/get-node-info?hostname=[HOSTNAME]
 ```
+
+### Mode:
+
+This method is compatible with swarm mode only.
 
 ### Description:
 
@@ -725,8 +619,6 @@ Returns detailed information of a specific node in the swarm network, in json fo
 
 </br>
 
-# Mode-agnostic methods
-
 ## Get App Uptime Summary
 
 ### Usage:
@@ -734,6 +626,10 @@ Returns detailed information of a specific node in the swarm network, in json fo
 ```
 <GET> http://placeholder.url/[FACILITY_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
 ```
+
+### Mode:
+
+This method is compatible with both solo and swarm mode.
 
 ### Description:
 
@@ -768,6 +664,10 @@ Returns timestamped log data representing uptime since the duration specified in
 <POST> http://placeholder.url/[FACILITY_ID]/request-image?image=[IMAGE_NAME]
 ```
 
+### Mode:
+
+This method is compatible with both solo and swarm mode.
+
 ### Description:
 
 Request an image to be pulled from docker hub.
@@ -785,6 +685,10 @@ Request an image to be pulled from docker hub.
 ```
 <GET> http://placeholder.url/[FACILITY_ID]/get-images
 ```
+
+### Mode:
+
+This method is compatible with both solo and swarm mode.
 
 ### Description:
 
