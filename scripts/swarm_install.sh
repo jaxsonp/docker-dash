@@ -88,10 +88,10 @@ done
 # configuring ssh
 echo -n "  > Configuring ssh... "
 # generate key
-keypath="/home/$USER/.ssh/id_srccontainerapi"
-rm -f "$keypath" &> /dev/null
-rm -f "$keypath.pub" &> /dev/null
-ssh-keygen -b 2048 -f "$keypath" -N "" &> /dev/null
+keypath="/home/$USER/.ssh/id_rsa"
+if [ ! -f "$keypath.pub" ]; then
+  ssh-keygen -b 2048 -f "$keypath" -N "" &> /dev/null
+fi
 # install expect
 sudo yum install -y expect &> /dev/null
 # copy key to workers
