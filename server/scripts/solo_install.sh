@@ -104,7 +104,7 @@ if [ "$(python3.9 --version 2>&1)" != "Python 3.9.16" ]; then
 
   # installing python
   echo -n "  > Installing python (this may take a few minutes)... "
-  sudo yum install -y gcc openssl-devel bzip2-devel libffi-devel zlib-devel &> /dev/null
+  sudo yum install -y make gcc openssl-devel bzip2-devel libffi-devel zlib-devel &> /dev/null
   curl -sOL https://www.python.org/ftp/python/3.9.16/Python-3.9.16.tgz &> /dev/null
   tar -xzf Python-3.9.16.tgz &> /dev/null
   cd Python-3.9.16 
