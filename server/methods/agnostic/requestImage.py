@@ -13,6 +13,7 @@ def requestImage(facility_id) -> flask.Response:
     image_name - this value is passed as an http parameter
   """
 
+  # verify image name
   image_name = flask.request.args.get("image")
   if image_name == None:
     return flask.make_response("No image name provided", 400)
