@@ -1,16 +1,17 @@
 import json
 import flask
+from subprocess import TimeoutExpired
 from methods import internal_methods
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=True)
-def swarmGetAppStatus(facility_id, app_name="", app_id="") -> flask.Response:
+def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
   
   """
   Returns basic information and status of the specified app, or all apps if no name is provided.
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     app_name (optional) - this value is passed as an http parameter
 
   returns:

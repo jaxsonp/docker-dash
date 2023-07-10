@@ -2,14 +2,14 @@ import flask
 import json
 from methods import internal_methods
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=True)
-def swarmCreateApp(facility_id) -> flask.Response:
+def swarmCreateApp(server_id) -> flask.Response:
   """
   Creates an app container from a given image name
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     image - this value is passed as an http parameter
   """
 

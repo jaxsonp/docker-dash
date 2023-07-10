@@ -44,9 +44,9 @@ def subprocessRun(cmd_str: str, capture_output=True, shell=True, timeout=None) -
   return subprocess.run(cmd_str, capture_output=capture_output, shell=shell, timeout=timeout)
 
 
-def verifyFacilityID(function):
+def verifyServerID(function):
   """
-  this decorator verifies that the facility id matches the expected input. For demo
+  this decorator verifies that the server id matches the expected input. For demo
   purposes, the id must match the string "demo".
   """
   def decoratorFunction(*args, **kwargs):
@@ -54,12 +54,12 @@ def verifyFacilityID(function):
     #print("kwargs:", kwargs)
 
     # this is temporary just for the demo
-    if "facility_id" in kwargs.keys() and kwargs["facility_id"] != "demo":
-      if kwargs["facility_id"] != "demo":
-        return flask.make_response("Invalid facility ID", 400)
-    elif "facility_id" not in kwargs.keys():
+    if "server_id" in kwargs.keys() and kwargs["server_id"] != "demo":
+      if kwargs["server_id"] != "demo":
+        return flask.make_response("Invalid server ID", 400)
+    elif "server_id" not in kwargs.keys():
       if args[0] != "demo":
-        return flask.make_response("Invalid facility ID", 400)
+        return flask.make_response("Invalid server ID", 400)
 
     return function(*args, **kwargs)
 

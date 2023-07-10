@@ -8,14 +8,14 @@ from methods import internal_methods
 import logger
 
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.handleAppName
-def getUptimeSummary(facility_id, app_name="", app_id="") -> flask.Response:
+def getUptimeSummary(server_id, app_name="", app_id="") -> flask.Response:
   """
   Returns a summary of the health/uptime of an app
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     app_name - this value is passed as an http parameter
     duration - this value is passed as an http parameter to specify duration of
       log data to return. (hour, day, week, or month)

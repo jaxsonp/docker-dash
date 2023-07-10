@@ -1,6 +1,6 @@
 # Docker Dash API
 
-This API can be used to manage apps running as Docker containers on SRC (supercomputing resource center) servers. Functionality includes creating, running, and killing apps, as well as getting an app's status, resource usage, and uptime logs. This API also supports Docker in swarm mode, which runs on a cluster of servers that shares tasks with automatic load balancing. This API was created for demo purposes, so it is not intended to run on systems where security is paramount.
+This API can be used to manage apps running as Docker containers on a server. Functionality includes creating, running, and killing apps, as well as getting an app's status, resource usage, and uptime logs. This API also supports Docker in swarm mode, which runs on a cluster of servers that shares tasks with automatic load balancing. This API was created for demo purposes, so it is not intended to run on systems where security is paramount.
 
 This is a comprehensive guide of the entire API but a quick plaintext outline of all endpoints can be found at the base url.
 
@@ -21,9 +21,9 @@ When an app is created, the image and user name are provided, then the Docker co
 
 Usernames and image names can include uppercase and lowercase letters and numbers, as well as dashes, underscores. However, usernames cannot have double dashes, nor can they start with a dash because a double dash is used to deliminate the username from the image name in the container naming convention. Image names in docker hub are already unique, but user names must be unique as well.
 
-### Facility ID
+### Server ID
 
-Each facility will be identified by a unique key in order to specify which SRC to interface with. For demo purposes, this API only responds to a placeholder facility with the ID "demo", however in production this is how you would specify your specific SRC.
+Each server will be identified by a unique key in order to specify which one to interface with. For demo purposes, this API only responds to a placeholder server with the ID "demo", however in production this is how you would specify your seperate servers.
 
 ### Solo Mode vs Swarm Mode
 
@@ -115,7 +115,7 @@ venv/bin/python main.py
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/start-app?name=[APP_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/start-app?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -126,7 +126,7 @@ This method is compatible with solo mode only.
 
 Starts the specified app using the `docker start` command. Trying to start an app that is paused will return an error, a paused app must be unpaused.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to start, following the [naming conventions](#naming-conventions).
 
@@ -137,7 +137,7 @@ Starts the specified app using the `docker start` command. Trying to start an ap
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/stop-app?name=[APP_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/stop-app?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -148,7 +148,7 @@ This method is compatible with solo mode only.
 
 Signals for the specified app to exit using the `docker stop` command. If the container does not respond to the `SIGTERM` signal within a 10 second grace period, it will kill the container forcefully with `SIGKILL`.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to stop, following the [naming conventions](#naming-conventions).
 
@@ -159,7 +159,7 @@ Signals for the specified app to exit using the `docker stop` command. If the co
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/pause-app?name=[APP_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/pause-app?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -170,7 +170,7 @@ This method is compatible with solo mode only.
 
 Pauses the specified app using the `docker pause` command. An app must be already running in order to be paused, otherwise the api will return error. While an app is paused, it can be unpaused, stopped, restarted, or killed.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to pause, following the [naming conventions](#naming-conventions).
 
@@ -181,7 +181,7 @@ Pauses the specified app using the `docker pause` command. An app must be alread
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/unpause-app?name=[APP_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/unpause-app?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -192,7 +192,7 @@ This method is compatible with solo mode only.
 
 Unpauses the specified app using the `docker unpause` command. An app must be paused, otherwise the api will return error.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to unpause, following the [naming conventions](#naming-conventions).
 
@@ -203,7 +203,7 @@ Unpauses the specified app using the `docker unpause` command. An app must be pa
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/restart-app?name=[APP_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/restart-app?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -214,7 +214,7 @@ This method is compatible with solo mode only.
 
 Restarts the specified app using the `docker restart` command. This command behaves similarly to a `docker stop` then a `docker start` command.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to restart, following the [naming conventions](#naming-conventions).
 
@@ -225,7 +225,7 @@ Restarts the specified app using the `docker restart` command. This command beha
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/kill-app?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -236,7 +236,7 @@ This method is compatible with both solo and swarm mode.
 
 Kills the specified app by forcefully stopping the container with a `SIGKILL` signal. Not as graceful as the [Stop App](#stop-app) method, and therefore not recommended.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to kill, following the [naming conventions](#naming-conventions).
 
@@ -247,7 +247,7 @@ Kills the specified app by forcefully stopping the container with a `SIGKILL` si
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
 ```
 
 ### Mode:
@@ -258,7 +258,7 @@ This method is compatible with both solo and swarm mode.
 
 Creates an app instance using the image specified. Once created, the container will be called '`IMAGE_NAME`--`USER_NAME`'. The image must have already been requested and approved in order to be used to create an app.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `IMAGE_NAME` - Name of the image to load the app from
 
@@ -271,7 +271,7 @@ Creates an app instance using the image specified. Once created, the container w
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/delete-app?name=[APP_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/delete-app?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -282,7 +282,7 @@ This method is compatible with solo mode only.
 
 Deletes the specified app, removing ALL related data.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to delete, following the [naming conventions](#naming-conventions).
 
@@ -293,7 +293,7 @@ Deletes the specified app, removing ALL related data.
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/hard-reset-app?name=[APP_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/hard-reset-app?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -304,7 +304,7 @@ This method is compatible with solo mode only.
 
 Resets the specified app, clearing ALL data and restoring it from the original image. Under the hood this method stops and deletes the app instance, then recreates it from the source image.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to reset, following the [naming conventions](#naming-conventions).
 
@@ -315,7 +315,7 @@ Resets the specified app, clearing ALL data and restoring it from the original i
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-users
+<GET> http://placeholder.url/[SERVER_ID]/get-users
 ```
 
 ### Mode:
@@ -324,9 +324,9 @@ This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns an array of all users that have apps (either running or stopped) on the specified SRC
+Returns an array of all users that have apps (either running or stopped) on the specified server
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 ### Example Response:
 ``` json
@@ -340,7 +340,7 @@ Returns an array of all users that have apps (either running or stopped) on the 
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-app-names?user=[USER]
+<GET> http://placeholder.url/[SERVER_ID]/get-app-names?user=[USER]
 ```
 
 ### Mode:
@@ -349,9 +349,9 @@ This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns an array of all existing apps on the specified SRC, regardless of its state (e.g. running, exited). If the `USER` parameter is not omitted, only the apps belonging to the given user will be returned
+Returns an array of all existing apps on the specified server, regardless of its state (e.g. running, exited). If the `USER` parameter is not omitted, only the apps belonging to the given user will be returned
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `USER` _(optional)_ : Name of user to query for
 
@@ -367,7 +367,7 @@ Returns an array of all existing apps on the specified SRC, regardless of its st
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-app-status?name=[APP_NAME]
+<GET> http://placeholder.url/[SERVER_ID]/get-app-status?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -378,7 +378,7 @@ This method is compatible with both solo and swarm mode.
 
 Returns basic information and status, in json format. This method returns the output of the `docker ps` commmand. Returns app resource information in json format, using the `docker stats` commmand. In swarm mode, it uses ssh to get info from the required node, so it may break if there are problems with the network or ssh configuration.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` _(optional)_ : Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps and statuses.
 
@@ -409,7 +409,7 @@ Returns basic information and status, in json format. This method returns the ou
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-app-stats?name=[APP_NAME]
+<GET> http://placeholder.url/[SERVER_ID]/get-app-stats?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -420,7 +420,7 @@ This method is compatible with both solo and swarm mode.
 
 Returns app resource information in json format, using the `docker stats` commmand. In swarm mode, this method uses ssh to get info from the required node, so it may break if there are problems with the network or ssh configuration.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` _(optional)_ : Name of app to query, following the [naming conventions](#naming-conventions). If omitted, will return a list of all apps' information.
 
@@ -446,7 +446,7 @@ Returns app resource information in json format, using the `docker stats` commma
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-app-info?name=[APP_NAME]
+<GET> http://placeholder.url/[SERVER_ID]/get-app-info?name=[APP_NAME]
 ```
 
 ### Mode:
@@ -457,7 +457,7 @@ This method is compatible with both solo and swarm mode.
 
 Returns detailed information of specified app, in json format. This method uses the `docker inspect` commmand, it will return identical data.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `APP_NAME` - Name of app to query, following the [naming conventions](#naming-conventions).
 
@@ -501,7 +501,7 @@ Returns detailed information of specified app, in json format. This method uses 
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-node-names
+<GET> http://placeholder.url/[SERVER_ID]/get-node-names
 ```
 
 ### Mode:
@@ -512,7 +512,7 @@ This method is compatible with swarm mode only.
 
 Returns an array of the hostnames of all nodes in the swarm.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 ### Example Response:
 ``` json
@@ -526,7 +526,7 @@ Returns an array of the hostnames of all nodes in the swarm.
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-node-status?hostname=[HOSTNAME]
+<GET> http://placeholder.url/[SERVER_ID]/get-node-status?hostname=[HOSTNAME]
 ```
 
 ### Mode:
@@ -537,7 +537,7 @@ This method is compatible with swarm mode only.
 
 Returns basic status info about nodes in a swarm network, in json format. Under the hood, this method returns the output of `docker node ls`.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `HOSTNAME` _(optional)_ - Hostname of the node to query. If omitted, will return a list of all nodes and their statuses.
 
@@ -562,7 +562,7 @@ Returns basic status info about nodes in a swarm network, in json format. Under 
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-node-info?hostname=[HOSTNAME]
+<GET> http://placeholder.url/[SERVER_ID]/get-node-info?hostname=[HOSTNAME]
 ```
 
 ### Mode:
@@ -573,7 +573,7 @@ This method is compatible with swarm mode only.
 
 Returns detailed information of a specific node in the swarm network, in json format. Under the hood, this method uses the `docker node inspect` commmand, it will return identical data.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `HOSTNAME` - Hostname of the node to query
 
@@ -625,7 +625,7 @@ Returns detailed information of a specific node in the swarm network, in json fo
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
+<GET> http://placeholder.url/[SERVER_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
 ```
 
 ### Mode:
@@ -636,9 +636,9 @@ This method is compatible with both solo and swarm mode.
 
 Returns timestamped log data representing uptime since the duration specified in the parameter. Possible durations are "hour", "day", "week", or "month". Output is `true` if the app status is 'running', and `false` if it is anything else.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
-`APP_NAME` - Facility-specific identifier
+`APP_NAME` - Server-specific identifier
 
 `DURATION` - String to specify duration of log data to return. (must be "hour", "day", "week", or "month")
 
@@ -662,7 +662,7 @@ Returns timestamped log data representing uptime since the duration specified in
 ### Usage:
 
 ```
-<POST> http://placeholder.url/[FACILITY_ID]/request-image?image=[IMAGE_NAME]
+<POST> http://placeholder.url/[SERVER_ID]/request-image?image=[IMAGE_NAME]
 ```
 
 ### Mode:
@@ -673,7 +673,7 @@ This method is compatible with both solo and swarm mode.
 
 Request an image to be pulled from docker hub.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 `IMAGE_NAME` - Name of requested image
 
@@ -684,7 +684,7 @@ Request an image to be pulled from docker hub.
 ### Usage:
 
 ```
-<GET> http://placeholder.url/[FACILITY_ID]/get-images
+<GET> http://placeholder.url/[SERVER_ID]/get-images
 ```
 
 ### Mode:
@@ -693,9 +693,9 @@ This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns an array of all existing images on the specified SRC. On top of the image information given by docker, another field called `CreatedContainerCount` will give the number of existing containers that were created from that image.
+Returns an array of all existing images on the specified server. On top of the image information given by docker, another field called `CreatedContainerCount` will give the number of existing containers that were created from that image.
 
-`FACILITY_ID` - Facility-specific identifier
+`SERVER_ID` - Server-specific identifier
 
 ### Example Response:
 ``` json

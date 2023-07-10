@@ -2,15 +2,15 @@ import flask
 from methods import internal_methods
 
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=False)
 @internal_methods.handleAppName
-def soloDeleteApp(facility_id, app_name="", app_id="") -> flask.Response:
+def soloDeleteApp(server_id, app_name="", app_id="") -> flask.Response:
   """
   This method stops and deletes a container
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     image - this value is passed as an http parameter
   """
 

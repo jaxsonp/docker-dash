@@ -2,14 +2,14 @@ import json
 import flask
 from methods import internal_methods
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=True)
-def swarmGetNodeNames(facility_id, app_name="", app_id="") -> flask.Response:
+def swarmGetNodeNames(server_id, app_name="", app_id="") -> flask.Response:
   """
   Returns a list of all nodes in the swarm
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
 
   returns:
     if successful, returns node names in json format
