@@ -3,15 +3,15 @@ import flask
 from methods import internal_methods
 
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=False)
 @internal_methods.handleAppName
-def soloGetAppInfo(facility_id, app_name="", app_id="") -> flask.Response:
+def soloGetAppInfo(server_id, app_name="", app_id="") -> flask.Response:
   """
   Returns detailed information of the specified app.
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     app_name - this value is passed as an http parameter
 
   returns:

@@ -4,74 +4,74 @@ This is a very crude help page outlining of the endpoints this API provides. Tho
 https://github.com/JaxsonP/docker-dash
 
 
-Start App - <POST> http://placeholder.url/[FACILITY_ID]/start-app?name=[APP_NAME]
+Start App - <POST> http://placeholder.url/[SERVER_ID]/start-app?name=[APP_NAME]
   Starts the specified app
   (solo only)
 
-Pause App - <POST> http://placeholder.url/[FACILITY_ID]/pause-app?name=[APP_NAME]
+Pause App - <POST> http://placeholder.url/[SERVER_ID]/pause-app?name=[APP_NAME]
   Pauses the specified app. The app must be running in order to pause
   (solo only)
 
-Unpause App - <POST> http://placeholder.url/[FACILITY_ID]/unpause-app?name=[APP_NAME]
+Unpause App - <POST> http://placeholder.url/[SERVER_ID]/unpause-app?name=[APP_NAME]
   Unpauses the specified app. The app must be paused in order to unpause
   (solo only)
 
-Restart App - <POST> http://placeholder.url/[FACILITY_ID]/restart-app?name=[APP_NAME]
+Restart App - <POST> http://placeholder.url/[SERVER_ID]/restart-app?name=[APP_NAME]
   Restarts the specified app.
   (solo only)
 
-Kill App - <POST> http://placeholder.url/[FACILITY_ID]/kill-app?name=[APP_NAME]
+Kill App - <POST> http://placeholder.url/[SERVER_ID]/kill-app?name=[APP_NAME]
   Forcefully kills the specified app.
   (solo/swarm)
 
-Create App - <POST> http://placeholder.url/[FACILITY_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
+Create App - <POST> http://placeholder.url/[SERVER_ID]/create-app?image=[IMAGE_NAME]&user=[USER_NAME]
   Creates an app using the specified image.
   (solo/swarm)
 
-Delete App - <POST> http://placeholder.url/[FACILITY_ID]/delete-app?name=[APP_NAME]
+Delete App - <POST> http://placeholder.url/[SERVER_ID]/delete-app?name=[APP_NAME]
   Deletes the specified app, removing its data.
   (solo only)
 
-Hard Reset App - <POST> http://placeholder.url/[FACILITY_ID]/hard-reset-app?name=[APP_NAME]
+Hard Reset App - <POST> http://placeholder.url/[SERVER_ID]/hard-reset-app?name=[APP_NAME]
   Resets the specified app, removing its data.
   (solo only)
 
-Get App Names - <GET> http://placeholder.url/[FACILITY_ID]/get-app-names
-  Returns an array of all apps on the specified SRC whether running or not.
+Get App Names - <GET> http://placeholder.url/[SERVER_ID]/get-app-names
+  Returns an array of all apps on the specified server whether running or not.
   (solo/swarm)
 
-Get App Status - <GET> http://placeholder.url/[FACILITY_ID]/get-app-status?name=[APP_NAME]
+Get App Status - <GET> http://placeholder.url/[SERVER_ID]/get-app-status?name=[APP_NAME]
   Returns basic status information about an app.
   (solo/swarm)
 
-Get App Stats - <GET> http://placeholder.url/[FACILITY_ID]/get-app-stats?name=[APP_NAME]
+Get App Stats - <GET> http://placeholder.url/[SERVER_ID]/get-app-stats?name=[APP_NAME]
   Returns lower-level hardware information about an app.
   (solo/swarm)
 
-Get App Info - <GET> http://placeholder.url/[FACILITY_ID]/get-app-info?name=[APP_NAME]
+Get App Info - <GET> http://placeholder.url/[SERVER_ID]/get-app-info?name=[APP_NAME]
   Return more detailed information about an app.
   (solo/swarm)
 
-Get Node Names - <GET> http://placeholder.url/[FACILITY_ID]/get-node-names
+Get Node Names - <GET> http://placeholder.url/[SERVER_ID]/get-node-names
   Returns an array of the hostnames of the nodes in a swarm network.
   (swarm only)
 
-Get Node Status - <GET> http://placeholder.url/[FACILITY_ID]/get-node-status?hostname={{hostName}}
+Get Node Status - <GET> http://placeholder.url/[SERVER_ID]/get-node-status?hostname={{hostName}}
   Returns basic status info about a node in a swarm network.
   (swarm only)
 
-Get Node Info - <GET> http://placeholder.url/[FACILITY_ID]/get-node-info?hostname={{hostName}}
+Get Node Info - <GET> http://placeholder.url/[SERVER_ID]/get-node-info?hostname={{hostName}}
   Returns detailed lower-level info about a node in a swarm network.
   (swarm only)
 
-Request Image - <POST> http://placeholder.url/[FACILITY_ID]/request-image?image=[IMAGE_NAME]
+Request Image - <POST> http://placeholder.url/[SERVER_ID]/request-image?image=[IMAGE_NAME]
   Requests an image to be "verified" and pulled from Docker Hub.
   (swarm only)
 
-Get Images - <GET> http://placeholder.url/[FACILITY_ID]/get-images
-  Returns an array of JSON objects representing all existing images on the specified SRC and their data.
+Get Images - <GET> http://placeholder.url/[SERVER_ID]/get-images
+  Returns an array of JSON objects representing all existing images on the specified server and their data.
   (swarm only)
 
-Get Uptime Summary - <GET> http://placeholder.url/[FACILITY_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
+Get Uptime Summary - <GET> http://placeholder.url/[SERVER_ID]/get-uptime-summary?name=[APP_NAME]&duration=[DURATION]
   Returns log data about the uptime of an app, over the specified duration (hour, day, week, or month)
   (swarm only)

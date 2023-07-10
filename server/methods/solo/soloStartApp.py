@@ -2,15 +2,15 @@ import flask
 from methods import internal_methods
 
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=False)
 @internal_methods.handleAppName
-def soloStartApp(facility_id, app_name="", app_id="") -> flask.Response:
+def soloStartApp(server_id, app_name="", app_id="") -> flask.Response:
   """
   Sends a command to docker to start the specified app
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     app_name - this value is passed as an http parameter
   """
 

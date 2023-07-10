@@ -3,14 +3,14 @@ import flask
 from methods import internal_methods
 
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=True)
-def swarmGetAppNames(facility_id) -> flask.Response:
+def swarmGetAppNames(server_id) -> flask.Response:
   """
   Returns an array of all running apps
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
   """
 
   # executing system command

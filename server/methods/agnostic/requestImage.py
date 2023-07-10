@@ -2,14 +2,14 @@ import flask
 from methods import internal_methods
 
 
-@internal_methods.verifyFacilityID
+@internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine()
-def requestImage(facility_id) -> flask.Response:
+def requestImage(server_id) -> flask.Response:
   """
   Request an image to be pulled from docker hub
 
   parameters:
-    facility_id - this value is passed in the API route, for demo purposes this should always be "demo"
+    server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     image_name - this value is passed as an http parameter
   """
 
