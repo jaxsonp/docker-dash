@@ -1,4 +1,4 @@
-# SRC Container API
+# Docker Dash API
 
 This API can be used to manage apps running as Docker containers on SRC (supercomputing resource center) servers. Functionality includes creating, running, and killing apps, as well as getting an app's status, resource usage, and uptime logs. This API also supports Docker in swarm mode, which runs on a cluster of servers that shares tasks with automatic load balancing. This API was created for demo purposes, so it is not intended to run on systems where security is paramount.
 
@@ -87,25 +87,25 @@ venv/bin/python main.py
 # API Endpoints:
 
 1. [Start App](#start-app)
-2. [Stop App](#stop-app)
-3. [Pause App](#pause-app)
-4. [Unpause App](#unpause-app)
-5. [Restart App](#restart-app)
-6. [Kill App](#kill-app)
-7. [Create App](#create-app)
-8. [Delete App](#delete-app)
-9. [Hard Reset App](#hard-reset-app)
-10. [Get Users](#get-users)
-10. [Get App Names](#get-app-names)
-11. [Get App Status](#get-app-status)
-12. [Get App Stats](#get-app-stats)
-13. [Get App Info](#get-app-info)
-20. [Get Node Names](#get-app-names)
-21. [Get Node Status](#get-app-status)
-22. [Get Node Info](#get-app-info)
-23. [Get App Uptime Summary](#get-app-uptime-summary)
-24. [Request Image](#request-image)
-25. [Get Images](#get-images)
+1. [Stop App](#stop-app)
+1. [Pause App](#pause-app)
+1. [Unpause App](#unpause-app)
+1. [Restart App](#restart-app)
+1. [Kill App](#kill-app)
+1. [Create App](#create-app)
+1. [Delete App](#delete-app)
+1. [Hard Reset App](#hard-reset-app)
+1. [Get Users](#get-users)
+1. [Get App Names](#get-app-names)
+1. [Get App Status](#get-app-status)
+1. [Get App Stats](#get-app-stats)
+1. [Get App Info](#get-app-info)
+1. [Get Node Names](#get-node-names)
+1. [Get Node Status](#get-node-status)
+1. [Get Node Info](#get-node-info)
+1. [Get App Uptime Summary](#get-app-uptime-summary)
+1. [Request Image](#request-image)
+1. [Get Images](#get-images)
 
 
 
