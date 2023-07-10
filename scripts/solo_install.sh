@@ -2,11 +2,21 @@
 
 echo -e "\n  > Starting install..."
 
+
+# verifying sudo
+sudo true
+
+
+# start in home directory
+cd ~
+path="docker-dash"
+
+
 # checking if dir exists
-if [ -d "src-container-api/" ]; then
+if [ -d "$path/" ]; then
   # prompting yes or no for overwrite
   while true; do
-    read -p "Directory \"src-container-api/\" already exists, overwrite? (y/n) " yn
+    read -p "Directory \"$path/\" already exists, overwrite? (y/n) " yn
     case $yn in 
       [yY] ) 
         break
@@ -20,20 +30,19 @@ if [ -d "src-container-api/" ]; then
     esac
   done
 fi
-# verifying sudo
-sudo true
+
 
 # downloading github repo
 echo -n "  > Downloading repository... "
-curl -sSLo ./src-container-api.tar https://api.github.com/repos/JaxsonP/src-container-api/tarball
+curl -sSLo ./docker-dash.tar https://api.github.com/repos/JaxsonP/docker-dash/tarball
 echo done
 
 # extracting tar archive
 echo -n "  > Extracting... "
-sudo rm -rf src-container-api/
-mkdir src-container-api/
-tar -sxf ./src-container-api.tar -C ./src-container-api/ --strip-components=1 &> /dev/null
-sudo rm src-container-api.tar
+sudo rm -rf "$path/"
+mkdir "$path/"
+tar -sxf ./docker-dash.tar -C ./$path/ --strip-components=1 &> /dev/null
+sudo rm docker-dash.tar
 echo done
 
 
