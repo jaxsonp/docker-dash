@@ -2,7 +2,7 @@ import os
 import json
 import time
 import logging
-from .methods import internal_methods
+from methods import internal_methods
 from flask import request
 
 

@@ -2,7 +2,7 @@ import sys
 import flask
 import threading
 from colorama import Fore, Style
-from .methods import internal_methods
+from methods import internal_methods
 
 import logger
 
