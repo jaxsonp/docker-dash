@@ -1,5 +1,5 @@
 __pycache__/
-logs/*
+join_command.txt
 .vscode
 nodes.csv
-join_command.txt
+server/logs/*
