@@ -59,11 +59,10 @@ Run this command (you may be asked for sudo password):
 ```
 bash <(curl -s https://raw.githubusercontent.com/JaxsonP/docker-dash/master/server/scripts/solo_install.sh)
 ```
-This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, then after navigating back to the installed directory you can start the server with:
+This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, then run the `start-server` script to start the API. If you are in the `docker-dash` folder the command will be:
 ```
-venv/bin/python main.py
+./start-server
 ```
-*Note: In order to run main.py, you must either explicitly use venv/bin/python (like shown) or manually activate the virtual environment with `source venv/bin/activate`.*
 
 ## For Swarm Mode:
 
