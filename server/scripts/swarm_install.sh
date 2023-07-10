@@ -189,9 +189,9 @@ sudo docker swarm init &> /dev/null
 sudo firewall-cmd --add-port=2377/tcp --permanent &> /dev/null
 sudo firewall-cmd --reload &> /dev/null
 jointoken=$(sudo docker swarm join-token manager)
-echo -e "run this command on each worker node:\nbash <(curl -s https://raw.githubusercontent.com/JaxsonP/src-container-api/master/scripts/swarm_install_worker.sh) ${jointoken:89}" > $joinfile
+echo -e "run this command on each worker node:\nbash <(curl -s https://raw.githubusercontent.com/JaxsonP/docker-dash/master/scripts/swarm_install_worker.sh) ${jointoken:89}" > $joinfile
 echo "done"
-echo "  > NOTE: run the command found at 'src-containers-api/$joinfile' to set up the worker nodes"
+echo "  > NOTE: run the command found at 'docker-dash/$joinfile' to set up the worker nodes"
 
 
 # prompt for restart
