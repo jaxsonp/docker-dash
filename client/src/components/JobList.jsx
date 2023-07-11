@@ -208,11 +208,13 @@ export default function JobList() {
   }, [view, viewId, order.length]);
 
   useEffect(() => {
+    if (order.length) {
     let displayedCards = order.slice(
       selectedIndex * step - step,
       selectedIndex * step
     );
     setRelevantResults(displayedCards || order.slice(0, 10));
+    }
   }, [order, selectedIndex, numItems]);
 
   useEffect(() => {
