@@ -1,0 +1,59 @@
+[
+    {
+      "Containers": "N/A",
+      "CreatedAt": "2023-06-19 14:47:25 -1000 HST",
+      "CreatedSince": "7 days ago",
+      "Digest": "<none>",
+      "ID": "56d6402215e8",
+      "Repository": "dummy-image",
+      "SharedSize": "N/A",
+      "Size": "1.01GB",
+      "Tag": "latest",
+      "UniqueSize": "N/A",
+      "VirtualSize": "1.008GB",
+      "CreatedContainerCount": 0
+    },
+    {
+      "Containers": "N/A",
+      "CreatedAt": "2023-06-14 18:51:02 -1000 HST",
+      "CreatedSince": "12 days ago",
+      "Digest": "<none>",
+      "ID": "9877ef007e1a",
+      "Repository": "bash",
+      "SharedSize": "N/A",
+      "Size": "13.9MB",
+      "Tag": "latest",
+      "UniqueSize": "N/A",
+      "VirtualSize": "13.88MB",
+      "CreatedContainerCount": 0
+    },
+    {
+      "Containers": "N/A",
+      "CreatedAt": "2023-06-14 10:45:43 -1000 HST",
+      "CreatedSince": "12 days ago",
+      "Digest": "<none>",
+      "ID": "ad303d7f80f9",
+      "Repository": "httpd",
+      "SharedSize": "N/A",
+      "Size": "168MB",
+      "Tag": "latest",
+      "UniqueSize": "N/A",
+      "VirtualSize": "168.1MB",
+      "CreatedContainerCount": 2
+    },
+    {
+      "Containers": "N/A",
+      "CreatedAt": "2023-06-13 07:45:16 -1000 HST",
+      "CreatedSince": "2 weeks ago",
+      "Digest": "<none>",
+      "ID": "09b1cac8826b",
+      "Repository": "python",
+      "SharedSize": "N/A",
+      "Size": "1.01GB",
+      "Tag": "latest",
+      "UniqueSize": "N/A",
+      "VirtualSize": "1.008GB",
+      "CreatedContainerCount": 0
+    }
+  ]
+  

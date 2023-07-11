@@ -1,0 +1,78 @@
+html {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 101dvh;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+thead > tr > th:hover {
+  background: hsl(0, 0%, 80%);
+  cursor: pointer;
+}
+
+.hover {
+  background: unset;
+  border-radius: 10px;
+  border: 1px solid silver;
+  box-shadow: 0px 1px 3px silver;
+}
+
+.hover:hover {
+  background: hsl(0, 0%, 80%);
+  cursor: pointer;
+}
+
+.grayify:hover {
+  background: hsl(0, 0%, 80%);
+}
+
+.nohover:hover {
+  background: unset;
+  cursor: unset;
+  text-decoration: unset;
+}
+
+.server-card-mapped-info p {
+  line-height: 1.1;
+}
+
+.reenter {
+  transition: opacity 0.2s ease-in-out;
+}
+
+nav a {
+  all: unset;
+}
+
+nav > ul > li:hover {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  color: silver;
+}
+
+.active {
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  color: silver;
+}
+
+button.btn {
+  transition: background-color 0s;
+}
+
+button.btn:hover {
+  transition: background-color 0.2s;
+}
