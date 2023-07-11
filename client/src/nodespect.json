@@ -1,0 +1,109 @@
+[
+    {
+      "ID": "wp2k6b0ynftjhgj4simuge5a4",
+      "Version": {
+        "Index": 22290
+      },
+      "CreatedAt": "2023-06-27T19:29:20.583082021Z",
+      "UpdatedAt": "2023-06-28T21:40:38.595493067Z",
+      "Spec": {
+        "Labels": {},
+        "Role": "worker",
+        "Availability": "active"
+      },
+      "Description": {
+        "Hostname": "localhost.server2",
+        "Platform": {
+          "Architecture": "x86_64",
+          "OS": "linux"
+        },
+        "Resources": {
+          "NanoCPUs": 1000000000,
+          "MemoryBytes": 1927254016
+        },
+        "Engine": {
+          "EngineVersion": "24.0.2",
+          "Plugins": [
+            {
+              "Type": "Log",
+              "Name": "awslogs"
+            },
+            {
+              "Type": "Log",
+              "Name": "fluentd"
+            },
+            {
+              "Type": "Log",
+              "Name": "gcplogs"
+            },
+            {
+              "Type": "Log",
+              "Name": "gelf"
+            },
+            {
+              "Type": "Log",
+              "Name": "journald"
+            },
+            {
+              "Type": "Log",
+              "Name": "json-file"
+            },
+            {
+              "Type": "Log",
+              "Name": "local"
+            },
+            {
+              "Type": "Log",
+              "Name": "logentries"
+            },
+            {
+              "Type": "Log",
+              "Name": "splunk"
+            },
+            {
+              "Type": "Log",
+              "Name": "syslog"
+            },
+            {
+              "Type": "Network",
+              "Name": "bridge"
+            },
+            {
+              "Type": "Network",
+              "Name": "host"
+            },
+            {
+              "Type": "Network",
+              "Name": "ipvlan"
+            },
+            {
+              "Type": "Network",
+              "Name": "macvlan"
+            },
+            {
+              "Type": "Network",
+              "Name": "null"
+            },
+            {
+              "Type": "Network",
+              "Name": "overlay"
+            },
+            {
+              "Type": "Volume",
+              "Name": "local"
+            }
+          ]
+        },
+        "TLSInfo": {
+          "TrustRoot": "-----BEGIN CERTIFICATE-----\nMIIBajCCARCgAwIBAgIUZaY5OLFHtV9To6yQFtOEbINkV3MwCgYIKoZIzj0EAwIw\nEzERMA8GA1UEAxMIc3dhcm0tY2EwHhcNMjMwNjI3MDIwNzAwWhcNNDMwNjIyMDIw\nNzAwWjATMREwDwYDVQQDEwhzd2FybS1jYTBZMBMGByqGSM49AgEGCCqGSM49AwEH\nA0IABEiQ2bY1IO0g8TbnV3PiUCEsakKkvpMQ6LboRZ+WOstZgDD7uLYWkeDFFyZ2\nDBWHdt079U//ePJ6bjqCwBimxc6jQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMB\nAf8EBTADAQH/MB0GA1UdDgQWBBTXUfzFuzLrcfZX39PO2BWeeJ7tSzAKBggqhkjO\nPQQDAgNIADBFAiBboiceXbOVQCxV3PrTouuSFqS9Lg09VzoZO58O1xjavwIhAOP1\nJfHiFh+TtVwmdQcTfGCUsRnn+elbGChINpiJIgaX\n-----END CERTIFICATE-----\n",
+          "CertIssuerSubject": "MBMxETAPBgNVBAMTCHN3YXJtLWNh",
+          "CertIssuerPublicKey": "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAESJDZtjUg7SDxNudXc+JQISxqQqS+kxDotuhFn5Y6y1mAMPu4thaR4MUXJnYMFYd23Tv1T/948npuOoLAGKbFzg=="
+        }
+      },
+      "Status": {
+        "State": "ready",
+        "Addr": "10.0.2.6"
+      }
+    }
+  ]
+  
