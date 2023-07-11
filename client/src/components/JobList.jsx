@@ -165,7 +165,7 @@ export default function JobList() {
       if (view === "apps") {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
-        let apps = handleFetch('apps', 'http://localhost:5000/demo/get-app-status');
+        let apps = handleFetch('apps', 'http://192.168.98.74/demo/get-app-status');
         setOrder(apps);
         if (viewId) {
         }
@@ -219,7 +219,7 @@ export default function JobList() {
 
   useEffect(() => {
     let relevant = [];
-    if (order) {
+    if (order && order.length) {
       if (!filterQuery.length) {
         setRelevantResults(order.slice(0, 10));
       } else {
@@ -260,6 +260,7 @@ export default function JobList() {
   }
 
   function sortDataBy(key) {
+    if (!order || !order.length) return;
     let direction = "asc";
     if (sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc";
@@ -334,7 +335,7 @@ export default function JobList() {
 
   return (
     <>
-    {order.length ?
+    {order && order.length ?
     <>
       <ImportModal show={modalShow} onHide={() => setModalShow(false)} />
       <DangerModal
