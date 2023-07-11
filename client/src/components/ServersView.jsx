@@ -118,11 +118,6 @@ function ServersView() {
   }, []);
 
   useEffect(() => {
-    let specificData = sortSpecificData(servers, clustersLocal);
-    setInitialData(specificData);
-  }, [servers, clustersLocal]);
-
-  useEffect(() => {
     let displayedCards = initialData.slice(
       selectedIndex * step - step,
       selectedIndex * step
