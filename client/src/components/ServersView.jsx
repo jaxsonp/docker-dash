@@ -87,28 +87,28 @@ function ServersView() {
     async function getServerPreviews() {
       async function fetchClusterData() {
         try {
-        const nodes = await fetch(
-          "http://192.168.98.74:3000/demo/get-node-status"
-        );
-        let nodesJ = await nodes.json();
-        return sortSpecificData(servers, [nodesJ]);
+          const nodes = await fetch(
+            "http://192.168.98.74:3000/demo/get-node-status"
+          );
+          let nodesJ = await nodes.json();
+          return sortSpecificData(servers, [nodesJ]);
         } catch (err) {
-          console.error(err)
+          console.error(err);
         }
       }
       setInitialData(await fetchClusterData());
       let timer = setInterval(async () => {
         if (!localStorage.getItem("sortedData")) {
           try {
-          const nodes = await fetch(
-            "http://192.168.98.74:3000/demo/get-node-status"
-          );
-          let nodesJ = await nodes.json();
-          let sorted = sortSpecificData(servers, [nodesJ]);
-          localStorage.setItem("sortedData", JSON.stringify(sorted));
-          setInitialData(sorted);
+            const nodes = await fetch(
+              "http://192.168.98.74:3000/demo/get-node-status"
+            );
+            let nodesJ = await nodes.json();
+            let sorted = sortSpecificData(servers, [nodesJ]);
+            localStorage.setItem("sortedData", JSON.stringify(sorted));
+            setInitialData(sorted);
           } catch (err) {
-            console.error(err)
+            console.error(err);
           }
         } else {
           setInitialData(JSON.parse(localStorage.getItem("sortedData")));
@@ -126,12 +126,12 @@ function ServersView() {
   }, []);
 
   useEffect(() => {
-    if (initialData.length) {
-    let displayedCards = initialData.slice(
-      selectedIndex * step - step,
-      selectedIndex * step
-    );
-    setReorderedData(displayedCards || initialData);
+    if (initialData && initialData.length) {
+      let displayedCards = initialData.slice(
+        selectedIndex * step - step,
+        selectedIndex * step
+      );
+      setReorderedData(displayedCards || initialData);
     }
   }, [initialData, selectedIndex]);
 
@@ -146,7 +146,7 @@ function ServersView() {
       <div
         style={{
           width: "100%",
-          textAlign: "left"
+          textAlign: "left",
         }}
       >
         <h2 style={{ textAlign: "center" }}>SERVERS:</h2>
@@ -157,17 +157,17 @@ function ServersView() {
             display: "flex",
             flexWrap: "wrap",
             gap: "15px",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
-          {reorderedData.length ? (
+          {reorderedData?.length ? (
             reorderedData.map((card, index) => {
               return (
                 <Card
                   key={index}
                   style={{
                     width: card.length > 1 ? "428px" : "214px",
-                    height: "fit-content"
+                    height: "fit-content",
                   }}
                 >
                   <h4 style={{ margin: "10px", fontSize: "22px" }}>
@@ -187,7 +187,7 @@ function ServersView() {
                       height: "20px",
                       position: "absolute",
                       top: "10px",
-                      right: "10px"
+                      right: "10px",
                     }}
                   ></div>
                   <div
@@ -197,7 +197,7 @@ function ServersView() {
                       gridTemplateColumns: card.length > 1 ? "1fr 1fr" : "1fr",
                       padding: "10px",
                       height: expanded === index + 1 ? "fit-content" : "346px",
-                      overflow: "hidden"
+                      overflow: "hidden",
                     }}
                   >
                     {card.length > 4 && (
@@ -207,7 +207,7 @@ function ServersView() {
                           position: "absolute",
                           left: 10,
                           top: 36,
-                          opacity: expanded ? 0 : 1
+                          opacity: expanded ? 0 : 1,
                         }}
                       >
                         Health of Not Visible:
@@ -221,7 +221,7 @@ function ServersView() {
                               style={{
                                 position: "absolute",
                                 left: 165,
-                                top: 41
+                                top: 41,
                               }}
                               key={key}
                             >
@@ -241,7 +241,7 @@ function ServersView() {
                                     height: "14px",
                                     marginLeft: 30 * (key - 4) + "px",
                                     borderRadius: "50%",
-                                    opacity: expanded ? 0 : 1
+                                    opacity: expanded ? 0 : 1,
                                   }}
                                 ></div>
                               )}
@@ -250,7 +250,7 @@ function ServersView() {
                           <Card
                             style={{
                               height: "fit-content",
-                              marginTop: "10px"
+                              marginTop: "10px",
                             }}
                           >
                             <Card.Body>
@@ -265,7 +265,7 @@ function ServersView() {
                                         color:
                                           inner.ManagerStatus === "Unavailable"
                                             ? "orangered"
-                                            : "unset"
+                                            : "unset",
                                       }}
                                     >
                                       {inner.ManagerStatus || "Worker"}
@@ -286,7 +286,7 @@ function ServersView() {
                                         height: "15px",
                                         position: "absolute",
                                         top: "10px",
-                                        right: "10px"
+                                        right: "10px",
                                       }}
                                     ></div>
                                     <p>{inner.Hostname}</p>
@@ -297,7 +297,7 @@ function ServersView() {
                                           inner.Availability === "paused" ||
                                           inner.Availability === "drain"
                                             ? "hsl(56, 100%, 44%)"
-                                            : "unset"
+                                            : "unset",
                                       }}
                                     >
                                       Availability: {inner.Availability}
@@ -307,7 +307,7 @@ function ServersView() {
                                         color:
                                           inner.Status === "failed"
                                             ? "orangered"
-                                            : "unset"
+                                            : "unset",
                                       }}
                                     >
                                       Status: {inner.Status}
@@ -347,7 +347,7 @@ function ServersView() {
                       style={{
                         fontSize: "20px",
                         width: "fit-content",
-                        margin: "0 auto"
+                        margin: "0 auto",
                       }}
                       onClick={() => {
                         expanded === index + 1
@@ -360,7 +360,7 @@ function ServersView() {
                   )}
                   <Button
                     style={{
-                      margin: card.length > 2 ? "10px" : "44px 10px 10px"
+                      margin: card.length > 2 ? "10px" : "44px 10px 10px",
                     }}
                   >
                     View Current Apps
@@ -374,36 +374,40 @@ function ServersView() {
             </div>
           )}
         </div>
-        <Pagination
-          style={{
-            width: "fit-content",
-            margin: "20px auto",
-            display: "flex",
-            justifyContent: "center"
-          }}
-          onClick={() => setExpanded(null)}
-        >
-          <Pagination.First
-            onClick={() => {
-              setSelectedIndex(1);
+        {initialData?.length && (
+          <Pagination
+            style={{
+              width: "fit-content",
+              margin: "20px auto",
+              display: "flex",
+              justifyContent: "center",
             }}
-          />
-          <Pagination.Prev
-            onClick={() =>
-              selectedIndex > 1 && setSelectedIndex(selectedIndex - 1)
-            }
-          />
-          {renderPagination(numItems, step, selectedIndex, setSelectedIndex)}
-          <Pagination.Next
-            onClick={() =>
-              selectedIndex < Math.ceil(servers.length / step) &&
-              setSelectedIndex(selectedIndex + 1)
-            }
-          />
-          <Pagination.Last
-            onClick={() => setSelectedIndex(Math.ceil(servers.length / step))}
-          />
-        </Pagination>
+            onClick={() => setExpanded(null)}
+          >
+            <Pagination.First
+              onClick={() => {
+                setSelectedIndex(1);
+              }}
+            />
+            <Pagination.Prev
+              onClick={() =>
+                selectedIndex > 1 && setSelectedIndex(selectedIndex - 1)
+              }
+            />
+            {renderPagination(numItems, step, selectedIndex, setSelectedIndex)}
+            <Pagination.Next
+              onClick={() =>
+                selectedIndex < Math.ceil(initialData.length / step) &&
+                setSelectedIndex(selectedIndex + 1)
+              }
+            />
+            <Pagination.Last
+              onClick={() =>
+                setSelectedIndex(Math.ceil(initialData.length / step))
+              }
+            />
+          </Pagination>
+        )}
       </div>
     </>
   );
