@@ -87,7 +87,7 @@ function ServersView() {
     async function getServerPreviews() {
       async function fetchClusterData() {
         const nodes = await fetch(
-          "http://localhost:5000/swarm-get-node-status"
+          "http://localhost:5000/demo/swarm-get-node-status"
         );
         let nodesJ = await nodes.json();
         return sortSpecificData(servers, [nodesJ]);
@@ -95,13 +95,17 @@ function ServersView() {
       setInitialData(await fetchClusterData());
       let timer = setInterval(async () => {
         if (!localStorage.getItem("sortedData")) {
+          try {
           const nodes = await fetch(
-            "http://localhost:5000/swarm-get-node-status"
+            "http://localhost:5000/demo/swarm-get-node-status"
           );
           let nodesJ = await nodes.json();
           let sorted = sortSpecificData(servers, [nodesJ]);
           localStorage.setItem("sortedData", JSON.stringify(sorted));
           setInitialData(sorted);
+          } catch (err) {
+            console.error(err)
+          }
         } else {
           setInitialData(JSON.parse(localStorage.getItem("sortedData")));
           if (timeOfLastFetch + 600000 < Date.now()) {
