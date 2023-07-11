@@ -506,11 +506,11 @@ Returns detailed information of specified app, in json format. This method uses 
 
 ### Mode:
 
-This method is compatible with swarm mode only.
+This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns an array of the hostnames of all nodes in the swarm.
+Returns an array of the hostnames of all nodes in the swarm, or if the node is running in solo mode, it will return a list who's only element is its own hostname.
 
 `SERVER_ID` - Server-specific identifier
 
@@ -531,11 +531,11 @@ Returns an array of the hostnames of all nodes in the swarm.
 
 ### Mode:
 
-This method is compatible with swarm mode only.
+This method is compatible with both solo and swarm mode.
 
 ### Description:
 
-Returns basic status info about nodes in a swarm network, in json format. Under the hood, this method returns the output of `docker node ls`.
+Returns basic status info about nodes in a swarm network, in json format. Under the hood, this method returns the output of `docker node ls`. If the node is not in swarm mode, it will still return it's own status info in an array with length 1, albiet some fields are unobtainable in solo mode and will be omitted.
 
 `SERVER_ID` - Server-specific identifier
 
@@ -545,13 +545,10 @@ Returns basic status info about nodes in a swarm network, in json format. Under 
 ``` json
 {
    "Availability":"Active",
-   "EngineVersion":"24.0.2",
    "Hostname":"localhost.server2",
-   "ID":"wp2k6b0ynftjhgj4simuge5a4",
-   "ManagerStatus":"",
+   "ManagerStatus":"Leader",
    "Self":false,
    "Status":"Ready",
-   "TLSStatus":"Ready"
 }
 ```
 

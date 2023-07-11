@@ -53,12 +53,12 @@ Get App Info - <GET> http://placeholder.url/[SERVER_ID]/get-app-info?name=[APP_N
   (solo/swarm)
 
 Get Node Names - <GET> http://placeholder.url/[SERVER_ID]/get-node-names
-  Returns an array of the hostnames of the nodes in a swarm network.
-  (swarm only)
+  Returns an array of the hostnames of the nodes in a swarm network, or just itself in solo mode.
+  (solo/swarm)
 
 Get Node Status - <GET> http://placeholder.url/[SERVER_ID]/get-node-status?hostname={{hostName}}
-  Returns basic status info about a node in a swarm network.
-  (swarm only)
+  Returns basic status info about a node in a swarm network, or just itself in solo mode.
+  (solo/swarm)
 
 Get Node Info - <GET> http://placeholder.url/[SERVER_ID]/get-node-info?hostname={{hostName}}
   Returns detailed lower-level info about a node in a swarm network.
