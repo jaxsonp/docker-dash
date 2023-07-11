@@ -46,6 +46,9 @@ if __name__ == "__main__":
 
   APP_NAME = f"{IMAGE_NAME}--{USER_NAME}"
 
+  # install IMAGE_NAME if not already
+  subprocess.run(f"docker pull {IMAGE_NAME}", shell=True, capture_output=True)
+
   def removeImage(image): subprocess.run(f"docker rmi {image}", shell=True, capture_output=True)
   def createApp(image, user): subprocess.run(f"docker service create --name {image}--{user} --mode replicated-job -d {image}", shell=True, capture_output=True)
   def deleteApp(app_name): subprocess.run(f"docker service rm {app_name}", shell=True, capture_output=True)
