@@ -166,7 +166,7 @@ export default function JobList() {
         setSortableHeaders(appHeaders);
         let apps = handleFetch(
           "apps",
-          "http://192.168.98.74:3000/demo/get-app-status"
+          "http://192.168.98.74/api/demo/get-app-status"
         );
         setOrder(apps);
         if (viewId) {
@@ -647,6 +647,12 @@ export default function JobList() {
             </div>
           )}
         </>
+      ) : view === "images" || view === "apps" ? (
+        <div style={{ height: "90dvh", margin: "0 auto" }}>
+          <h2>
+            <em>Loading...</em>
+          </h2>
+        </div>
       ) : (
         <div style={{ height: "90dvh", display: "grid", placeItems: "center" }}>
           <h1>404 Page Not Found</h1>
