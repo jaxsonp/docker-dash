@@ -106,7 +106,7 @@ function ServersView() {
           setInitialData(JSON.parse(localStorage.getItem("sortedData")));
           if (timeOfLastFetch + 600000 < Date.now()) {
             setTimeOfLastFetch(Date.now());
-            localStorage.clear("sortedData");
+            localStorage.removeItem("sortedData");
           }
         }
       }, 600000);
@@ -116,11 +116,6 @@ function ServersView() {
     }
     getServerPreviews();
   }, []);
-
-  useEffect(() => {
-    let specificData = sortSpecificData(servers, clustersLocal);
-    setInitialData(specificData);
-  }, [servers, clustersLocal]);
 
   useEffect(() => {
     let displayedCards = initialData.slice(

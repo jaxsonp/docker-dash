@@ -11,3 +11,24 @@ export default async function handleFetch(name, api) {
     }
   }
   
+  export async function handleFetchInterval(name, api, interval) {
+    let timer = setInterval(async () => {
+      if (!localStorage.getItem(name)) {
+        let response = await fetch(
+          api
+        );
+        response = await nodes.json();
+        localStorage.setItem(name, JSON.stringify(response));
+        return JSON.parse(localStorage.getItem(name));
+      } else {
+        return JSON.parse(localStorage.getItem("sortedData"));
+        if (timeOfLastFetch + interval < Date.now()) {
+          setTimeOfLastFetch(Date.now());
+          localStorage.removeItem(name);
+        }
+      }
+    }, interval);
+    return function () {
+      clearTimeout(timer);
+    };
+  }
