@@ -1,20 +1,23 @@
 # Docker Dash
-Docker Dash is a handy GUI dashboard made for administrators to manage apps running as docker containers on a server.
 
-## Table of Contents
-1. [Background](#background)
+### Table of Contents
+1. [Introduction](#introduction)
 1. [Getting Started](#getting-started)
 1. [Docker Dash API](#docker-dash-api)
-
-<br>
 
 ---
 
 <br>
 
-# Background
+# Introduction
 
-This project was created as a mockup to demonstrate the concept of containerization of applications and to prototype an administrative dashboard to manage users and apps. With that in mind, safety and security were not the highest concern. Be advised that significant security vulnerabilities may exist in many aspects of this project.
+Docker Dash is a handy GUI dashboard made for administrators to manage apps running as docker containers on a server. This project was created to demonstrate the concept of containerization in the context of user/app management on a research server.
+
+Docker Dash is designed to be running on a shared research server. A user wishing to access the server will do so through various apps, which are then spawned on the server as Docker containers, and managed easily by an administrator through Docker Dash. 
+
+## Security warning
+
+This project was created as a mockup to demonstrate the concept of containerization, rather than a full-fledged, officially maintained product. With that in mind, safety and security were not the highest concern during development. Be advised that significant security vulnerabilities may exist in many aspects of this project.
 
 <br>
 
