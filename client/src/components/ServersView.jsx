@@ -81,41 +81,41 @@ function ServersView() {
     return navigate(`/containers/${serverId}`);
   }
 
-  // useEffect(() => {
-  //   localStorage.clear("sortedData");
+  useEffect(() => {
+    localStorage.clear("sortedData");
 
-  //   async function getServerPreviews() {
-  //     async function fetchClusterData() {
-  //       const nodes = await fetch(
-  //         "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/swarm-get-node-status"
-  //       );
-  //       let nodesJ = await nodes.json();
-  //       return sortSpecificData(servers, [nodesJ]);
-  //     }
-  //     setInitialData(await fetchClusterData());
-  //     let timer = setInterval(async () => {
-  //       if (!localStorage.getItem("sortedData")) {
-  //         const nodes = await fetch(
-  //           "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/swarm-get-node-status"
-  //         );
-  //         let nodesJ = await nodes.json();
-  //         let sorted = sortSpecificData(servers, [nodesJ]);
-  //         localStorage.setItem("sortedData", JSON.stringify(sorted));
-  //         setInitialData(sorted);
-  //       } else {
-  //         setInitialData(JSON.parse(localStorage.getItem("sortedData")));
-  //         if (timeOfLastFetch + 600000 < Date.now()) {
-  //           setTimeOfLastFetch(Date.now());
-  //           localStorage.clear("sortedData");
-  //         }
-  //       }
-  //     }, 600000);
-  //     return function () {
-  //       clearTimeout(timer);
-  //     };
-  //   }
-  //   getServerPreviews();
-  // }, []);
+    async function getServerPreviews() {
+      async function fetchClusterData() {
+        const nodes = await fetch(
+          "http://localhost:5000/swarm-get-node-status"
+        );
+        let nodesJ = await nodes.json();
+        return sortSpecificData(servers, [nodesJ]);
+      }
+      setInitialData(await fetchClusterData());
+      let timer = setInterval(async () => {
+        if (!localStorage.getItem("sortedData")) {
+          const nodes = await fetch(
+            "http://localhost:5000/swarm-get-node-status"
+          );
+          let nodesJ = await nodes.json();
+          let sorted = sortSpecificData(servers, [nodesJ]);
+          localStorage.setItem("sortedData", JSON.stringify(sorted));
+          setInitialData(sorted);
+        } else {
+          setInitialData(JSON.parse(localStorage.getItem("sortedData")));
+          if (timeOfLastFetch + 600000 < Date.now()) {
+            setTimeOfLastFetch(Date.now());
+            localStorage.clear("sortedData");
+          }
+        }
+      }, 600000);
+      return function () {
+        clearTimeout(timer);
+      };
+    }
+    getServerPreviews();
+  }, []);
 
   useEffect(() => {
     let specificData = sortSpecificData(servers, clustersLocal);
