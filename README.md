@@ -3,6 +3,7 @@ Docker Dash is a handy GUI dashboard made for administrators to manage apps runn
 
 ## Table of Contents
 1. [Background](#background)
+1. [Getting Started](#getting-started)
 1. [Docker Dash API](#docker-dash-api)
 
 <br>
@@ -18,6 +19,8 @@ This project was created as a mockup to demonstrate the concept of containerizat
 <br>
 
 # Getting Started
+
+*TODO put stuff here*
 
 <br>
 
@@ -36,7 +39,7 @@ This API serves as a backend for Docker Dash, providing an interface between the
 - Internet connection
 - All nodes must have unique hostnames *(for swarm mode)*
 
-*Notes: Installation should ideally work on other Red-Hat-based distros, but it hasn't been officially tested.*
+*Notes: Installation should ideally work on other Red-Hat-based distros, but it hasn't been formally tested.*
 
 ### For Solo Mode:
 
