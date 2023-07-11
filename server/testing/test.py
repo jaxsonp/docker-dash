@@ -45,6 +45,9 @@ if __name__ == "__main__":
 
   APP_NAME = f"{IMAGE_NAME}--{USER_NAME}"
 
+  # install IMAGE_NAME if not already
+  subprocess.run(f"docker pull {IMAGE_NAME}", shell=True, capture_output=True)
+
   def startApp(app_name): subprocess.run(f"docker start {app_name}", shell=True, capture_output=True)
   def killApp(app_name): subprocess.run(f"docker kill {app_name}", shell=True, capture_output=True)
   def removeImage(image): subprocess.run(f"docker rmi {image}", shell=True, capture_output=True)
