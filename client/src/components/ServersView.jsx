@@ -88,7 +88,7 @@ function ServersView() {
       async function fetchClusterData() {
         try {
         const nodes = await fetch(
-          "http://192.168.98.74:5000/demo/get-node-status"
+          "http://192.168.98.74:3000/demo/get-node-status"
         );
         let nodesJ = await nodes.json();
         return sortSpecificData(servers, [nodesJ]);
@@ -101,7 +101,7 @@ function ServersView() {
         if (!localStorage.getItem("sortedData")) {
           try {
           const nodes = await fetch(
-            "http://192.168.98.74:5000/demo/get-node-status"
+            "http://192.168.98.74:3000/demo/get-node-status"
           );
           let nodesJ = await nodes.json();
           let sorted = sortSpecificData(servers, [nodesJ]);

@@ -165,7 +165,7 @@ export default function JobList() {
       if (view === "apps") {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
-        let apps = handleFetch('apps', 'http://192.168.98.74/demo/get-app-status');
+        let apps = handleFetch('apps', 'http://192.168.98.74:3000/demo/get-app-status');
         setOrder(apps);
         if (viewId) {
         }
