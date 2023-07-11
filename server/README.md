@@ -56,27 +56,27 @@ Most GET methods this API provides return data from a corresponding docker comma
 ## For Solo Mode:
 
 Run this command (you may be asked for sudo password):
-```
+``` bash
 bash <(curl -s https://raw.githubusercontent.com/JaxsonP/docker-dash/master/server/scripts/solo_install.sh)
 ```
-This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, then run the `start-server` script to start the API. If you are in the `docker-dash` folder the command will be:
-```
+This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, then run the `start-server` script to start the API. If you are in the `docker-dash/` folder the command will be:
+``` bash
 ./start-server
 ```
 
 ## For Swarm Mode:
 
 Run this command (you may be asked for sudo password):
-```
+``` bash
 bash <(curl -s https://raw.githubusercontent.com/JaxsonP/docker-dash/master/server/scripts/swarm_install.sh)
-```
+``` 
 This will download all files and install and configure Docker and Python 3.9.16. This can take up to 5-10 minutes. You will be prompted to restart, and you can start setting up the worker nodes. The specific command to use will be saved in a file called `join_command.txt`, but it should look something like:
-```
+``` bash
 bash <(curl -s https://raw.githubusercontent.com/JaxsonP/docker-dash/master/server/scripts/swarm_install_worker.sh) [SWARM_TOKEN] [MANAGER_IP_ADDRESS]:2377
 ```
-Run this command on each worker node to complete setup. This script will first add the node to the swarm as a manager so that it can configure itself, then it will demote itself to worker. Once that is done, you can navigate to the api directory on the true manager node and start the server with:
-```
-venv/bin/python main.py
+Run this command on each worker node to complete setup. This script will first add the node to the swarm as a manager so that it can configure itself, then it will demote itself to worker. Once that is done, you can navigate to the `docker-dash/` directory on the true manager node and start the server with:
+``` bash
+./start-server
 ```
 *Note: In order to run main.py, you must either explicitly use venv/bin/python (like shown) or manually activate the virtual environment with `source venv/bin/activate`.*
 
@@ -114,7 +114,7 @@ venv/bin/python main.py
 
 ### Usage:
 
-```
+``` 
 <POST> http://placeholder.url/[SERVER_ID]/start-app?name=[APP_NAME]
 ```
 
