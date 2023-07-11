@@ -106,7 +106,7 @@ function ServersView() {
           setInitialData(JSON.parse(localStorage.getItem("sortedData")));
           if (timeOfLastFetch + 600000 < Date.now()) {
             setTimeOfLastFetch(Date.now());
-            localStorage.clear("sortedData");
+            localStorage.removeItem("sortedData");
           }
         }
       }, 600000);

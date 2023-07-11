@@ -150,9 +150,9 @@ export default function JobList() {
 
   useEffect(() => {
     let timer = setInterval(() => {
-      localStorage.clear("apps");
-      localStorage.clear("images");
-      localStorage.clear("services");
+      localStorage.removeItem("apps");
+      localStorage.removeItem("images");
+      localStorage.removeItem("services");
     }, 300000);
     return () => clearInterval(timer);
   }, []);

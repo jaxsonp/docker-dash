@@ -24,7 +24,7 @@ export default async function handleFetch(name, api) {
         return JSON.parse(localStorage.getItem("sortedData"));
         if (timeOfLastFetch + interval < Date.now()) {
           setTimeOfLastFetch(Date.now());
-          localStorage.clear(name);
+          localStorage.removeItem(name);
         }
       }
     }, interval);
