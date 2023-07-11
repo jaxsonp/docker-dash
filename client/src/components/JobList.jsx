@@ -165,22 +165,8 @@ export default function JobList() {
       if (view === "apps") {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
-        // let apps = await handleFetch(
-        //   "apps",
-        //   "https://run.mocky.io/v3/528ff2f2-9b6c-42ff-a650-62c7d61e30dc"
-        // );
+        let apps = handleFetch('apps', 'http://localhost:5000/demo/get-app-status');
         setOrder(apps);
-        // if (localStorage.getItem("apps")) {
-        //   console.log("local-apps");
-        //   setOrder(apps);
-        // } else {
-        //   // let response = await fetch(
-        //   //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/get-app-status"
-        //   // );
-        //   // const jsonD = await response.json();
-        //   setOrder(apps);
-        //   localStorage.setItem("apps", JSON.stringify(apps));
-        // }
         if (viewId) {
         }
       } else if (view === "images") {

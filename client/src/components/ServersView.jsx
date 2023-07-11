@@ -88,7 +88,7 @@ function ServersView() {
       async function fetchClusterData() {
         try {
         const nodes = await fetch(
-          "http://localhost:5000/demo/swarm-get-node-status"
+          "http://localhost:5000/demo/get-node-status"
         );
         let nodesJ = await nodes.json();
         return sortSpecificData(servers, [nodesJ]);
@@ -101,7 +101,7 @@ function ServersView() {
         if (!localStorage.getItem("sortedData")) {
           try {
           const nodes = await fetch(
-            "http://localhost:5000/demo/swarm-get-node-status"
+            "http://localhost:5000/demo/get-node-status"
           );
           let nodesJ = await nodes.json();
           let sorted = sortSpecificData(servers, [nodesJ]);
@@ -126,11 +126,13 @@ function ServersView() {
   }, []);
 
   useEffect(() => {
+    if (initialData.length) {
     let displayedCards = initialData.slice(
       selectedIndex * step - step,
       selectedIndex * step
     );
     setReorderedData(displayedCards || initialData);
+    }
   }, [initialData, selectedIndex]);
 
   return (

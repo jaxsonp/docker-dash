@@ -21,11 +21,12 @@ export default async function handleFetch(name, api) {
         localStorage.setItem(name, JSON.stringify(response));
         return JSON.parse(localStorage.getItem(name));
       } else {
-        return JSON.parse(localStorage.getItem("sortedData"));
+        let parsed = JSON.parse(localStorage.getItem(name))
         if (timeOfLastFetch + interval < Date.now()) {
           setTimeOfLastFetch(Date.now());
           localStorage.removeItem(name);
         }
+        return parsed;
       }
     }, interval);
     return function () {
