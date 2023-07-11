@@ -6,11 +6,13 @@ from methods import internal_methods
 @internal_methods.verifyDockerEngine(swarm_method=True)
 def swarmCreateApp(server_id) -> flask.Response:
   """
-  Creates an app container from a given image name
+  Creates an app container from a given image and user
 
   parameters:
     server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     image - this value is passed as an http parameter
+    user - this value is passed as an http parameter
+    version (optional) - this value is passed as an http parameter
   """
 
   image_name = flask.request.args.get("image")
@@ -36,14 +38,16 @@ def swarmCreateApp(server_id) -> flask.Response:
   completedProcess = internal_methods.subprocessRun(f"docker service ls --format \"{{{{.Name}}}}\"")
   if service_name in completedProcess.stdout.decode().split("\n"):
     completedProcess = internal_methods.subprocessRun(f"docker service ps --format json {service_name}")
+
+    # if app exists and is running, exit
     if "complete" not in json.loads(completedProcess.stdout.decode())["CurrentState"].lower():
       return flask.make_response("App already exists", 400)
     
-    # removing old service
+    # app is done running, delete it
     internal_methods.subprocessRun(f"docker service rm {service_name}")
 
 
-  # executing system command
+  # executing docker command
   completedProcess = internal_methods.subprocessRun(f"docker service create --name \"{service_name}\" --detach --mode replicated-job {image_name}")
   if completedProcess.returncode != 0:
     # uncaught error

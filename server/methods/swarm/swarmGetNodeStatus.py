@@ -10,7 +10,7 @@ def swarmGetNodeStatus(server_id, app_name="", app_id="") -> flask.Response:
 
   parameters:
     server_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    app_name (optional) - this value is passed as an http parameter
+    hostname (optional) - this value is passed as an http parameter
 
   returns:
     if successful, returns node status in json format
@@ -19,7 +19,8 @@ def swarmGetNodeStatus(server_id, app_name="", app_id="") -> flask.Response:
   # get list of node names
   completedProcess = internal_methods.subprocessRun("docker node ls --format {{.Hostname}}")
   if completedProcess.returncode != 0:
-      return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+      # uncaught error
+      return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
   name_list = completedProcess.stdout.decode().strip().split("\n")
 
   hostname = flask.request.args.get("hostname")
@@ -45,6 +46,7 @@ def swarmGetNodeStatus(server_id, app_name="", app_id="") -> flask.Response:
     # get specified node status
     completedProcess = internal_methods.subprocessRun(f"docker node ls -f name={hostname} --format json")
     if completedProcess.returncode != 0:
-      return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+      # uncaught error
+      return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
     return flask.make_response(json.dumps(json.loads(completedProcess.stdout.decode())), 200)

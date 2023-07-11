@@ -24,16 +24,16 @@ def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
   completedProcess = internal_methods.subprocessRun("hostname")
   local_hostname = completedProcess.stdout.decode().strip()
 
-  # get statuses of all apps
+  # get all app statuses
   if app_name == None:
     
     # get list of all node hostnames
     completedProcess = internal_methods.subprocessRun("docker node ls --format {{.Hostname}}")
     if completedProcess.returncode != 0:
-      return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+      return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
     hostname_list = [name for name in completedProcess.stdout.decode().split("\n") if name != ""]
 
-    # add all processes in each node to output_list
+    # add all containers in each node to output_list
     output_list = []
     for hostname in hostname_list:
 
@@ -42,9 +42,9 @@ def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
         # get status of local containers
         completedProcess = internal_methods.subprocessRun("docker ps -a --format json")
         if completedProcess.returncode != 0:
-          return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+          return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
-        # add all statuses to list
+        # add all statuses to output_list
         for app in completedProcess.stdout.decode().strip().split("\n"):
           if app == "": continue
           app_json = json.loads(app)
@@ -56,7 +56,7 @@ def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
         # get username and ip address of node in question
         completedProcess = internal_methods.subprocessRun(f"docker node inspect --format json {hostname}")
         if completedProcess.returncode != 0:
-          return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+          return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
         node = json.loads(completedProcess.stdout.decode())[0]
         if not "Labels" in node["Spec"] or not "username" in node["Spec"]["Labels"]:
           return flask.make_response("Cannot find node username (make sure all nodes have the label 'username' which is the current user's name)", 500)
@@ -69,9 +69,9 @@ def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
         except TimeoutExpired:
           return flask.make_response(f"Cannot ssh into node '{hostname}' (make sure this node has the shared ssh key)", 500)
         if completedProcess.returncode != 0:
-          return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+          return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
         
-        # add all containers to list
+        # add all containers to output_list
         for app in completedProcess.stdout.decode().strip().split("\n"):
           if app == "": continue
           app_json = json.loads(app)
@@ -88,10 +88,10 @@ def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
     if app_id == None:
       return flask.make_response(f"Unable to find app \"{app_name}\"", 400)
     
-    # get hostname of node that service is running on
+    # get hostname of node that the app is running on
     completedProcess = internal_methods.subprocessRun(f"docker service ps -f desired-state=complete --format json {app_name}")
     if completedProcess.returncode != 0:
-      return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+      return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
     app_list = [name for name in completedProcess.stdout.decode().strip().split("\n") if name != ""]
     app_list = list(map(json.loads, app_list))
     app_hostname = app_list[0]["Node"]
@@ -102,7 +102,7 @@ def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
       # get stats of local containers
       completedProcess = internal_methods.subprocessRun("docker ps -a --format json")
       if completedProcess.returncode != 0:
-        return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+        return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
       # find the correct container
       output_list = completedProcess.stdout.decode().strip().split("\n")
@@ -120,7 +120,7 @@ def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
       # get username and ip address of node in question
       completedProcess = internal_methods.subprocessRun(f"docker node inspect --format json {app_hostname}")
       if completedProcess.returncode != 0:
-        return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+        return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
       node = json.loads(completedProcess.stdout.decode())[0]
       if not "Labels" in node["Spec"] or not "username" in node["Spec"]["Labels"]:
         return flask.make_response("Cannot find node username (make sure all nodes have the label 'username' which is the current user's name)", 500)
@@ -133,7 +133,7 @@ def swarmGetAppStatus(server_id, app_name="", app_id="") -> flask.Response:
       except TimeoutExpired:
         return flask.make_response(f"Cannot ssh into node '{app_hostname}' (make sure this node has an authorized ssh key)", 500)
       if completedProcess.returncode != 0:
-        return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+        return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
       # find the correct container
       output_list = completedProcess.stdout.decode().strip().split("\n")
