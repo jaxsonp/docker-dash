@@ -11,10 +11,11 @@ def soloDeleteApp(server_id, app_name="", app_id="") -> flask.Response:
 
   parameters:
     server_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    image - this value is passed as an http parameter
+    app_name - this value is passed as an http parameter
+    app_id - this value is obtained when the app_name is verified with the handleAppName decorator
   """
 
-  # executing system commands
+  # executing docker commands
   internal_methods.subprocessRun(f"docker stop \"{app_id}\"")
   completedProcess = internal_methods.subprocessRun(f"docker rm \"{app_id}\"")
   if completedProcess.returncode != 0:

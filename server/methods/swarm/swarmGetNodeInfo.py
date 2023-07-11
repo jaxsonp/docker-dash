@@ -4,13 +4,13 @@ from methods import internal_methods
 
 @internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=True)
-def swarmGetNodeInfo(server_id, app_name="", app_id="") -> flask.Response:
+def swarmGetNodeInfo(server_id) -> flask.Response:
   """
-  Returns information on specified node
+  Returns detailed information on specified node
 
   parameters:
     server_id - this value is passed in the API route, for demo purposes this should always be "demo"
-    app_name (optional) - this value is passed as an http parameter
+    hostname - this value is passed as an http parameter
 
   returns:
     if successful, returns node information in json format
@@ -19,7 +19,8 @@ def swarmGetNodeInfo(server_id, app_name="", app_id="") -> flask.Response:
   # get list of node names
   completedProcess = internal_methods.subprocessRun("docker node ls --format {{.Hostname}}")
   if completedProcess.returncode != 0:
-      return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+      # uncaught error
+      return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
   name_list = completedProcess.stdout.decode().strip().split("\n")
 
   # check that node exists
@@ -32,6 +33,7 @@ def swarmGetNodeInfo(server_id, app_name="", app_id="") -> flask.Response:
   # inspect specified node
   completedProcess = internal_methods.subprocessRun(f"docker node inspect --format json {hostname}")
   if completedProcess.returncode != 0:
-    return flask.make_response(f"Unknown error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
+    # uncaught error
+    return flask.make_response(f"Uncaught error:\n"+completedProcess.stdout.decode()+"\n"+completedProcess.stderr.decode(), 500)
 
   return flask.make_response(json.dumps(json.loads(completedProcess.stdout.decode())), 200)

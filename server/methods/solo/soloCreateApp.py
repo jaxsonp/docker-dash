@@ -1,16 +1,17 @@
 import flask
 from methods import internal_methods
 
-
 @internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=False)
 def soloCreateApp(server_id) -> flask.Response:
   """
-  Creates an app container from a given image name
+  Creates an app container from a given image and user
 
   parameters:
     server_id - this value is passed in the API route, for demo purposes this should always be "demo"
     image - this value is passed as an http parameter
+    user - this value is passed as an http parameter
+    version (optional) - this value is passed as an http parameter
   """
 
   image_name = flask.request.args.get("image")
@@ -37,7 +38,7 @@ def soloCreateApp(server_id) -> flask.Response:
   if container_name in completedProcess.stdout.decode().split("\n"):
     return flask.Response("App already exists", status=400)
 
-  # executing system command
+  # create container
   completedProcess = internal_methods.subprocessRun(f"docker create --name \"{container_name}\" --pull never {image_name}")
   if completedProcess.returncode != 0:
     # uncaught error
