@@ -1,5 +1,5 @@
-import json
 import flask
+import json
 from methods import internal_methods
 
 @internal_methods.verifyServerID

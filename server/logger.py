@@ -1,9 +1,9 @@
-import os
+from flask import request
 import json
-import time
 import logging
 from methods import internal_methods
-from flask import request
+import os
+import time
 
 
 container_state_codes = {
