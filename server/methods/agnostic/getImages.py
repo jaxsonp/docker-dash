@@ -1,6 +1,6 @@
 from collections import Counter
-import json
 import flask
+import json
 from methods import internal_methods
 
 

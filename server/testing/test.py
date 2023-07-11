@@ -1,8 +1,8 @@
-from requests import get, post
 from colorama import Fore
 from datetime import datetime
-import subprocess
 import json
+from requests import get, post
+import subprocess
 
 total_tests = 0
 successful_tests = 0

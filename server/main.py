@@ -1,8 +1,8 @@
-import sys
-import flask
-import threading
 from colorama import Fore, Style
+import flask
 from methods import internal_methods
+import sys
+import threading
 
 import logger
 
