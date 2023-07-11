@@ -86,11 +86,15 @@ function ServersView() {
 
     async function getServerPreviews() {
       async function fetchClusterData() {
+        try {
         const nodes = await fetch(
           "http://localhost:5000/demo/swarm-get-node-status"
         );
         let nodesJ = await nodes.json();
         return sortSpecificData(servers, [nodesJ]);
+        } catch (err) {
+          console.error(err)
+        }
       }
       setInitialData(await fetchClusterData());
       let timer = setInterval(async () => {
