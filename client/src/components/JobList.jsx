@@ -329,10 +329,7 @@ export default function JobList() {
 
   return (
     <>
-      {(view === "images" || view === "apps") &&
-      !failed &&
-      order &&
-      order.length > 0 ? (
+      {(view === "images" || view === "apps") && order && order.length > 0 ? (
         <>
           <ImportModal show={modalShow} onHide={() => setModalShow(false)} />
           <DangerModal
@@ -637,17 +634,15 @@ export default function JobList() {
             </div>
           )}
         </>
-      ) : order.length === 0 && (view === "images" || view === "apps") ? (
-        !failed ? (
-          <div style={{ height: "484px" }}>
-            <Spinner animation="border" />
-          </div>
-        ) : (
-          <h2 style={{ color: "crimson" }}>SERVER ISSUES DETECTED</h2>
-        )
-      ) : (
+      ) : !view === "images" && !view === "apps" ? (
         <div style={{ height: "90dvh", display: "grid", placeItems: "center" }}>
           <h1>404 Page Not Found</h1>
+        </div>
+      ) : failed ? (
+        <h2 style={{ color: "crimson" }}>SERVER ISSUES DETECTED</h2>
+      ) : (
+        <div style={{ height: "484px" }}>
+          <Spinner animation="border" />
         </div>
       )}
     </>
