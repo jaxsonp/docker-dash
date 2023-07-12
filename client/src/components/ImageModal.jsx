@@ -112,7 +112,7 @@ export function InspectModal(props) {
           id="contained-modal-title-vcenter"
           style={{ width: "100%", textAlign: "center" }}
         >
-          {props.id}
+          {"<server.hostname>"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

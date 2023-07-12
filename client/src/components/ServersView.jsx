@@ -5,7 +5,6 @@ import { ChevronDown, ChevronUp } from "react-feather";
 import { InspectModal } from "./ImageModal";
 import servers from "../serverInfo.json";
 import clustersLocal from "../clusters.json";
-import nodespect from "../nodespect.json";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   let pages = [];
@@ -76,8 +75,8 @@ function ServersView() {
   const [initialData, setInitialData] = useState([]);
   const [inspectInfo, setInspectInfo] = useState("");
   const [reorderedData, setReorderedData] = useState([]);
-  const navigate = useNavigate();
   const [timeOfLastFetch, setTimeOfLastFetch] = useState(Date.now());
+  const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.removeItem("sortedData");
@@ -129,10 +128,6 @@ function ServersView() {
     }
   }, [initialData, selectedIndex]);
 
-  async function handleGetContainers(serverId) {
-    return navigate(`/containers/${serverId}`);
-  }
-
   async function handleInspectModal(endpoint) {
     let response = await fetch(endpoint);
     response = await response.json();
@@ -144,7 +139,6 @@ function ServersView() {
       <InspectModal
         show={modalShow}
         onHide={() => setModalShow(false)}
-        id="5176"
         src={inspectInfo}
       />
       <div
