@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button, Card, Pagination, Spinner } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { InspectModal } from "./ImageModal";
 import servers from "../serverInfo.json";
@@ -77,9 +77,6 @@ function ServersView() {
   const [reorderedData, setReorderedData] = useState([]);
   const [timeOfLastFetch, setTimeOfLastFetch] = useState(Date.now());
   const [failed, setFailed] = useState(false);
-  const navigate = useNavigate();
-
-  let entryTime = Date.now();
 
   useEffect(() => {
     sessionStorage.removeItem("sortedData");
