@@ -140,6 +140,7 @@ export default function JobList() {
   // ];
 
   useEffect(() => {
+    setFailed(false);
     let timer = setTimeout(() => {
       order.length === 0 && setFailed(true);
     }, 5000);
