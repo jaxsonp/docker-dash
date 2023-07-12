@@ -329,7 +329,10 @@ export default function JobList() {
 
   return (
     <>
-      {order && order.length > 0 ? (
+      {(view === "images" || view === "apps") &&
+      !failed &&
+      order &&
+      order.length > 0 ? (
         <>
           <ImportModal show={modalShow} onHide={() => setModalShow(false)} />
           <DangerModal
@@ -634,7 +637,7 @@ export default function JobList() {
             </div>
           )}
         </>
-      ) : view === "images" || view === "apps" ? (
+      ) : order.length === 0 && (view === "images" || view === "apps") ? (
         !failed ? (
           <div style={{ height: "484px" }}>
             <Spinner animation="border" />
