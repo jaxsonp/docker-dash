@@ -33,7 +33,6 @@ const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
 
 // revise this to only take the dynamic part of api i.e. stop, start, etc.
 async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
-  console.log(arrayOfArrays);
   let commaSeparated = [];
   for (let i = 0; i < arrayOfArrays.length; i++) {
     commaSeparated.push(arrayOfArrays[i][0]);
@@ -43,22 +42,18 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
   let url = api + commaStrung;
 
   let toRevise = originalArray.map((x) => Object.assign({}, x));
-  console.log("TR", toRevise);
-  let theFinale = null;
+  let mappedRevised = null;
   let updatedArray = null;
   if (newState !== "banished") {
-    theFinale = toRevise
+    mappedRevised = toRevise
       .filter((el) => commaSeparated.includes(el.Names))
       .map((el) => (el.State = newState));
     updatedArray = toRevise.map((obj) =>
-      obj.Names === theFinale.Names ? theFinale : obj
+      obj.Names === mappedRevised.Names ? mappedRevised : obj
     );
   } else {
-    updatedArray = toRevise.findIndex((el) => el.Names === theFinale.Names);
-    console.log("updated", updatedArray);
+    updatedArray = toRevise.findIndex((el) => el.Names === mappedRevised.Names);
   }
-  console.log("daindex", originalArray);
-  console.log("updatedArray", updatedArray, originalArray);
   return updatedArray;
   // let response = await fetch(url, {
   //   method: "POST"
@@ -90,6 +85,7 @@ export default function JobList() {
   const [modalShow, setModalShow] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(1);
   // const [reorderedData, setReorderedData] = useState([]);
+  const [failed, setFailed] = useState(false);
   const [numItems, setNumItems] = useState(1);
   const [dangerShow, setDangerShow] = useState(false);
 
@@ -144,11 +140,17 @@ export default function JobList() {
   // ];
 
   useEffect(() => {
+    setTimeout(() => {
+      setFailed(true);
+    }, 5000);
+  }, []);
+
+  useEffect(() => {
     let timer = setInterval(() => {
-      localStorage.removeItem("apps");
-      localStorage.removeItem("images");
-      localStorage.removeItem("inspectApp");
-      localStorage.removeItem("appHealth");
+      sessionStorage.removeItem("apps");
+      sessionStorage.removeItem("images");
+      sessionStorage.removeItem("inspectApp");
+      sessionStorage.removeItem("appHealth");
     }, 300000);
     return () => clearInterval(timer);
   }, []);
@@ -161,15 +163,25 @@ export default function JobList() {
       if (view === "apps") {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
-        let apps = handleFetch("apps", api + "get-app-status");
-        setOrder(apps);
+        try {
+          let apps = handleFetch("apps", api + "get-app-status");
+          setOrder(apps);
+        } catch (err) {
+          setFailed(true);
+          console.error(err);
+        }
         if (viewId) {
         }
       } else if (view === "images") {
         setDirectory("images");
         setSortableHeaders(imageHeaders);
-        let images = handleFetch("images", api + "get-images");
-        setOrder(images);
+        try {
+          let images = handleFetch("images", api + "get-images");
+          setOrder(images);
+        } catch (err) {
+          setFailed(true);
+          console.error(err);
+        }
         if (viewId) {
         }
       } else {
@@ -181,7 +193,7 @@ export default function JobList() {
   }, [view, viewId, order.length]);
 
   useEffect(() => {
-    if (order.length) {
+    if (order && order.length) {
       let displayedCards = order.slice(
         selectedIndex * step - step,
         selectedIndex * step
@@ -280,30 +292,28 @@ export default function JobList() {
   }
 
   async function handleChartUpdate() {
-    // info here will be equal to an inspect tree
+    let inspectApp;
+    try {
+      inspectApp = await handleFetch(
+        "inspectApp",
+        api + `get-app-info?name=${checkedRows[0][0]}`
+      );
+    } catch (err) {
+      console.error(err);
+    }
 
-    // let info = await fetch(
-    //   `https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/get-app-info?name=${checkedRows[0][0]}`
-    // );
-    // let infoJ = await info.json();
-    let inspectApp = await handleFetch(
-      "inspectApp",
-      api + `get-app-info?name=${checkedRows[0][0]}`
-    );
-    // let points = await fetch(
-    //   `https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
-    // );
-    let appHealth = await handleFetch(
-      "appHealth",
-      api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
-    );
-    // let pointsJ = await points.json();
+    let appHealth;
+    try {
+      appHealth = await handleFetch(
+        "appHealth",
+        api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
+      );
+    } catch (err) {
+      console.error(err);
+    }
+
     let appHealthToNums = Object.values(appHealth).map((val) => +val);
 
-    // let pointsObj = apps.filter(
-    //   (container) => container.Names === checkedRows[0][0]
-    // )[0].Points;
-    // let numericalPointArr = Object.values(pointsObj).map((val) => +val);
     let sliced = appHealthToNums.slice(
       appHealthToNums.length - 7,
       appHealthToNums.length
@@ -317,7 +327,7 @@ export default function JobList() {
 
   return (
     <>
-      {order && order.length ? (
+      {order && order.length > 0 ? (
         <>
           <ImportModal show={modalShow} onHide={() => setModalShow(false)} />
           <DangerModal
@@ -623,11 +633,13 @@ export default function JobList() {
           )}
         </>
       ) : view === "images" || view === "apps" ? (
-        <div style={{ height: "90dvh", margin: "0 auto" }}>
-          <h2>
-            <em>Loading...</em>
-          </h2>
-        </div>
+        !failed ? (
+          <div style={{ height: "484px" }}>
+            <Spinner animation="border" />
+          </div>
+        ) : (
+          <h2 style={{ color: "crimson" }}>SERVER ISSUES DETECTED</h2>
+        )
       ) : (
         <div style={{ height: "90dvh", display: "grid", placeItems: "center" }}>
           <h1>404 Page Not Found</h1>

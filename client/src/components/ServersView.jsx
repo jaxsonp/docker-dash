@@ -76,10 +76,13 @@ function ServersView() {
   const [inspectInfo, setInspectInfo] = useState("");
   const [reorderedData, setReorderedData] = useState([]);
   const [timeOfLastFetch, setTimeOfLastFetch] = useState(Date.now());
+  const [failed, setFailed] = useState(false);
   const navigate = useNavigate();
 
+  let entryTime = Date.now();
+
   useEffect(() => {
-    localStorage.removeItem("sortedData");
+    sessionStorage.removeItem("sortedData");
 
     async function getServerPreviews() {
       async function fetchClusterData() {
@@ -88,26 +91,28 @@ function ServersView() {
           let nodesJ = await nodes.json();
           return sortSpecificData(servers, [nodesJ]);
         } catch (err) {
+          setFailed(true);
           console.error(err);
         }
       }
       setInitialData(await fetchClusterData());
       let timer = setInterval(async () => {
-        if (!localStorage.getItem("sortedData")) {
+        if (!sessionStorage.getItem("sortedData")) {
           try {
             const nodes = await fetch(api + "get-node-status");
             let nodesJ = await nodes.json();
             let sorted = sortSpecificData(servers, [nodesJ]);
-            localStorage.setItem("sortedData", JSON.stringify(sorted));
+            sessionStorage.setItem("sortedData", JSON.stringify(sorted));
             setInitialData(sorted);
           } catch (err) {
+            setFailed(true);
             console.error(err);
           }
         } else {
-          setInitialData(JSON.parse(localStorage.getItem("sortedData")));
+          setInitialData(JSON.parse(sessionStorage.getItem("sortedData")));
           if (timeOfLastFetch + 600000 < Date.now()) {
             setTimeOfLastFetch(Date.now());
-            localStorage.removeItem("sortedData");
+            sessionStorage.removeItem("sortedData");
           }
         }
       }, 600000);
@@ -313,6 +318,7 @@ function ServersView() {
                                   </>
                                 ) : (
                                   <>
+                                    {/* Status, Availability */}
                                     <p>{inner["Hostname"]}</p>
                                     <hr />
                                     <p>CPU%: {inner["CPU%"]}</p>
@@ -369,10 +375,12 @@ function ServersView() {
                 </Card>
               );
             })
-          ) : (
+          ) : !failed ? (
             <div style={{ height: "484px" }}>
               <Spinner animation="border" />
             </div>
+          ) : (
+            <h1 style={{ color: "crimson" }}>SERVERS DOWN</h1>
           )}
         </div>
         {initialData?.length && (
