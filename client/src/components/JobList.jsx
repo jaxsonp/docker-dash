@@ -7,9 +7,9 @@ import { useParams } from "react-router-dom";
 import ReactJson from "@microlink/react-json-view";
 import ImportModal from "./ImageModal";
 import { DangerModal } from "./ImageModal";
-import services from "../services.json";
-import apps from "../db.json";
-import images from "../images.json";
+// import services from "../services.json";
+// import apps from "../db.json";
+// import images from "../images.json";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   let pages = [];
@@ -66,6 +66,7 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
   // return console.log(response.status);
 }
 
+const api = "http://192.168.98.74/api/demo/";
 const step = 10;
 
 export default function JobList() {
@@ -98,54 +99,49 @@ export default function JobList() {
       name: "Start",
       disabledBy: ["restarting", "running", "paused", "dead"],
       causes: "running",
-      // api:
-      //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/start-app?name="
+      api: api + "start-app?name=",
     },
     {
       name: "Stop",
       disabledBy: ["created", "restarting", "exited", "dead"],
       causes: "exited",
-      // api:
-      //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/stop-app?name="
+      api: api + "stop-app?name=",
     },
     {
       name: "Pause",
       disabledBy: ["created", "restarting", "paused", "exited", "dead"],
       causes: "paused",
-      api: "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/pause-app?name=",
+      api: api + "pause-app?name=",
     },
     {
       name: "Resume",
       causes: "running",
       disabledBy: ["created", "running", "restarting", "exited", "dead"],
-      // api:
-      //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/unpause-app?name="
+      api: api + "unpause-app?name=",
     },
     {
       name: "Restart",
       disabledBy: ["created", "restarting", "exited", "dead"],
       causes: "restarting",
-      // api:
-      //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/restart-app?name="
+      api: api + "restart-app?name=",
     },
     {
       variant: "warning",
       name: "Kill",
       causes: "exited",
       disabledBy: ["created", "exited", "dead"],
-      // api:
-      //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/kill-app?name="
+      api: api + "kill-app?name=",
     },
   ];
   const imageHeaders = ["ID", "Size", "Containers", "Tag", "CreatedAt"];
-  const serviceHeaders = [
-    "Name",
-    "ID",
-    "BlockIO",
-    "NetIO",
-    "CPUPerc",
-    "MemUsage",
-  ];
+  // const serviceHeaders = [
+  //   "Name",
+  //   "ID",
+  //   "BlockIO",
+  //   "NetIO",
+  //   "CPUPerc",
+  //   "MemUsage",
+  // ];
 
   useEffect(() => {
     let timer = setInterval(() => {
@@ -164,41 +160,15 @@ export default function JobList() {
       if (view === "apps") {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
-        let apps = handleFetch(
-          "apps",
-          "http://192.168.98.74/api/demo/get-app-status"
-        );
+        let apps = handleFetch("apps", api + "get-app-status");
         setOrder(apps);
         if (viewId) {
         }
       } else if (view === "images") {
         setDirectory("images");
         setSortableHeaders(imageHeaders);
-        if (localStorage.getItem("images")) {
-          setOrder(images);
-        } else {
-          // let response = await fetch(
-          //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/get-images"
-          // );
-          // const jsonD = await response.json();
-          setOrder(images);
-          localStorage.setItem("images", JSON.stringify(images));
-        }
-        if (viewId) {
-        }
-      } else if (view === "services") {
-        setDirectory("services");
-        setSortableHeaders(serviceHeaders);
-        if (localStorage.getItem("services")) {
-          setOrder(services);
-        } else {
-          // let response = await fetch(
-          //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/swarm-get-app-stats"
-          // );
-          // const jsonD = await response.json();
-          setOrder(services);
-          localStorage.setItem("services", JSON.stringify(services));
-        }
+        let images = handleFetch("images", api + "get-images");
+        setOrder(images);
         if (viewId) {
         }
       } else {
@@ -312,21 +282,30 @@ export default function JobList() {
     // info here will be equal to an inspect tree
 
     // let info = await fetch(
-    //   `https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/get-app-info?name=${checkedRows[0]}`
+    //   `https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/get-app-info?name=${checkedRows[0][0]}`
     // );
     // let infoJ = await info.json();
+    let inspectApp = await handleFetch(
+      "inspectApp",
+      api + `get-app-info?name=${checkedRows[0][0]}`
+    );
     // let points = await fetch(
-    //   `https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/get-uptime-summary?name=${checkedRows[0]}&duration=hour`
+    //   `https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
     // );
+    let appHealth = await handleFetch(
+      "appHealth",
+      api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
+    );
     // let pointsJ = await points.json();
-    // let pointVals = Object.values(pointsJ).map((val) => +val);
-    let pointsObj = apps.filter(
-      (container) => container.Names === checkedRows[0][0]
-    )[0].Points;
-    let numericalPointArr = Object.values(pointsObj).map((val) => +val);
-    let sliced = numericalPointArr.slice(
-      numericalPointArr.length - 7,
-      numericalPointArr.length
+    let appHealthToNums = Object.values(appHealth).map((val) => +val);
+
+    // let pointsObj = apps.filter(
+    //   (container) => container.Names === checkedRows[0][0]
+    // )[0].Points;
+    // let numericalPointArr = Object.values(pointsObj).map((val) => +val);
+    let sliced = appHealthToNums.slice(
+      appHealthToNums.length - 7,
+      appHealthToNums.length
     );
     setInView({
       key: checkedRows[0][0],
@@ -347,7 +326,7 @@ export default function JobList() {
             arrayofArrays={checkedRows}
             originalArray={order}
             newState={"banished"}
-            api="https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/delete-app?name="
+            api={api + "delete-app?name="}
           />
           {directory !== "images" && (
             <div
@@ -359,7 +338,6 @@ export default function JobList() {
                 alignItems: "center",
               }}
             >
-              {/* Update to useRef, post & on 200 success navigate to user id params page? */}
               <Form.Control
                 value={filterQuery}
                 onChange={(e) => setFilterQuery(e.target.value)}
@@ -481,9 +459,6 @@ export default function JobList() {
               )}
             </div>
           </div>
-
-          {/* New State:   const [sortableHeaders, setSortableHeaders] = useState([]); */}
-
           <Table style={{ marginBottom: 0 }} responsive striped bordered>
             <thead>
               <tr>
@@ -505,9 +480,8 @@ export default function JobList() {
                         Enable Actions
                       </div>
                     </th>
-                    {/* Alternative Path */}
                   </>
-                ) : directory === "images" || directory === "services" ? (
+                ) : directory === "images" ? (
                   <>
                     <th className="nohover">
                       <div>Enable Actions</div>

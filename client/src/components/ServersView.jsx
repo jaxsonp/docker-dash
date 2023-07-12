@@ -23,6 +23,7 @@ const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   return pages;
 };
 
+const api = "http://192.168.98.74/api/demo/";
 const step = 3;
 
 function sortSpecificData(singleObj, multiObj) {
@@ -73,13 +74,10 @@ function ServersView() {
   const [expanded, setExpanded] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [initialData, setInitialData] = useState([]);
+  const [inspectInfo, setInspectInfo] = useState("");
   const [reorderedData, setReorderedData] = useState([]);
   const navigate = useNavigate();
   const [timeOfLastFetch, setTimeOfLastFetch] = useState(Date.now());
-
-  async function handleGetContainers(serverId) {
-    return navigate(`/containers/${serverId}`);
-  }
 
   useEffect(() => {
     localStorage.clear("sortedData");
@@ -87,9 +85,7 @@ function ServersView() {
     async function getServerPreviews() {
       async function fetchClusterData() {
         try {
-          const nodes = await fetch(
-            "http://192.168.98.74/api/demo/get-node-status"
-          );
+          const nodes = await fetch(api + "get-node-status");
           let nodesJ = await nodes.json();
           return sortSpecificData(servers, [nodesJ]);
         } catch (err) {
@@ -100,9 +96,7 @@ function ServersView() {
       let timer = setInterval(async () => {
         if (!localStorage.getItem("sortedData")) {
           try {
-            const nodes = await fetch(
-              "http://192.168.98.74/api/demo/get-node-status"
-            );
+            const nodes = await fetch(api + "get-node-status");
             let nodesJ = await nodes.json();
             let sorted = sortSpecificData(servers, [nodesJ]);
             localStorage.setItem("sortedData", JSON.stringify(sorted));
@@ -135,13 +129,23 @@ function ServersView() {
     }
   }, [initialData, selectedIndex]);
 
+  async function handleGetContainers(serverId) {
+    return navigate(`/containers/${serverId}`);
+  }
+
+  async function handleInspectModal(endpoint) {
+    let response = await fetch(endpoint);
+    response = await response.json();
+    setInspectInfo(response);
+  }
+
   return (
     <>
       <InspectModal
         show={modalShow}
         onHide={() => setModalShow(false)}
         id="5176"
-        src={nodespect}
+        src={inspectInfo}
       />
       <div
         style={{
@@ -330,7 +334,10 @@ function ServersView() {
                             </Card.Body>
                             {card.length > 1 && (
                               <Button
-                                onClick={() => setModalShow(true)}
+                                onClick={() => {
+                                  handleInspectModal(api + "get-node-info");
+                                  setModalShow(true);
+                                }}
                                 style={{ margin: "0 auto 10px" }}
                               >
                                 Inspect

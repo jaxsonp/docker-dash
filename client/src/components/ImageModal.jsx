@@ -5,6 +5,8 @@ import ReactJson from "@microlink/react-json-view";
 import { useRef } from "react";
 import { propTypes } from "react-bootstrap/esm/Image";
 
+const api = "http://192.168.98.74/api/demo/";
+
 export default function ImportModal(props) {
   const imageRef = useRef();
   const reasonRef = useRef();
@@ -36,15 +38,14 @@ export default function ImportModal(props) {
             style={{ marginRight: "50px" }}
             onClick={async () => {
               props.onHide();
-              // let response = await fetch(
-              //   "https://039f22be-dbf3-4f9a-b96b-f0e72b7c408e.mock.pstmn.io/demo/start-app?name=" +
-              //     imageRef.current.value,
-              //   {
-              //     method: "POST"
-              //   }
-              // );
-              // response = await response.json();
-              // console.log(response);
+              let response = await fetch(
+                api + "start-app?name=" + imageRef.current.value,
+                {
+                  method: "POST",
+                }
+              );
+              response = await response.json();
+              console.log(response);
             }}
           >
             Submit
@@ -119,7 +120,7 @@ export function InspectModal(props) {
         <ReactJson
           style={{
             textAlign: "left",
-            wordBreak: "break-all"
+            wordBreak: "break-all",
           }}
           collapsed={false}
           src={props.src}
