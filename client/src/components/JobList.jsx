@@ -166,7 +166,7 @@ export default function JobList() {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
         try {
-          let apps = handleFetch("apps", api + "get-app-status");
+          let apps = await handleFetch("apps", api + "get-app-status");
           setOrder(apps);
         } catch (err) {
           setFailed(true);
@@ -178,7 +178,7 @@ export default function JobList() {
         setDirectory("images");
         setSortableHeaders(imageHeaders);
         try {
-          let images = handleFetch("images", api + "get-images");
+          let images = await handleFetch("images", api + "get-images");
           setOrder(images);
         } catch (err) {
           setFailed(true);
