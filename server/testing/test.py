@@ -139,16 +139,18 @@ if __name__ == "__main__":
   test("Kill app - no app name",                   "POST", f"{BASE_URL}/{SERVER_ID}/kill-app", 400)
   startApp(APP_NAME)
 
-  if SWARM_MODE:
-    print()
-    test("Get node names - success",                       "GET", f"{BASE_URL}/{SERVER_ID}/get-node-names", 200)
-    test("Get node names - invalid facility ID",           "GET", f"{BASE_URL}/iaminvalid/get-node-names", 400)
+  print()
+  test("Get node names - success",                       "GET", f"{BASE_URL}/{SERVER_ID}/get-node-names", 200)
+  test("Get node names - invalid facility ID",           "GET", f"{BASE_URL}/iaminvalid/get-node-names", 400)
 
-    print()
-    test("Get node status - success",                      "GET", f"{BASE_URL}/{SERVER_ID}/get-node-status", 200)
+  print()
+  test("Get node status - success",                      "GET", f"{BASE_URL}/{SERVER_ID}/get-node-status", 200)
+  test("Get node status - invalid facility ID",          "GET", f"{BASE_URL}/iaminvalid/get-node-status?hostname={NODE_NAME}", 400)
+  test("Get node status - invalid app name",             "GET", f"{BASE_URL}/{SERVER_ID}/get-node-status?hostname=iaminvalid", 400)
+
+  if SWARM_MODE:
+    
     test("Get node status - success (specific node)",      "GET", f"{BASE_URL}/{SERVER_ID}/get-node-status?hostname={NODE_NAME}", 200)
-    test("Get node status - invalid facility ID",          "GET", f"{BASE_URL}/iaminvalid/get-node-status?hostname={NODE_NAME}", 400)
-    test("Get node status - invalid app name",             "GET", f"{BASE_URL}/{SERVER_ID}/get-node-status?hostname=iaminvalid", 400)
 
     print()
     test("Get node info - success",                        "GET", f"{BASE_URL}/{SERVER_ID}/get-node-info?hostname={NODE_NAME}", 200)

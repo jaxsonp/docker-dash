@@ -4,7 +4,7 @@ from methods import internal_methods
 
 @internal_methods.verifyServerID
 @internal_methods.verifyDockerEngine(swarm_method=True)
-def swarmGetNodeStatus(server_id, app_name="", app_id="") -> flask.Response:
+def swarmGetNodeStatus(server_id) -> flask.Response:
   """
   Returns status of specified node, or all nodes if not specified
 

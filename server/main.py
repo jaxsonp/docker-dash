@@ -89,23 +89,6 @@ def hardResetAppWrapper(server_id) -> flask.Response:
 # SWARM ONLY METHODS ===========================================================
 
 
-from methods.swarm.swarmGetNodeNames import swarmGetNodeNames
-@app.route('/<server_id>/get-node-names', methods=['GET'])
-def getNodeNamesWrapper(server_id) -> flask.Response:
-  if swarm_mode:
-    return swarmGetNodeNames(server_id)
-  else:
-    return flask.make_response("get-node-names endpoint incompatible with solo mode", 400)
-
-from methods.swarm.swarmGetNodeStatus import swarmGetNodeStatus
-@app.route('/<server_id>/get-node-status', methods=['GET'])
-def getNodeStatusWrapper(server_id) -> flask.Response:
-  if swarm_mode:
-    return swarmGetNodeStatus(server_id)
-  else:
-    return flask.make_response("get-node-status endpoint incompatible with solo mode", 400)
-
-
 from methods.swarm.swarmGetNodeInfo import swarmGetNodeInfo
 @app.route('/<server_id>/get-node-info', methods=['GET'])
 def getNodeInfoWrapper(server_id) -> flask.Response:
@@ -188,6 +171,25 @@ def getAppInfoWrapper(server_id) -> flask.Response:
   else:
     return soloGetAppInfo(server_id)
   
+
+from methods.solo.soloGetNodeNames import soloGetNodeNames
+from methods.swarm.swarmGetNodeNames import swarmGetNodeNames
+@app.route('/<server_id>/get-node-names', methods=['GET'])
+def getNodeNamesWrapper(server_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetNodeNames(server_id)
+  else:
+    return soloGetNodeNames(server_id)
+
+
+from methods.solo.soloGetNodeStatus import soloGetNodeStatus
+from methods.swarm.swarmGetNodeStatus import swarmGetNodeStatus
+@app.route('/<server_id>/get-node-status', methods=['GET'])
+def getNodeStatusWrapper(server_id) -> flask.Response:
+  if swarm_mode:
+    return swarmGetNodeStatus(server_id)
+  else:
+    return soloGetNodeStatus(server_id)
 
 
 
