@@ -3,7 +3,6 @@ import { Modal } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import ReactJson from "@microlink/react-json-view";
 import { useRef } from "react";
-import { propTypes } from "react-bootstrap/esm/Image";
 
 const api = "http://192.168.98.74/api/demo/";
 

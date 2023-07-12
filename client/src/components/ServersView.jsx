@@ -80,7 +80,7 @@ function ServersView() {
   const [timeOfLastFetch, setTimeOfLastFetch] = useState(Date.now());
 
   useEffect(() => {
-    localStorage.clear("sortedData");
+    localStorage.removeItem("sortedData");
 
     async function getServerPreviews() {
       async function fetchClusterData() {

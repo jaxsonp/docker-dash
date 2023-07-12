@@ -1,35 +1,34 @@
 export default async function handleFetch(name, api) {
-    if (localStorage.getItem(name)) {
-      console.log("exists", localStorage.getItem(name));
+  if (localStorage.getItem(name)) {
+    console.log("exists", localStorage.getItem(name));
+    return JSON.parse(localStorage.getItem(name));
+  } else {
+    let response = await fetch(api);
+    response = await response.json();
+    localStorage.setItem(name, JSON.stringify(response));
+    console.log("not", localStorage.getItem(name));
+    return JSON.parse(localStorage.getItem(name));
+  }
+}
+
+export async function handleFetchInterval(name, api, interval) {
+  let timeOfLastFetch = Date.now();
+  let timer = setInterval(async () => {
+    if (!localStorage.getItem(name)) {
+      let response = await fetch(api);
+      response = await nodes.json();
+      localStorage.setItem(name, JSON.stringify(response));
       return JSON.parse(localStorage.getItem(name));
     } else {
-      let response = await fetch(api);
-      response = await response.json();
-      localStorage.setItem(name, JSON.stringify(response));
-      console.log("not", localStorage.getItem(name));
-      return JSON.parse(localStorage.getItem(name));
-    }
-  }
-  
-  export async function handleFetchInterval(name, api, interval) {
-    let timer = setInterval(async () => {
-      if (!localStorage.getItem(name)) {
-        let response = await fetch(
-          api
-        );
-        response = await nodes.json();
-        localStorage.setItem(name, JSON.stringify(response));
-        return JSON.parse(localStorage.getItem(name));
-      } else {
-        let parsed = JSON.parse(localStorage.getItem(name))
-        if (timeOfLastFetch + interval < Date.now()) {
-          setTimeOfLastFetch(Date.now());
-          localStorage.removeItem(name);
-        }
-        return parsed;
+      let parsed = JSON.parse(localStorage.getItem(name));
+      if (timeOfLastFetch + interval < Date.now()) {
+        timeOfLastFetch = Date.now();
+        localStorage.removeItem(name);
       }
-    }, interval);
-    return function () {
-      clearTimeout(timer);
-    };
-  }
+      return parsed;
+    }
+  }, interval);
+  return function () {
+    clearTimeout(timer);
+  };
+}

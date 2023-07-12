@@ -147,7 +147,8 @@ export default function JobList() {
     let timer = setInterval(() => {
       localStorage.removeItem("apps");
       localStorage.removeItem("images");
-      localStorage.removeItem("services");
+      localStorage.removeItem("inspectApp");
+      localStorage.removeItem("appHealth");
     }, 300000);
     return () => clearInterval(timer);
   }, []);
@@ -310,7 +311,7 @@ export default function JobList() {
     setInView({
       key: checkedRows[0][0],
       performance: sliced,
-      // details
+      details: inspectApp,
     });
   }
 
