@@ -576,16 +576,15 @@ export default function JobList() {
                             onChange={(e) =>
                               handleChange(
                                 e,
-                                datum.Names || datum.Repository,
-                                datum.State
+                                datum.Names ||
+                                  datum.Repository + ":" + datum.Tag,
+                                datum.State || ""
                               )
                             }
-                            value={datum.Names ? datum.Names : datum.Repository}
+                            value={datum.Names ? datum.Names : datum.ID}
                             checked={checkedRows
                               .flat()
-                              .includes(
-                                datum.Names ? datum.Names : datum.Repository
-                              )}
+                              .includes(datum.Names ? datum.Names : datum.ID)}
                             type={directory === "apps" ? "checkbox" : "radio"}
                           ></input>
                         </label>
