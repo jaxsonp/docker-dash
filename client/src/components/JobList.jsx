@@ -481,7 +481,7 @@ export default function JobList() {
                       let response = await fetch(
                         api +
                           "create-app?image=" +
-                          checkedRows[0][0] +
+                          checkedRows[0] +
                           "&user=janeschmo"
                       );
                       response = await response.json();

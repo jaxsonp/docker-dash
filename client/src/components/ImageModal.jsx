@@ -38,7 +38,7 @@ export default function ImportModal(props) {
             onClick={async () => {
               props.onHide();
               let response = await fetch(
-                api + "request-image?name=" + imageRef.current.value,
+                api + "request-image?image=" + imageRef.current.value,
                 {
                   method: "POST",
                 }
