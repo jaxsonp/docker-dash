@@ -12,7 +12,7 @@ export default function Layout() {
           right: "10px",
           zIndex: 1,
           opacity: 0.8,
-          padding: "6px 3px"
+          padding: "6px 3px",
         }}
         onClick={() => window.scrollTo({ top: 0, behavior: "instant" })}
       >
@@ -21,7 +21,7 @@ export default function Layout() {
       <nav
         style={{
           backgroundColor: "navy",
-          color: "gainsboro"
+          color: "gainsboro",
         }}
       >
         <ul
@@ -31,7 +31,7 @@ export default function Layout() {
             listStyle: "none",
             padding: 0,
             justifyContent: "space-evenly",
-            alignItems: "center"
+            alignItems: "center",
           }}
         >
           <li>
@@ -44,6 +44,7 @@ export default function Layout() {
           </li>
           <li>
             <NavLink
+              onClick={sessionStorage.removeItem("apps")}
               className={({ isActive }) => (isActive ? "active" : "")}
               to="/apps"
             >

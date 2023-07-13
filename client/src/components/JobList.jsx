@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp } from "react-feather";
 import { useState, useEffect } from "react";
 import handleFetch from "../handleFetch";
 import Chart from "./Chart";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactJson from "@microlink/react-json-view";
 import ImportModal from "./ImageModal";
 import { DangerModal } from "./ImageModal";
@@ -99,6 +99,7 @@ export default function JobList() {
   const [failed, setFailed] = useState(false);
   const [numItems, setNumItems] = useState(1);
   const [dangerShow, setDangerShow] = useState(false);
+  const navigate = useNavigate();
 
   const appHeaders = ["ID", "State", "Image", "Names", "CreatedAt"];
   const appButtons = [
@@ -140,7 +141,7 @@ export default function JobList() {
       api: api + "kill-app?name=",
     },
   ];
-  const imageHeaders = ["ID", "Size", "Containers", "Tag", "CreatedAt"];
+  const imageHeaders = ["Repository", "Size", "Containers", "Tag", "CreatedAt"];
   // const serviceHeaders = [
   //   "Name",
   //   "ID",
@@ -179,6 +180,7 @@ export default function JobList() {
         try {
           let apps = await handleFetch("apps", api + "get-app-status");
           setOrder(apps);
+          sessionStorage.setItem("apps", JSON.stringify(apps));
         } catch (err) {
           setFailed(true);
           console.error(err);
@@ -474,11 +476,21 @@ export default function JobList() {
                   <Button size="sm" onClick={() => setModalShow(true)}>
                     Request Image
                   </Button>
-                  <Button disabled={checkedRows.length === 0} size="sm">
-                    Create Container
-                  </Button>
-                  <Button disabled={checkedRows.length === 0} size="sm">
-                    Create Service
+                  <Button
+                    onClick={async () => {
+                      let response = await fetch(
+                        api +
+                          "create-app?image=" +
+                          checkedRows[0][0] +
+                          "&user=janeschmo"
+                      );
+                      response = await response.json();
+                      response.status === 200 && navigate("/apps");
+                    }}
+                    disabled={checkedRows.length === 0}
+                    size="sm"
+                  >
+                    Create App
                   </Button>
                 </>
               ) : (
@@ -504,7 +516,9 @@ export default function JobList() {
                             ? setCheckedRows([])
                             : setCheckedRows(
                                 relevantResults.map((container) => [
-                                  container.Names,
+                                  container.Names
+                                    ? container.Names
+                                    : container.Repository,
                                   container.State,
                                 ])
                               )
@@ -562,14 +576,16 @@ export default function JobList() {
                             onChange={(e) =>
                               handleChange(
                                 e,
-                                datum.Names || datum.ID,
+                                datum.Names || datum.Repository,
                                 datum.State
                               )
                             }
-                            value={datum.Names ? datum.Names : datum.ID}
+                            value={datum.Names ? datum.Names : datum.Repository}
                             checked={checkedRows
                               .flat()
-                              .includes(datum.Names ? datum.Names : datum.ID)}
+                              .includes(
+                                datum.Names ? datum.Names : datum.Repository
+                              )}
                             type={directory === "apps" ? "checkbox" : "radio"}
                           ></input>
                         </label>
