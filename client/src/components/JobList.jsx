@@ -8,7 +8,7 @@ import ReactJson from "@microlink/react-json-view";
 import ImportModal from "./ImageModal";
 import { DangerModal } from "./ImageModal";
 // import services from "../services.json";
-import containers from "../db.json";
+// import containers from "../db.json";
 // import images from "../images.json";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
@@ -177,8 +177,8 @@ export default function JobList() {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
         try {
-          // let apps = await handleFetch("apps", api + "get-app-status");
-          setOrder(containers);
+          let apps = await handleFetch("apps", api + "get-app-status");
+          setOrder(apps);
         } catch (err) {
           setFailed(true);
           console.error(err);
