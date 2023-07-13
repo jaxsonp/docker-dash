@@ -101,7 +101,6 @@ export default function JobList() {
   const [failed, setFailed] = useState(false);
   const [numItems, setNumItems] = useState(1);
   const [dangerShow, setDangerShow] = useState(false);
-  const navigate = useNavigate();
 
   const appHeaders = ["ID", "State", "Image", "Names", "CreatedAt"];
   const appButtons = [
