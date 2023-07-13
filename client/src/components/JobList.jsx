@@ -175,7 +175,8 @@ export default function JobList() {
     async function getExpectedData() {
       sessionStorage.removeItem("apps");
       setOrder([]);
-      setRelevantResults([[{ Id: "Loading..." }]]);
+      setSelectedIndex(1);
+      setRelevantResults([]);
       setCheckedRows([]);
       if (view === "apps") {
         setDirectory("apps");
@@ -241,19 +242,19 @@ export default function JobList() {
   }, [order, filterQuery]);
 
   async function handleCreateApp() {
+    let response = null;
     try {
-      let response = await fetch(
+      response = await fetch(
         api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
         {
           method: "POST",
         }
       );
       response = await response.json();
-      alert("200 Request Successful");
     } catch (err) {
       console.error(err);
     }
-    navigate("/apps");
+    response && navigate("/apps");
   }
 
   function handleChange(e, containerId, containerState) {
