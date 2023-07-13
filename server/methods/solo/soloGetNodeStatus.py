@@ -24,6 +24,6 @@ def soloGetNodeStatus(server_id) -> flask.Response:
   if completedProcess.returncode != 0:
     status = "Down"
 
-  resp = [{"Availability":"Active", "Hostname":local_hostname, "ManagerStatus":"Leader", "Self":True, "Status":status}]
+  resp = [{"Availability":"Active", "Hostname":local_hostname, "ManagerStatus":"Solo", "Self":True, "Status":status}]
 
   return flask.make_response(json.dumps(resp), 200)
