@@ -581,10 +581,18 @@ export default function JobList() {
                                 datum.State || ""
                               )
                             }
-                            value={datum.Names ? datum.Names : datum.ID}
+                            value={
+                              datum.Names
+                                ? datum.Names
+                                : datum.Repository + ":" + datum.Tag
+                            }
                             checked={checkedRows
                               .flat()
-                              .includes(datum.Names ? datum.Names : datum.ID)}
+                              .includes(
+                                datum.Names
+                                  ? datum.Names
+                                  : datum.Repository + ":" + datum.Tag
+                              )}
                             type={directory === "apps" ? "checkbox" : "radio"}
                           ></input>
                         </label>
