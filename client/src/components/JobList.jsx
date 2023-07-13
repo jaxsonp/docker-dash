@@ -41,35 +41,35 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
 
   let url = api + commaStrung;
 
-  // let response;
-  // try {
-  //   response = await fetch(url, {
-  //     method: "POST",
-  //   });
-  //   response = await response.json();
-  // } catch (err) {
-  //   console.error(err);
-  // }
-
-  // if (response.status === 200) {
-  let toRevise = originalArray.map((x) => Object.assign({}, x));
-  let mappedRevised = toRevise
-    .filter((el) => commaSeparated.includes(el.Names))
-    .map((el) => (el.State = newState));
-  let updatedArray = null;
-  if (newState !== "banished") {
-    updatedArray = toRevise.map((obj) =>
-      obj.Names === mappedRevised.Names ? mappedRevised : obj
-    );
-  } else {
-    toRevise.forEach(
-      (el, index) => el.State === "banished" && toRevise.splice(index, 1)
-    );
-    updatedArray = toRevise;
+  let response;
+  try {
+    response = await fetch(url, {
+      method: "POST",
+    });
+    response = await response.json();
+  } catch (err) {
+    console.error(err);
   }
-  console.log(updatedArray);
-  return updatedArray;
-  // }
+
+  if (response.status === 200) {
+    let toRevise = originalArray.map((x) => Object.assign({}, x));
+    let mappedRevised = toRevise
+      .filter((el) => commaSeparated.includes(el.Names))
+      .map((el) => (el.State = newState));
+    let updatedArray = null;
+    if (newState !== "banished") {
+      updatedArray = toRevise.map((obj) =>
+        obj.Names === mappedRevised.Names ? mappedRevised : obj
+      );
+    } else {
+      toRevise.forEach(
+        (el, index) => el.State === "banished" && toRevise.splice(index, 1)
+      );
+      updatedArray = toRevise;
+    }
+    console.log(updatedArray);
+    return updatedArray;
+  }
 }
 
 const api = "http://192.168.98.74/api/demo/";
