@@ -72,7 +72,7 @@ function ServersView() {
   const [expanded, setExpanded] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [initialData, setInitialData] = useState([]);
-  const [inspectInfo, setInspectInfo] = useState("");
+  const [inspectInfo, setInspectInfo] = useState(null);
   const [reorderedData, setReorderedData] = useState([]);
   const [timeOfLastFetch, setTimeOfLastFetch] = useState(Date.now());
   const [failed, setFailed] = useState(false);
@@ -134,9 +134,14 @@ function ServersView() {
   }, [initialData, selectedIndex, numItems]);
 
   async function handleInspectModal(endpoint) {
-    let response = await fetch(endpoint);
-    response = await response.json();
-    setInspectInfo(response);
+    try {
+      let response = await fetch(endpoint);
+      response = await response.json();
+      setInspectInfo(response);
+    } catch (err) {
+      console.error(err);
+      setInspectInfo([{ message: "Something went wrong..." }]);
+    }
   }
 
   return (
