@@ -41,35 +41,35 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
 
   let url = api + commaStrung;
 
-  let response;
-  try {
-    response = await fetch(url, {
-      method: "POST",
-    });
-    response = await response.json();
-  } catch (err) {
-    console.error(err);
-  }
+  // let response;
+  // try {
+  //   response = await fetch(url, {
+  //     method: "POST",
+  //   });
+  //   response = await response.json();
+  // } catch (err) {
+  //   console.error(err);
+  // }
 
-  if (response.status === 200) {
-    let toRevise = originalArray.map((x) => Object.assign({}, x));
-    let mappedRevised = toRevise
-      .filter((el) => commaSeparated.includes(el.Names))
-      .map((el) => (el.State = newState));
-    let updatedArray = null;
-    if (newState !== "banished") {
-      updatedArray = toRevise.map((obj) =>
-        obj.Names === mappedRevised.Names ? mappedRevised : obj
-      );
-    } else {
-      toRevise.forEach(
-        (el, index) => el.State === "banished" && toRevise.splice(index, 1)
-      );
-      updatedArray = toRevise;
-    }
-    console.log(updatedArray);
-    return updatedArray;
+  // if (response.status === 200) {
+  let toRevise = originalArray.map((x) => Object.assign({}, x));
+  let mappedRevised = toRevise
+    .filter((el) => commaSeparated.includes(el.Names))
+    .map((el) => (el.State = newState));
+  let updatedArray = null;
+  if (newState !== "banished") {
+    updatedArray = toRevise.map((obj) =>
+      obj.Names === mappedRevised.Names ? mappedRevised : obj
+    );
+  } else {
+    toRevise.forEach(
+      (el, index) => el.State === "banished" && toRevise.splice(index, 1)
+    );
+    updatedArray = toRevise;
   }
+  console.log(updatedArray);
+  return updatedArray;
+  // }
 }
 
 const api = "http://192.168.98.74/api/demo/";
@@ -177,8 +177,8 @@ export default function JobList() {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
         try {
-          let apps = await handleFetch("apps", api + "get-app-status");
-          setOrder(apps);
+          // let apps = await handleFetch("apps", api + "get-app-status");
+          setOrder(containers);
         } catch (err) {
           setFailed(true);
           console.error(err);
@@ -202,8 +202,11 @@ export default function JobList() {
       }
     }
     getExpectedData();
-    setNumItems(order.length);
   }, [view, viewId]);
+
+  useEffect(() => {
+    setNumItems(order.length);
+  }, [order.length]);
 
   useEffect(() => {
     if (order && order.length) {
@@ -658,7 +661,7 @@ export default function JobList() {
           <h1>404 Page Not Found</h1>
         </div>
       ) : failed ? (
-        <h2 style={{ color: "crimson" }}>SERVER ISSUES DETECTED</h2>
+        <h2 style={{ color: "crimson" }}>Something went wrong...</h2>
       ) : (
         <div style={{ height: "484px" }}>
           <Spinner animation="border" />
