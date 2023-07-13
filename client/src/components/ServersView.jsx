@@ -26,7 +26,10 @@ const step = 3;
 function sortSpecificData(singleObj, multiObj) {
   let singElArr = singleObj.map((server) => [server]);
   let sorted = multiObj.filter(
-    (el) => el.length > 1 || el[0].ManagerStatus === "Leader"
+    (el) =>
+      el.length > 1 ||
+      el[0].ManagerStatus === "Leader" ||
+      el[0].ManagerStatus === "Solo"
   );
   if (sorted.length > 1) {
     sorted = sorted.sort((a, b) => b.length - a.length);
@@ -78,19 +81,17 @@ function ServersView() {
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    sessionStorage.removeItem("sortedData");
-
-    async function getServerPreviews() {
-      async function fetchClusterData() {
-        try {
-          const nodes = await fetch(api + "get-node-status");
-          let nodesJ = await nodes.json();
-          return sortSpecificData(servers, [nodesJ]);
-        } catch (err) {
-          setFailed(true);
-          console.error(err);
-        }
+    async function fetchClusterData() {
+      try {
+        const nodes = await fetch(api + "get-node-status");
+        let nodesJ = await nodes.json();
+        return sortSpecificData(servers, [nodesJ]);
+      } catch (err) {
+        setFailed(true);
+        console.error(err);
       }
+    }
+    async function getServerPreviews() {
       setInitialData(await fetchClusterData());
       let timer = setInterval(async () => {
         if (!sessionStorage.getItem("sortedData")) {

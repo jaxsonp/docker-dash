@@ -28,4 +28,4 @@ src/clusters.json
 src/db.json
 src/images.json
 src/nodespect.json
-src/serverInfo.json
+src/services.json
