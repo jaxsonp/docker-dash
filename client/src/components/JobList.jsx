@@ -69,7 +69,6 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
       );
       updatedArray = toRevise;
     }
-    sessionStorage.setItem("apps", updatedArray);
     return updatedArray;
   }
 }
@@ -250,10 +249,10 @@ export default function JobList() {
         }
       );
       response = await response.json();
-      navigate("/apps");
     } catch (err) {
       console.error(err);
     }
+    navigate("/apps");
   }
 
   function handleChange(e, containerId, containerState) {
@@ -374,6 +373,7 @@ export default function JobList() {
                 order,
                 "banished"
               ).then((res) => {
+                sessionStorage.setItem("apps", res);
                 setOrder(res);
                 setCheckedRows([]);
               })
