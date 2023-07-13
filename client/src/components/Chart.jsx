@@ -42,7 +42,7 @@ export const options = {
       beginAtZero: false,
       title: {
         display: true,
-        text: "Minutes since present",
+        text: "Time (hh:mm)",
       },
     },
   },
