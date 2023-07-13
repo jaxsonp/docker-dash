@@ -177,15 +177,17 @@ function ServersView() {
                   }}
                 >
                   <h4 style={{ margin: "10px", fontSize: "22px" }}>
-                    {card.length > 1 ? "Cluster Host" : "Container Host"}
+                    {card[0].ManagerStatus === "Leader" || card.length > 1
+                      ? "Cluster Host"
+                      : "Container Host"}
                   </h4>
                   <div
                     style={{
                       backgroundColor:
                         card[0].state === "on" ||
                         (card[0].ManagerStatus === "Leader" &&
-                          card[0].Status === "ready" &&
-                          card[0].Availability === "active")
+                          card[0].Status === "Ready" &&
+                          card[0].Availability === "Active")
                           ? "green"
                           : "red",
                       borderRadius: "50%",
