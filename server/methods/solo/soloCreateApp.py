@@ -17,6 +17,7 @@ def soloCreateApp(server_id) -> flask.Response:
   image_name = flask.request.args.get("image")
   if image_name == None:
     return flask.Response("No image name provided", status=400)
+  image_name = image_name.split(":")[0]
 
   user_name = flask.request.args.get("user")
   if user_name == None:
