@@ -6,8 +6,8 @@ export default async function handleFetch(name, api) {
       let response = await fetch(api);
       response = await response.json();
       sessionStorage.setItem(name, JSON.stringify(response));
-      JSON.parse(sessionStorage.getItem(name));
       alert("Your request was successed");
+      return JSON.parse(sessionStorage.getItem(name));
     } catch (err) {
       alert(err);
       throw new Error(err);
