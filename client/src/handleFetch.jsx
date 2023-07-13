@@ -6,6 +6,7 @@ export default async function handleFetch(name, api) {
     try {
       response = await fetch(api);
       response = await response.json();
+      console.log("handleFetch", response);
     } catch (err) {
       alert(err);
       throw new Error(err);

@@ -332,7 +332,7 @@ export default function JobList() {
     console.log(appHealth);
 
     let appHealthLabels = Object.keys(appHealth).map((val) =>
-      val.substring(-3, 5)
+      val.substring(10, 15)
     );
     let appHealthToNums = Object.values(appHealth).map((val) => +val);
 
@@ -489,6 +489,7 @@ export default function JobList() {
                         }
                       );
                       response = await response.json();
+                      console.log("response", response);
                       response.status === 200 && navigate("/apps");
                     }}
                     disabled={checkedRows.length === 0}
