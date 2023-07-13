@@ -239,7 +239,7 @@ export default function JobList() {
   }, [order, filterQuery]);
 
   function handleChange(e, containerId, containerState) {
-    if (directory === "images" || directory === "services") {
+    if (directory === "images") {
       if (e.target.checked) {
         setCheckedRows([containerId]);
       }
@@ -329,6 +329,8 @@ export default function JobList() {
     } catch (err) {
       console.error(err);
     }
+
+    console.log(appHealth);
 
     let appHealthToNums = Object.values(appHealth).map((val) => +val);
 
@@ -482,7 +484,10 @@ export default function JobList() {
                         api +
                           "create-app?image=" +
                           checkedRows[0] +
-                          "&user=janeschmo"
+                          "&user=janeschmo",
+                        {
+                          method: "POST",
+                        }
                       );
                       response = await response.json();
                       response.status === 200 && navigate("/apps");

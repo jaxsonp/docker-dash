@@ -84,6 +84,7 @@ function ServersView() {
         try {
           const nodes = await fetch(api + "get-node-status");
           let nodesJ = await nodes.json();
+          console.log(nodesJ);
           return sortSpecificData(servers, [nodesJ]);
         } catch (err) {
           setFailed(true);
