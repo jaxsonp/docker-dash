@@ -67,9 +67,7 @@ function sortSpecificData(singleObj, multiObj) {
 
 function ServersView() {
   const [selectedIndex, setSelectedIndex] = useState(1);
-  const [numItems, setNumItems] = useState(
-    servers.length + clustersLocal.length
-  );
+  const [numItems, setNumItems] = useState(1);
   const [expanded, setExpanded] = useState(null);
   const [modalShow, setModalShow] = useState(false);
   const [initialData, setInitialData] = useState([]);
@@ -121,6 +119,10 @@ function ServersView() {
   }, []);
 
   useEffect(() => {
+    setNumItems(initialData.length);
+  }, [initialData.length]);
+
+  useEffect(() => {
     if (initialData && initialData.length) {
       let displayedCards = initialData.slice(
         selectedIndex * step - step,
@@ -128,7 +130,7 @@ function ServersView() {
       );
       setReorderedData(displayedCards || initialData);
     }
-  }, [initialData, selectedIndex]);
+  }, [initialData, selectedIndex, numItems]);
 
   async function handleInspectModal(endpoint) {
     let response = await fetch(endpoint);
