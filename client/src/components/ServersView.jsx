@@ -188,7 +188,8 @@ function ServersView() {
                     style={{
                       backgroundColor:
                         card[0].state === "on" ||
-                        (card[0].ManagerStatus === "Leader" &&
+                        ((card[0].ManagerStatus === "Leader" ||
+                          card[0].ManagerStatus === "Solo") &&
                           card[0].Status === "Ready" &&
                           card[0].Availability === "Active")
                           ? "green"
