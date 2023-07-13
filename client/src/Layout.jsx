@@ -44,7 +44,6 @@ export default function Layout() {
           </li>
           <li>
             <NavLink
-              onClick={sessionStorage.removeItem("apps")}
               className={({ isActive }) => (isActive ? "active" : "")}
               to="/apps"
             >

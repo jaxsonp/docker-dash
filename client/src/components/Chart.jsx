@@ -42,17 +42,15 @@ export const options = {
       beginAtZero: false,
       title: {
         display: true,
-        text: "Minutes since present",
+        text: "Time (hh:mm)",
       },
     },
   },
 };
 
-const labels = ["-60", "-50", "-40", "-30", "-20", "-10", "0"];
-
 export default function Chart({ inView }) {
   const data = {
-    labels,
+    labels: inView.labels,
     datasets: [
       {
         label: inView.key,

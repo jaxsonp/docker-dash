@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button, Card, Pagination, Spinner } from "react-bootstrap";
-// import { useNavigate } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { InspectModal } from "./ImageModal";
 import servers from "../serverInfo.json";
-import clustersLocal from "../clusters.json";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   let pages = [];
@@ -27,24 +25,27 @@ const step = 3;
 
 function sortSpecificData(singleObj, multiObj) {
   let singElArr = singleObj.map((server) => [server]);
-  let sorted = multiObj
-    .filter((el) => el.length > 1)
-    .sort((a, b) => b.length - a.length);
-  sorted.map((el) => {
-    return el.sort((a, b) => {
-      if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
-        if (a.ManagerStatus.length === 0 && b.ManagerStatus.length === 0) {
-          return 0;
-        } else if (a.ManagerStatus.length === 0) {
-          return 1;
+  let sorted = multiObj.filter(
+    (el) => el.length > 1 || el[0].ManagerStatus === "Leader"
+  );
+  if (sorted.length > 1) {
+    sorted = sorted.sort((a, b) => b.length - a.length);
+    sorted.map((el) => {
+      return el.sort((a, b) => {
+        if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
+          if (a.ManagerStatus.length === 0 && b.ManagerStatus.length === 0) {
+            return 0;
+          } else if (a.ManagerStatus.length === 0) {
+            return 1;
+          } else {
+            return -1;
+          }
         } else {
-          return -1;
+          return a.ManagerStatus.length - b.ManagerStatus.length;
         }
-      } else {
-        return a.ManagerStatus.length - b.ManagerStatus.length;
-      }
+      });
     });
-  });
+  }
   sorted = sorted.concat(singElArr);
   sorted.sort((a, b) => {
     if (
@@ -84,7 +85,6 @@ function ServersView() {
         try {
           const nodes = await fetch(api + "get-node-status");
           let nodesJ = await nodes.json();
-          console.log(nodesJ);
           return sortSpecificData(servers, [nodesJ]);
         } catch (err) {
           setFailed(true);
@@ -174,15 +174,17 @@ function ServersView() {
                   }}
                 >
                   <h4 style={{ margin: "10px", fontSize: "22px" }}>
-                    {card.length > 1 ? "Cluster Host" : "Container Host"}
+                    {card[0].ManagerStatus === "Leader" || card.length > 1
+                      ? "Cluster Host"
+                      : "Container Host"}
                   </h4>
                   <div
                     style={{
                       backgroundColor:
                         card[0].state === "on" ||
                         (card[0].ManagerStatus === "Leader" &&
-                          card[0].Status === "ready" &&
-                          card[0].Availability === "active")
+                          card[0].Status === "Ready" &&
+                          card[0].Availability === "Active")
                           ? "green"
                           : "red",
                       borderRadius: "50%",
@@ -318,7 +320,6 @@ function ServersView() {
                                   </>
                                 ) : (
                                   <>
-                                    {/* Status, Availability */}
                                     <p>{inner["Hostname"]}</p>
                                     <hr />
                                     <p>CPU%: {inner["CPU%"]}</p>
@@ -332,10 +333,15 @@ function ServersView() {
                                 )}
                               </div>
                             </Card.Body>
-                            {card.length > 1 && (
+                            {(card[0].ManagerStatus === "Leader" ||
+                              card.length > 1) && (
                               <Button
                                 onClick={() => {
-                                  handleInspectModal(api + "get-node-info");
+                                  handleInspectModal(
+                                    api +
+                                      "get-node-info?hostname=" +
+                                      inner.Hostname
+                                  );
                                   setModalShow(true);
                                 }}
                                 style={{ margin: "0 auto 10px" }}
@@ -366,6 +372,13 @@ function ServersView() {
                     </button>
                   )}
                   <Button
+                    onClick={() =>
+                      alert(
+                        "This would redirect to " +
+                          (card[0].Hostname || "<hostname>") +
+                          " apps"
+                      )
+                    }
                     style={{
                       margin: card.length > 2 ? "10px" : "44px 10px 10px",
                     }}

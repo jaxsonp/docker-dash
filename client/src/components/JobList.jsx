@@ -7,9 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import ReactJson from "@microlink/react-json-view";
 import ImportModal from "./ImageModal";
 import { DangerModal } from "./ImageModal";
-// import services from "../services.json";
-// import containers from "../db.json";
-// import images from "../images.json";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   let pages = [];
@@ -27,11 +24,6 @@ const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   return pages;
 };
 
-// function updateListOnSuccess(checkedRows) {
-
-// }
-
-// revise this to only take the dynamic part of api i.e. stop, start, etc.
 async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
   let commaSeparated = [];
   for (let i = 0; i < arrayOfArrays.length; i++) {
@@ -55,7 +47,9 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
     let toRevise = originalArray.map((x) => Object.assign({}, x));
     let mappedRevised = toRevise
       .filter((el) => commaSeparated.includes(el.Names))
-      .map((el) => (el.State = newState));
+      .map(
+        (el) => (el.State = newState !== "restarting" ? newState : "running")
+      );
     let updatedArray = null;
     if (newState !== "banished") {
       updatedArray = toRevise.map((obj) =>
@@ -67,7 +61,6 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
       );
       updatedArray = toRevise;
     }
-    console.log(updatedArray);
     return updatedArray;
   }
 }
@@ -83,6 +76,7 @@ export default function JobList() {
     direction: "asc",
   });
   const [inView, setInView] = useState({
+    labels: null,
     key: null,
     performance: null,
     details: null,
@@ -95,7 +89,6 @@ export default function JobList() {
   const [sortableHeaders, setSortableHeaders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(1);
-  // const [reorderedData, setReorderedData] = useState([]);
   const [failed, setFailed] = useState(false);
   const [numItems, setNumItems] = useState(1);
   const [dangerShow, setDangerShow] = useState(false);
@@ -142,14 +135,6 @@ export default function JobList() {
     },
   ];
   const imageHeaders = ["Repository", "Size", "Containers", "Tag", "CreatedAt"];
-  // const serviceHeaders = [
-  //   "Name",
-  //   "ID",
-  //   "BlockIO",
-  //   "NetIO",
-  //   "CPUPerc",
-  //   "MemUsage",
-  // ];
 
   useEffect(() => {
     setFailed(false);
@@ -171,8 +156,10 @@ export default function JobList() {
 
   useEffect(() => {
     async function getExpectedData() {
+      sessionStorage.removeItem("apps");
       setOrder([]);
-      setRelevantResults([[{ Id: "Loading..." }]]);
+      setSelectedIndex(1);
+      setRelevantResults([]);
       setCheckedRows([]);
       if (view === "apps") {
         setDirectory("apps");
@@ -180,7 +167,6 @@ export default function JobList() {
         try {
           let apps = await handleFetch("apps", api + "get-app-status");
           setOrder(apps);
-          sessionStorage.setItem("apps", JSON.stringify(apps));
         } catch (err) {
           setFailed(true);
           console.error(err);
@@ -237,6 +223,22 @@ export default function JobList() {
       }
     }
   }, [order, filterQuery]);
+
+  async function handleCreateApp() {
+    let response = null;
+    try {
+      response = await fetch(
+        api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
+        {
+          method: "POST",
+        }
+      );
+      response = await response.json();
+    } catch (err) {
+      console.error(err);
+    }
+    response && navigate("/apps");
+  }
 
   function handleChange(e, containerId, containerState) {
     if (directory === "images") {
@@ -312,35 +314,31 @@ export default function JobList() {
   async function handleChartUpdate() {
     let inspectApp;
     try {
-      inspectApp = await handleFetch(
-        "inspectApp",
-        api + `get-app-info?name=${checkedRows[0][0]}`
-      );
+      inspectApp = await fetch(api + `get-app-info?name=${checkedRows[0][0]}`);
+      inspectApp = await inspectApp.json();
     } catch (err) {
       console.error(err);
     }
 
     let appHealth;
     try {
-      appHealth = await handleFetch(
-        "appHealth",
+      appHealth = await fetch(
         api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
       );
+      appHealth = await appHealth.json();
     } catch (err) {
       console.error(err);
     }
 
-    console.log(appHealth);
-
+    let appHealthLabels = Object.keys(appHealth).map((val) =>
+      val.substring(11, 16)
+    );
     let appHealthToNums = Object.values(appHealth).map((val) => +val);
 
-    let sliced = appHealthToNums.slice(
-      appHealthToNums.length - 7,
-      appHealthToNums.length
-    );
     setInView({
+      labels: appHealthLabels,
       key: checkedRows[0][0],
-      performance: sliced,
+      performance: appHealthToNums,
       details: inspectApp,
     });
   }
@@ -360,31 +358,12 @@ export default function JobList() {
                 order,
                 "banished"
               ).then((res) => {
+                sessionStorage.setItem("apps", JSON.stringify(res));
                 setOrder(res);
                 setCheckedRows([]);
               })
             }
           />
-          {/* {directory !== "images" && (
-            <div
-              style={{
-                display: "flex",
-                margin: "20px",
-                gap: "15px",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Form.Control
-                value={filterQuery}
-                onChange={(e) => setFilterQuery(e.target.value)}
-                style={{ width: "300px", height: "38px" }}
-                type="text"
-                placeholder="Get Specific User"
-              ></Form.Control>
-              <Button>Get</Button>
-            </div>
-          )} */}
           <div
             style={{
               display: "flex",
@@ -441,6 +420,7 @@ export default function JobList() {
                           button.causes
                         );
                         setOrder(newOrder);
+                        alert("200 Request Successful");
                         setLoading("");
                         setCheckedRows([]);
                       }}
@@ -479,19 +459,7 @@ export default function JobList() {
                     Request Image
                   </Button>
                   <Button
-                    onClick={async () => {
-                      let response = await fetch(
-                        api +
-                          "create-app?image=" +
-                          checkedRows[0] +
-                          "&user=janeschmo",
-                        {
-                          method: "POST",
-                        }
-                      );
-                      response = await response.json();
-                      response.status === 200 && navigate("/apps");
-                    }}
+                    onClick={handleCreateApp}
                     disabled={checkedRows.length === 0}
                     size="sm"
                   >
