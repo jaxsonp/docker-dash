@@ -1,93 +1,92 @@
 [
-    [
-      {
-        "ManagerStatus": "Leader",
-        "id": "nfsmlypksrnr1q1wx7ei6bcid",
-        "Hostname": "localhost.server1",
-        "Availability": "active",
-        "Status": "failed"
-      },
-      {
-        "ManagerStatus": "",
-        "id": "9479",
-        "Hostname": "localhost.server2",
-        "Availability": "drain",
-        "Status": "failed"
-      },
-      {
-        "ManagerStatus": "Reachable",
-        "id": "4411",
-        "Hostname": "localhost.server3",
-        "Availability": "paused",
-        "Status": "ready"
-      },
-      {
-        "ManagerStatus": "",
-        "id": "1277",
-        "Hostname": "localhost.server4",
-        "Availability": "active",
-        "Status": "ready"
-      }
-    ],
-    [
-      {
-        "ManagerStatus": "",
-        "id": "1277",
-        "Hostname": "localhost.server5",
-        "Availability": "active",
-        "Status": "ready"
-      },
-      {
-        "ManagerStatus": "",
-        "id": "2369",
-        "Hostname": "localhost.server6",
-        "Availability": "active",
-        "Status": "ready"
-      },
-      {
-        "ManagerStatus": "Reachable",
-        "id": "5176",
-        "Hostname": "localhost.server7",
-        "Availability": "active",
-        "Status": "ready"
-      },
-      {
-        "ManagerStatus": "Leader",
-        "id": "2775",
-        "Hostname": "localhost.server8",
-        "Availability": "active",
-        "Status": "ready"
-      },
-      {
-        "ManagerStatus": "",
-        "id": "6238",
-        "Hostname": "localhost.server9",
-        "Availability": "active",
-        "Status": "failed"
-      },
-      {
-        "ManagerStatus": "",
-        "id": "6239",
-        "Hostname": "localhost.server12",
-        "Availability": "active",
-        "Status": "failed"
-      }
-    ],
-    [
-      {
-        "ManagerStatus": "",
-        "id": "5176",
-        "Hostname": "localhost.server10",
-        "Availability": "active",
-        "Status": "failed"
-      },
-      {
-        "ManagerStatus": "Leader",
-        "id": "2775",
-        "Hostname": "localhost.server11",
-        "Availability": "active",
-        "Status": "ready"
-      }
-    ]
+  [
+    {
+      "ManagerStatus": "Leader",
+      "id": "nfsmlypksrnr1q1wx7ei6bcid",
+      "Hostname": "localhost.server1",
+      "Availability": "active",
+      "Status": "failed"
+    },
+    {
+      "ManagerStatus": "",
+      "id": "9479",
+      "Hostname": "localhost.server2",
+      "Availability": "drain",
+      "Status": "failed"
+    },
+    {
+      "ManagerStatus": "Reachable",
+      "id": "4411",
+      "Hostname": "localhost.server3",
+      "Availability": "paused",
+      "Status": "ready"
+    },
+    {
+      "ManagerStatus": "",
+      "id": "1277",
+      "Hostname": "localhost.server4",
+      "Availability": "active",
+      "Status": "ready"
+    }
+  ],
+  [
+    {
+      "ManagerStatus": "",
+      "id": "1277",
+      "Hostname": "localhost.server5",
+      "Availability": "active",
+      "Status": "ready"
+    },
+    {
+      "ManagerStatus": "",
+      "id": "2369",
+      "Hostname": "localhost.server6",
+      "Availability": "active",
+      "Status": "ready"
+    },
+    {
+      "ManagerStatus": "Reachable",
+      "id": "5176",
+      "Hostname": "localhost.server7",
+      "Availability": "active",
+      "Status": "ready"
+    },
+    {
+      "ManagerStatus": "Leader",
+      "id": "2775",
+      "Hostname": "localhost.server8",
+      "Availability": "active",
+      "Status": "ready"
+    },
+    {
+      "ManagerStatus": "",
+      "id": "6238",
+      "Hostname": "localhost.server9",
+      "Availability": "active",
+      "Status": "failed"
+    },
+    {
+      "ManagerStatus": "",
+      "id": "6239",
+      "Hostname": "localhost.server12",
+      "Availability": "active",
+      "Status": "failed"
+    }
+  ],
+  [
+    {
+      "ManagerStatus": "",
+      "id": "5176",
+      "Hostname": "localhost.server10",
+      "Availability": "active",
+      "Status": "failed"
+    },
+    {
+      "ManagerStatus": "Leader",
+      "id": "2775",
+      "Hostname": "localhost.server11",
+      "Availability": "active",
+      "Status": "ready"
+    }
   ]
-  
+]

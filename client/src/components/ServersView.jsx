@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { Button, Card, Pagination, Spinner } from "react-bootstrap";
-// import { useNavigate } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { InspectModal } from "./ImageModal";
 import servers from "../serverInfo.json";
-import clustersLocal from "../clusters.json";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   let pages = [];
@@ -87,7 +85,6 @@ function ServersView() {
         try {
           const nodes = await fetch(api + "get-node-status");
           let nodesJ = await nodes.json();
-          console.log(nodesJ);
           return sortSpecificData(servers, [nodesJ]);
         } catch (err) {
           setFailed(true);
@@ -323,7 +320,6 @@ function ServersView() {
                                   </>
                                 ) : (
                                   <>
-                                    {/* Status, Availability */}
                                     <p>{inner["Hostname"]}</p>
                                     <hr />
                                     <p>CPU%: {inner["CPU%"]}</p>
@@ -337,17 +333,22 @@ function ServersView() {
                                 )}
                               </div>
                             </Card.Body>
-                            {card.length > 1 && (
-                              <Button
-                                onClick={() => {
-                                  handleInspectModal(api + "get-node-info");
-                                  setModalShow(true);
-                                }}
-                                style={{ margin: "0 auto 10px" }}
-                              >
-                                Inspect
-                              </Button>
-                            )}
+                            {card[0].ManagerStatus === "Leader" ||
+                              (card.length > 1 && (
+                                <Button
+                                  onClick={() => {
+                                    handleInspectModal(
+                                      api +
+                                        "get-node-info?hostname=" +
+                                        inner.Hostname
+                                    );
+                                    setModalShow(true);
+                                  }}
+                                  style={{ margin: "0 auto 10px" }}
+                                >
+                                  Inspect
+                                </Button>
+                              ))}
                           </Card>
                         </>
                       );
@@ -371,6 +372,13 @@ function ServersView() {
                     </button>
                   )}
                   <Button
+                    onClick={() =>
+                      alert(
+                        "This would redirect to " +
+                          (card[0].Hostname || "<hostname>") +
+                          " apps"
+                      )
+                    }
                     style={{
                       margin: card.length > 2 ? "10px" : "44px 10px 10px",
                     }}

@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Dummy data
+src/clusters.json
+src/db.json
+src/images.json
+src/nodespect.json
+src/serverInfo.json

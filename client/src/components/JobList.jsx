@@ -7,9 +7,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import ReactJson from "@microlink/react-json-view";
 import ImportModal from "./ImageModal";
 import { DangerModal } from "./ImageModal";
-// import services from "../services.json";
-// import containers from "../db.json";
-// import images from "../images.json";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   let pages = [];
@@ -27,11 +24,6 @@ const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   return pages;
 };
 
-// function updateListOnSuccess(checkedRows) {
-
-// }
-
-// revise this to only take the dynamic part of api i.e. stop, start, etc.
 async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
   let commaSeparated = [];
   for (let i = 0; i < arrayOfArrays.length; i++) {
@@ -97,7 +89,6 @@ export default function JobList() {
   const [sortableHeaders, setSortableHeaders] = useState([]);
   const [modalShow, setModalShow] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(1);
-  // const [reorderedData, setReorderedData] = useState([]);
   const [failed, setFailed] = useState(false);
   const [numItems, setNumItems] = useState(1);
   const [dangerShow, setDangerShow] = useState(false);
@@ -144,14 +135,6 @@ export default function JobList() {
     },
   ];
   const imageHeaders = ["Repository", "Size", "Containers", "Tag", "CreatedAt"];
-  // const serviceHeaders = [
-  //   "Name",
-  //   "ID",
-  //   "BlockIO",
-  //   "NetIO",
-  //   "CPUPerc",
-  //   "MemUsage",
-  // ];
 
   useEffect(() => {
     setFailed(false);
@@ -381,26 +364,6 @@ export default function JobList() {
               })
             }
           />
-          {/* {directory !== "images" && (
-            <div
-              style={{
-                display: "flex",
-                margin: "20px",
-                gap: "15px",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Form.Control
-                value={filterQuery}
-                onChange={(e) => setFilterQuery(e.target.value)}
-                style={{ width: "300px", height: "38px" }}
-                type="text"
-                placeholder="Get Specific User"
-              ></Form.Control>
-              <Button>Get</Button>
-            </div>
-          )} */}
           <div
             style={{
               display: "flex",
