@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp } from "react-feather";
 import { useState, useEffect } from "react";
 import handleFetch from "../handleFetch";
 import Chart from "./Chart";
-import { redirect, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ReactJson from "@microlink/react-json-view";
 import ImportModal from "./ImageModal";
 import { DangerModal } from "./ImageModal";
@@ -69,6 +69,7 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
       );
       updatedArray = toRevise;
     }
+    sessionStorage.setItem("apps", updatedArray);
     return updatedArray;
   }
 }
@@ -101,6 +102,7 @@ export default function JobList() {
   const [failed, setFailed] = useState(false);
   const [numItems, setNumItems] = useState(1);
   const [dangerShow, setDangerShow] = useState(false);
+  const navigate = useNavigate();
 
   const appHeaders = ["ID", "State", "Image", "Names", "CreatedAt"];
   const appButtons = [
@@ -489,7 +491,7 @@ export default function JobList() {
                           }
                         );
                         response = await response.json();
-                        return redirect("/apps");
+                        navigate("/apps");
                       } catch (err) {
                         console.error(err);
                       }
