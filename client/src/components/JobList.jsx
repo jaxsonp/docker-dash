@@ -334,13 +334,9 @@ export default function JobList() {
 
     let appHealthToNums = Object.values(appHealth).map((val) => +val);
 
-    let sliced = appHealthToNums.slice(
-      appHealthToNums.length - 7,
-      appHealthToNums.length
-    );
     setInView({
       key: checkedRows[0][0],
-      performance: sliced,
+      performance: appHealthToNums,
       details: inspectApp,
     });
   }
