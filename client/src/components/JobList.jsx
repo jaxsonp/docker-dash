@@ -55,7 +55,9 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
     let toRevise = originalArray.map((x) => Object.assign({}, x));
     let mappedRevised = toRevise
       .filter((el) => commaSeparated.includes(el.Names))
-      .map((el) => (el.State = newState));
+      .map(
+        (el) => (el.State = newState !== "restarting" ? newState : "running")
+      );
     let updatedArray = null;
     if (newState !== "banished") {
       updatedArray = toRevise.map((obj) =>
@@ -67,7 +69,6 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
       );
       updatedArray = toRevise;
     }
-    console.log(updatedArray);
     return updatedArray;
   }
 }
@@ -329,10 +330,8 @@ export default function JobList() {
       console.error(err);
     }
 
-    console.log(appHealth);
-
     let appHealthLabels = Object.keys(appHealth).map((val) =>
-      val.substring(10, 15)
+      val.substring(11, 16)
     );
     let appHealthToNums = Object.values(appHealth).map((val) => +val);
 
@@ -479,18 +478,21 @@ export default function JobList() {
                   </Button>
                   <Button
                     onClick={async () => {
-                      let response = await fetch(
-                        api +
-                          "create-app?image=" +
-                          checkedRows[0] +
-                          "&user=janeschmo",
-                        {
-                          method: "POST",
-                        }
-                      );
-                      response = await response.json();
-                      console.log("response", response);
-                      response.status === 200 && navigate("/apps");
+                      try {
+                        let response = await fetch(
+                          api +
+                            "create-app?image=" +
+                            checkedRows[0] +
+                            "&user=janeschmo",
+                          {
+                            method: "POST",
+                          }
+                        );
+                        response = await response.json();
+                        navigate("/apps");
+                      } catch (err) {
+                        console.error(err);
+                      }
                     }}
                     disabled={checkedRows.length === 0}
                     size="sm"
