@@ -333,22 +333,22 @@ function ServersView() {
                                 )}
                               </div>
                             </Card.Body>
-                            {card[0].ManagerStatus === "Leader" ||
-                              (card.length > 1 && (
-                                <Button
-                                  onClick={() => {
-                                    handleInspectModal(
-                                      api +
-                                        "get-node-info?hostname=" +
-                                        inner.Hostname
-                                    );
-                                    setModalShow(true);
-                                  }}
-                                  style={{ margin: "0 auto 10px" }}
-                                >
-                                  Inspect
-                                </Button>
-                              ))}
+                            {(card[0].ManagerStatus === "Leader" ||
+                              card.length > 1) && (
+                              <Button
+                                onClick={() => {
+                                  handleInspectModal(
+                                    api +
+                                      "get-node-info?hostname=" +
+                                      inner.Hostname
+                                  );
+                                  setModalShow(true);
+                                }}
+                                style={{ margin: "0 auto 10px" }}
+                              >
+                                Inspect
+                              </Button>
+                            )}
                           </Card>
                         </>
                       );
