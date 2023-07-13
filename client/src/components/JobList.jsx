@@ -173,6 +173,7 @@ export default function JobList() {
 
   useEffect(() => {
     async function getExpectedData() {
+      sessionStorage.removeItem("apps");
       setOrder([]);
       setRelevantResults([[{ Id: "Loading..." }]]);
       setCheckedRows([]);
@@ -182,7 +183,6 @@ export default function JobList() {
         try {
           let apps = await handleFetch("apps", api + "get-app-status");
           setOrder(apps);
-          sessionStorage.setItem("apps", JSON.stringify(apps));
         } catch (err) {
           setFailed(true);
           console.error(err);
@@ -249,6 +249,7 @@ export default function JobList() {
         }
       );
       response = await response.json();
+      alert("200 Request Successful");
     } catch (err) {
       console.error(err);
     }
@@ -373,7 +374,7 @@ export default function JobList() {
                 order,
                 "banished"
               ).then((res) => {
-                sessionStorage.setItem("apps", res);
+                sessionStorage.setItem("apps", JSON.stringify(res));
                 setOrder(res);
                 setCheckedRows([]);
               })
