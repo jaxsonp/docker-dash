@@ -241,6 +241,21 @@ export default function JobList() {
     }
   }, [order, filterQuery]);
 
+  async function handleCreateApp() {
+    try {
+      let response = await fetch(
+        api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
+        {
+          method: "POST",
+        }
+      );
+      response = await response.json();
+      navigate("/apps");
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   function handleChange(e, containerId, containerState) {
     if (directory === "images") {
       if (e.target.checked) {
@@ -479,23 +494,7 @@ export default function JobList() {
                     Request Image
                   </Button>
                   <Button
-                    onClick={async () => {
-                      try {
-                        let response = await fetch(
-                          api +
-                            "create-app?image=" +
-                            checkedRows[0] +
-                            "&user=janeschmo",
-                          {
-                            method: "POST",
-                          }
-                        );
-                        response = await response.json();
-                        navigate("/apps");
-                      } catch (err) {
-                        console.error(err);
-                      }
-                    }}
+                    onClick={handleCreateApp}
                     disabled={checkedRows.length === 0}
                     size="sm"
                   >
