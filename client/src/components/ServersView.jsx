@@ -27,10 +27,11 @@ const step = 3;
 
 function sortSpecificData(singleObj, multiObj) {
   let singElArr = singleObj.map((server) => [server]);
-  let sorted = multiObj
-    .filter((el) => el.length > 1)
-    .sort((a, b) => b.length - a.length);
-  if (multiObj !== 0) {
+  let sorted = multiObj.filter(
+    (el) => el.length > 1 || el[0].ManagerStatus === "Leader"
+  );
+  if (sorted.length > 1) {
+    sorted = sorted.sort((a, b) => b.length - a.length);
     sorted.map((el) => {
       return el.sort((a, b) => {
         if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
@@ -46,9 +47,8 @@ function sortSpecificData(singleObj, multiObj) {
         }
       });
     });
-    sorted = sorted.concat(singElArr);
   }
-  sorted = sorted.concat(multiObj);
+  sorted = sorted.concat(singElArr);
   sorted.sort((a, b) => {
     if (
       b[0].Status === "failed" ||
