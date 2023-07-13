@@ -48,11 +48,11 @@ export const options = {
   },
 };
 
-const labels = ["-60", "-50", "-40", "-30", "-20", "-10", "0"];
+// const labels = ["-60", "-50", "-40", "-30", "-20", "-10", "0"];
 
 export default function Chart({ inView }) {
   const data = {
-    labels,
+    labels: inView.labels,
     datasets: [
       {
         label: inView.key,

@@ -83,6 +83,7 @@ export default function JobList() {
     direction: "asc",
   });
   const [inView, setInView] = useState({
+    labels: null,
     key: null,
     performance: null,
     details: null,
@@ -312,29 +313,31 @@ export default function JobList() {
   async function handleChartUpdate() {
     let inspectApp;
     try {
-      inspectApp = await handleFetch(
-        "inspectApp",
-        api + `get-app-info?name=${checkedRows[0][0]}`
-      );
+      inspectApp = await fetch(api + `get-app-info?name=${checkedRows[0][0]}`);
+      inspectApp = await inspectApp.json();
     } catch (err) {
       console.error(err);
     }
 
     let appHealth;
     try {
-      appHealth = await handleFetch(
-        "appHealth",
+      appHealth = await fetch(
         api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
       );
+      appHealth = await appHealth.json();
     } catch (err) {
       console.error(err);
     }
 
     console.log(appHealth);
 
+    let appHealthLabels = Object.keys(appHealth).map((val) =>
+      val.substring(-3, 5)
+    );
     let appHealthToNums = Object.values(appHealth).map((val) => +val);
 
     setInView({
+      labels: appHealthLabels,
       key: checkedRows[0][0],
       performance: appHealthToNums,
       details: inspectApp,

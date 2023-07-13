@@ -30,22 +30,25 @@ function sortSpecificData(singleObj, multiObj) {
   let sorted = multiObj
     .filter((el) => el.length > 1)
     .sort((a, b) => b.length - a.length);
-  sorted.map((el) => {
-    return el.sort((a, b) => {
-      if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
-        if (a.ManagerStatus.length === 0 && b.ManagerStatus.length === 0) {
-          return 0;
-        } else if (a.ManagerStatus.length === 0) {
-          return 1;
+  if (multiObj !== 0) {
+    sorted.map((el) => {
+      return el.sort((a, b) => {
+        if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
+          if (a.ManagerStatus.length === 0 && b.ManagerStatus.length === 0) {
+            return 0;
+          } else if (a.ManagerStatus.length === 0) {
+            return 1;
+          } else {
+            return -1;
+          }
         } else {
-          return -1;
+          return a.ManagerStatus.length - b.ManagerStatus.length;
         }
-      } else {
-        return a.ManagerStatus.length - b.ManagerStatus.length;
-      }
+      });
     });
-  });
-  sorted = sorted.concat(singElArr);
+    sorted = sorted.concat(singElArr);
+  }
+  sorted = sorted.concat(multiObj);
   sorted.sort((a, b) => {
     if (
       b[0].Status === "failed" ||
