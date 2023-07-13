@@ -38,7 +38,7 @@ export default function ImportModal(props) {
             onClick={async () => {
               props.onHide();
               let response = await fetch(
-                api + "start-app?name=" + imageRef.current.value,
+                api + "request-image?name=" + imageRef.current.value,
                 {
                   method: "POST",
                 }
@@ -80,12 +80,7 @@ export function DangerModal(props) {
             style={{ marginRight: "50px" }}
             onClick={async () => {
               props.onHide();
-              props.handleBatchPost(
-                props.arrayofArrays,
-                props.api,
-                props.originalArray,
-                props.newState
-              );
+              await props.handleBatchPost();
             }}
           >
             Yes

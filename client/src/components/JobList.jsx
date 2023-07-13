@@ -8,7 +8,7 @@ import ReactJson from "@microlink/react-json-view";
 import ImportModal from "./ImageModal";
 import { DangerModal } from "./ImageModal";
 // import services from "../services.json";
-// import apps from "../db.json";
+import containers from "../db.json";
 // import images from "../images.json";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
@@ -41,24 +41,35 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
 
   let url = api + commaStrung;
 
-  let toRevise = originalArray.map((x) => Object.assign({}, x));
-  let mappedRevised = null;
-  let updatedArray = null;
-  if (newState !== "banished") {
-    mappedRevised = toRevise
+  let response;
+  try {
+    response = await fetch(url, {
+      method: "POST",
+    });
+    response = await response.json();
+  } catch (err) {
+    console.error(err);
+  }
+
+  if (response.status === 200) {
+    let toRevise = originalArray.map((x) => Object.assign({}, x));
+    let mappedRevised = toRevise
       .filter((el) => commaSeparated.includes(el.Names))
       .map((el) => (el.State = newState));
-    updatedArray = toRevise.map((obj) =>
-      obj.Names === mappedRevised.Names ? mappedRevised : obj
-    );
-  } else {
-    updatedArray = toRevise.findIndex((el) => el.Names === mappedRevised.Names);
+    let updatedArray = null;
+    if (newState !== "banished") {
+      updatedArray = toRevise.map((obj) =>
+        obj.Names === mappedRevised.Names ? mappedRevised : obj
+      );
+    } else {
+      toRevise.forEach(
+        (el, index) => el.State === "banished" && toRevise.splice(index, 1)
+      );
+      updatedArray = toRevise;
+    }
+    console.log(updatedArray);
+    return updatedArray;
   }
-  return updatedArray;
-  // let response = await fetch(url, {
-  //   method: "POST"
-  // });
-  // return console.log(response.status);
 }
 
 const api = "http://192.168.98.74/api/demo/";
@@ -192,7 +203,7 @@ export default function JobList() {
     }
     getExpectedData();
     setNumItems(order.length);
-  }, [view, viewId, order.length]);
+  }, [view, viewId]);
 
   useEffect(() => {
     if (order && order.length) {
@@ -335,13 +346,19 @@ export default function JobList() {
           <DangerModal
             show={dangerShow}
             onHide={() => setDangerShow(false)}
-            handleBatchPost={handleBatchPost}
-            arrayofArrays={checkedRows}
-            originalArray={order}
-            newState={"banished"}
-            api={api + "delete-app?name="}
+            handleBatchPost={async () =>
+              await handleBatchPost(
+                checkedRows,
+                api + "delete-app?name=",
+                order,
+                "banished"
+              ).then((res) => {
+                setOrder(res);
+                setCheckedRows([]);
+              })
+            }
           />
-          {directory !== "images" && (
+          {/* {directory !== "images" && (
             <div
               style={{
                 display: "flex",
@@ -360,7 +377,7 @@ export default function JobList() {
               ></Form.Control>
               <Button>Get</Button>
             </div>
-          )}
+          )} */}
           <div
             style={{
               display: "flex",
@@ -491,6 +508,8 @@ export default function JobList() {
                         }
                       >
                         Enable Actions
+                        <br />
+                        (Selected: {checkedRows.length})
                       </div>
                     </th>
                   </>
