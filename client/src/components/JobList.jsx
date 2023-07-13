@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp } from "react-feather";
 import { useState, useEffect } from "react";
 import handleFetch from "../handleFetch";
 import Chart from "./Chart";
-import { useNavigate, useParams } from "react-router-dom";
+import { redirect, useParams } from "react-router-dom";
 import ReactJson from "@microlink/react-json-view";
 import ImportModal from "./ImageModal";
 import { DangerModal } from "./ImageModal";
@@ -439,6 +439,7 @@ export default function JobList() {
                           button.causes
                         );
                         setOrder(newOrder);
+                        alert("200 Request Successful");
                         setLoading("");
                         setCheckedRows([]);
                       }}
@@ -489,7 +490,7 @@ export default function JobList() {
                           }
                         );
                         response = await response.json();
-                        navigate("/apps");
+                        return redirect("/apps");
                       } catch (err) {
                         console.error(err);
                       }
