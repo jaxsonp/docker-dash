@@ -36,7 +36,6 @@ export default function ImportModal(props) {
           <Button
             style={{ marginRight: "50px" }}
             onClick={async () => {
-              props.onHide();
               try {
                 let response = await fetch(
                   api + "request-image?image=" + imageRef.current.value,
@@ -45,9 +44,12 @@ export default function ImportModal(props) {
                   }
                 );
                 response = await response.json();
+                imageRef.current.value = "";
+                reasonRef.current.value = "";
                 alert("200 Request Successful");
               } catch (err) {
                 console.error(err);
+                alert("Something went wrong...");
               }
             }}
           >
