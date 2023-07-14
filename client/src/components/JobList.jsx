@@ -399,9 +399,9 @@ export default function JobList() {
                   >
                     Inspect (One)
                   </Button>
-                  {appButtons.map((button, key) => (
+                  {appButtons.map((button) => (
                     <Button
-                      key={key}
+                      key={button.name}
                       variant={button.variant || "primary"}
                       size="sm"
                       disabled={
@@ -514,7 +514,7 @@ export default function JobList() {
                 )}
                 {sortableHeaders.map((header, key) => {
                   return (
-                    <th key={key} onClick={() => sortDataBy(header)}>
+                    <th key={"sh1" + key} onClick={() => sortDataBy(header)}>
                       <div>
                         {header + " "}
                         {sortConfig.key === header ? (
@@ -536,7 +536,7 @@ export default function JobList() {
               {(relevantResults.length > 0 ? relevantResults : order).map(
                 (datum, key) => {
                   return (
-                    <tr key={key}>
+                    <tr key={"rr" + key}>
                       <td style={{ padding: 0 }}>
                         <label
                           className="grayify"
@@ -578,7 +578,7 @@ export default function JobList() {
                                 maxWidth: "180px",
                                 overflowWrap: "break-word",
                               }}
-                              key={key}
+                              key={"sh2" + key}
                             >
                               {datum[header]}
                             </td>

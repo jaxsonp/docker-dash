@@ -44,13 +44,13 @@ export default function ImportModal(props) {
                   }
                 );
                 response = await response.json();
-                imageRef.current.value = "";
-                reasonRef.current.value = "";
                 alert("200 Request Successful");
               } catch (err) {
                 console.error(err);
                 alert("Something went wrong...");
               }
+              imageRef.current.value = "";
+              reasonRef.current.value = "";
             }}
           >
             Submit

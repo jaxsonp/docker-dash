@@ -235,7 +235,7 @@ function ServersView() {
                                 left: 165,
                                 top: 41,
                               }}
-                              key={key}
+                              key={inner + key}
                             >
                               {key > 3 && (
                                 <div
