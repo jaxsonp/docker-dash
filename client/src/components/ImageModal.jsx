@@ -36,24 +36,15 @@ export default function ImportModal(props) {
           <Button
             style={{ marginRight: "50px" }}
             onClick={async () => {
-              // try {
               let response = await fetch(
                 api + "request-image?image=" + imageRef.current.value,
                 {
                   method: "POST",
                 }
               );
-              console.log("b4", response);
-              response =
-                typeof response === "string"
-                  ? JSON.stringify(response)
-                  : await response.json();
-              console.log("after", response);
-              alert("200 Request Successful");
-              // } catch (err) {
-              //   alert("Something went wrong...");
-              //   console.error(err);
-              // }
+              response.ok === true
+                ? alert("200 Request Successful")
+                : alert("Something went wrong...");
               imageRef.current.value = "";
               reasonRef.current.value = "";
             }}
