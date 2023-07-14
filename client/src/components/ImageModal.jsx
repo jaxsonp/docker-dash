@@ -42,12 +42,17 @@ export default function ImportModal(props) {
                   method: "POST",
                 }
               );
-              response.ok === true
-                ? alert("200 Request Successful")
-                : alert("Something went wrong...");
-              imageRef.current.value = "";
-              reasonRef.current.value = "";
-              return props.onHide();
+              if (response.ok === true) {
+                alert("200 Request Successful");
+                imageRef.current.value = "";
+                reasonRef.current.value = "";
+                let getImages = await fetch(api + "get-images");
+                getImages = getImages.json();
+                setOrder(getImages);
+                props.onHide();
+              } else {
+                alert("Something went wrong...");
+              }
             }}
           >
             Submit

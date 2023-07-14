@@ -180,8 +180,8 @@ export default function JobList() {
           setFailed(true);
           console.error(err);
         }
-        if (viewId) {
-        }
+        // if (viewId) {
+        // }
       } else if (view === "images") {
         setDirectory("images");
         setSortableHeaders(imageHeaders);
@@ -192,18 +192,18 @@ export default function JobList() {
           setFailed(true);
           console.error(err);
         }
-        if (viewId) {
-        }
+        // if (viewId) {
+        // }
       } else {
         setOrder([]);
       }
     }
     getExpectedData();
-  }, [view, viewId]);
+  }, [view]);
 
   useEffect(() => {
-    setNumItems(order.length);
-  }, [order.length]);
+    order && order.length && setNumItems(order.length);
+  }, [order]);
 
   useEffect(() => {
     if (order && order.length) {
@@ -360,9 +360,6 @@ export default function JobList() {
             show={modalShow}
             onHide={async () => {
               setModalShow(false);
-              let response = await fetch(api + "get-images");
-              response = response.json();
-              setOrder(response);
             }}
           />
           <DangerModal
@@ -437,6 +434,10 @@ export default function JobList() {
                           button.causes
                         );
                         setOrder(newOrder);
+                        sessionStorage.setItem(
+                          "apps",
+                          JSON.stringify(newOrder)
+                        );
                         alert("200 Request Successful");
                         setLoading("");
                         setCheckedRows([]);
