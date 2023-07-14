@@ -148,8 +148,6 @@ export default function JobList() {
     let timer = setInterval(() => {
       sessionStorage.removeItem("apps");
       sessionStorage.removeItem("images");
-      sessionStorage.removeItem("inspectApp");
-      sessionStorage.removeItem("appHealth");
     }, 300000);
     return () => clearInterval(timer);
   }, []);
