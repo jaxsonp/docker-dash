@@ -11,7 +11,7 @@ const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
       <Pagination.Item
         active={selectedIndex === i}
         onClick={() => setSelectedIndex(i)}
-        key={i}
+        key={"pg" + i}
       >
         {i}
       </Pagination.Item>
@@ -121,8 +121,8 @@ function ServersView() {
   }, []);
 
   useEffect(() => {
-    setNumItems(initialData.length);
-  }, [initialData.length]);
+    setNumItems(initialData && initialData.length ? initialData.length : 1);
+  }, [initialData]);
 
   useEffect(() => {
     if (initialData && initialData.length) {
@@ -173,7 +173,7 @@ function ServersView() {
             reorderedData.map((card, index) => {
               return (
                 <Card
-                  key={index}
+                  key={"ro" + index}
                   style={{
                     width: card.length > 1 ? "428px" : "214px",
                     height: "fit-content",
@@ -235,7 +235,7 @@ function ServersView() {
                                 left: 165,
                                 top: 41,
                               }}
-                              key={inner + key}
+                              key={"card" + key}
                             >
                               {key > 3 && (
                                 <div

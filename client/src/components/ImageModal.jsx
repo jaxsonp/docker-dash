@@ -47,6 +47,9 @@ export default function ImportModal(props) {
                 : alert("Something went wrong...");
               imageRef.current.value = "";
               reasonRef.current.value = "";
+              setTimeout(() => {
+                props.onHide();
+              }, 500);
             }}
           >
             Submit

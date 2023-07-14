@@ -8,7 +8,6 @@ export default async function handleFetch(name, api) {
       sessionStorage.setItem(name, JSON.stringify(response));
       return JSON.parse(sessionStorage.getItem(name));
     } catch (err) {
-      alert(err);
       throw new Error(err);
     }
   }

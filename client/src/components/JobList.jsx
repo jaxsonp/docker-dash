@@ -15,7 +15,7 @@ const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
       <Pagination.Item
         active={selectedIndex === i}
         onClick={() => setSelectedIndex(i)}
-        key={i}
+        key={"rppi" + i}
       >
         {i}
       </Pagination.Item>
