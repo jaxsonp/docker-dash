@@ -55,7 +55,7 @@ export default function Chart({ inView }) {
       {
         label: inView.key,
         data: inView.performance,
-        borderColor: "hsl(0, 0%, 20%)",
+        borderColor: "hsl(257, 81%, 55%)",
         backgroundColor: "white",
       },
     ],

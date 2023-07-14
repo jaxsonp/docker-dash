@@ -24,14 +24,22 @@ const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   return pages;
 };
 
-async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
+const api = "http://192.168.98.74/api/demo/";
+const step = 10;
+
+async function handleBatchPost(
+  arrayOfArrays,
+  apiCommand,
+  originalArray,
+  newState
+) {
   let commaSeparated = [];
   for (let i = 0; i < arrayOfArrays.length; i++) {
     commaSeparated.push(arrayOfArrays[i][0]);
   }
   let commaStrung = commaSeparated.join(",");
 
-  let url = api + commaStrung;
+  let url = apiCommand + commaStrung;
 
   let response;
   try {
@@ -44,29 +52,32 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
   }
 
   if (response.status === 200) {
-    let toRevise = originalArray.map((x) => Object.assign({}, x));
-    let mappedRevised = toRevise
-      .filter((el) => commaSeparated.includes(el.Names))
-      .map(
-        (el) => (el.State = newState !== "restarting" ? newState : "running")
-      );
-    let updatedArray = null;
-    if (newState !== "banished") {
-      updatedArray = toRevise.map((obj) =>
-        obj.Names === mappedRevised.Names ? mappedRevised : obj
-      );
+    if (newState === "fetch") {
+      setTimeout(async () => {
+        let response = await fetch(api + "get-app-status");
+        response = await response.json();
+        return response;
+      }, 1500);
     } else {
-      toRevise.forEach(
-        (el, index) => el.State === "banished" && toRevise.splice(index, 1)
-      );
-      updatedArray = toRevise;
+      let toRevise = originalArray.map((x) => Object.assign({}, x));
+      let mappedRevised = toRevise
+        .filter((el) => commaSeparated.includes(el.Names))
+        .map((el) => (el.State = newState));
+      let updatedArray = null;
+      if (newState !== "banished") {
+        updatedArray = toRevise.map((obj) =>
+          obj.Names === mappedRevised.Names ? mappedRevised : obj
+        );
+      } else {
+        toRevise.forEach(
+          (el, index) => el.State === "banished" && toRevise.splice(index, 1)
+        );
+        updatedArray = toRevise;
+      }
+      return updatedArray;
     }
-    return updatedArray;
   }
 }
-
-const api = "http://192.168.98.74/api/demo/";
-const step = 10;
 
 export default function JobList() {
   const [directory, setDirectory] = useState("");
@@ -94,12 +105,12 @@ export default function JobList() {
   const [dangerShow, setDangerShow] = useState(false);
   const navigate = useNavigate();
 
-  const appHeaders = ["ID", "State", "Image", "Names", "CreatedAt"];
+  const appHeaders = ["Image", "Names", "State", "Status", "CreatedAt"];
   const appButtons = [
     {
       name: "Start",
       disabledBy: ["restarting", "running", "paused", "dead"],
-      causes: "running",
+      causes: "fetch",
       api: api + "start-app?name=",
     },
     {
@@ -123,7 +134,7 @@ export default function JobList() {
     {
       name: "Restart",
       disabledBy: ["created", "restarting", "exited", "dead"],
-      causes: "restarting",
+      causes: "fetch",
       api: api + "restart-app?name=",
     },
     {
@@ -345,7 +356,15 @@ export default function JobList() {
     <>
       {(view === "images" || view === "apps") && order && order.length > 0 ? (
         <>
-          <ImportModal show={modalShow} onHide={() => setModalShow(false)} />
+          <ImportModal
+            show={modalShow}
+            onHide={async () => {
+              setModalShow(false);
+              let response = await fetch(api + "get-images");
+              response = response.json();
+              setOrder(response);
+            }}
+          />
           <DangerModal
             show={dangerShow}
             onHide={() => setDangerShow(false)}

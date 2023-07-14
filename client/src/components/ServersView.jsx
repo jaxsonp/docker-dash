@@ -181,8 +181,8 @@ function ServersView() {
                 >
                   <h4 style={{ margin: "10px", fontSize: "22px" }}>
                     {card[0].ManagerStatus === "Leader" || card.length > 1
-                      ? "Cluster Host"
-                      : "Container Host"}
+                      ? "Swarm Server(s)"
+                      : "Solo Server"}
                   </h4>
                   <div
                     style={{
@@ -280,7 +280,9 @@ function ServersView() {
                                             : "unset",
                                       }}
                                     >
-                                      {inner.ManagerStatus || "Worker"}
+                                      {inner.ManagerStatus !== "Solo"
+                                        ? inner.ManagerStatus || "Worker"
+                                        : inner.Hostname}
                                     </h5>
                                     <div
                                       style={{
@@ -301,7 +303,9 @@ function ServersView() {
                                         right: "10px",
                                       }}
                                     ></div>
-                                    <p>{inner.Hostname}</p>
+                                    {inner.ManagerStatus !== "Solo" && (
+                                      <p>{inner.Hostname}</p>
+                                    )}
                                     <hr style={{ margin: "8px 0" }} />
                                     <p
                                       style={{
@@ -331,11 +335,8 @@ function ServersView() {
                                     <hr />
                                     <p>CPU%: {inner["CPU%"]}</p>
                                     <p>Mem%: {inner["Memory%"]}</p>
-                                    <p>User Num: {inner["User Quantity"]}</p>
-                                    <p>
-                                      Container Qty:{" "}
-                                      {inner["Container Quantity"]}
-                                    </p>
+                                    <p>Users: {inner["Users"]}</p>
+                                    <p>Total Apps: {inner["Total Apps"]}</p>
                                   </>
                                 )}
                               </div>
