@@ -54,10 +54,12 @@ async function handleBatchPost(
         setTimeout(async () => {
           response = await fetch(api + "get-app-status");
           response = await response.json();
+          return response;
         }, 1000);
         if (response) return response;
       }
-      return refetch();
+      let toReturn = refetch();
+      return toReturn;
     } else {
       let toRevise = originalArray.map((x) => Object.assign({}, x));
       let mappedRevised = toRevise
