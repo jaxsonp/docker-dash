@@ -359,6 +359,10 @@ export default function JobList() {
           <ImportModal
             show={modalShow}
             onHide={async () => {
+              let response = await fetch(api + "get-images");
+              response = response.json();
+              setOrder(response);
+              sessionStorage.setItem("images", JSON.stringify(response));
               setModalShow(false);
             }}
           />

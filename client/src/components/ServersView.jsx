@@ -331,12 +331,12 @@ function ServersView() {
                                   </>
                                 ) : (
                                   <>
-                                    <p>{inner["Hostname"]}</p>
+                                    <h5>{inner["Hostname"]}</h5>
                                     <hr />
                                     <p>CPU%: {inner["CPU%"]}</p>
                                     <p>Mem%: {inner["Memory%"]}</p>
                                     <p>Users: {inner["Users"]}</p>
-                                    <p>Total Apps: {inner["Total Apps"]}</p>
+                                    <p>Current Apps: {inner["Current Apps"]}</p>
                                   </>
                                 )}
                               </div>
