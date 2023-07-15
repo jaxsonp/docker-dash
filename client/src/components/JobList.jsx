@@ -50,12 +50,12 @@ async function handleBatchPost(
   if (typeof response === "object") {
     if (newState === "fetch") {
       async function refetch() {
-        let timer = setTimeout(async () => {
-          let response = await fetch(api + "get-app-status");
+        let response;
+        setTimeout(async () => {
+          response = await fetch(api + "get-app-status");
           response = await response.json();
-          return response;
         }, 1000);
-        return () => clearTimeout(timer);
+        if (response) return response;
       }
       return refetch();
     } else {
