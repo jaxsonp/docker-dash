@@ -360,7 +360,7 @@ export default function JobList() {
             show={modalShow}
             onHide={async () => {
               let response = await fetch(api + "get-images");
-              response = response.json();
+              response = await response.json();
               setOrder(response);
               sessionStorage.setItem("images", JSON.stringify(response));
               setModalShow(false);
