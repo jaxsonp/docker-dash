@@ -49,17 +49,9 @@ async function handleBatchPost(
 
   if (typeof response === "object") {
     if (newState === "fetch") {
-      async function refetch() {
-        let response;
-        setTimeout(async () => {
-          response = await fetch(api + "get-app-status");
-          response = await response.json();
-          return response;
-        }, 1000);
-        if (response) return response;
-      }
-      let toReturn = refetch();
-      return toReturn;
+      let response = await fetch(api + "get-app-status");
+      response = await response.json();
+      return response;
     } else {
       let toRevise = originalArray.map((x) => Object.assign({}, x));
       let mappedRevised = toRevise
