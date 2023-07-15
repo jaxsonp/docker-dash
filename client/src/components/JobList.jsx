@@ -47,7 +47,7 @@ async function handleBatchPost(
   });
   response = await response.json();
 
-  if (typeof response === "object") {
+  if (response) {
     if (newState === "fetch") {
       let response = await fetch(api + "get-app-status");
       response = await response.json();
@@ -404,18 +404,14 @@ export default function JobList() {
                           order,
                           button.causes
                         );
-                        if (typeof newOrder === "object") {
-                          setOrder(newOrder);
-                          sessionStorage.setItem(
-                            "apps",
-                            JSON.stringify(newOrder)
-                          );
-                          alert("200 Request Successful");
-                          setButtonLoad("");
-                          setCheckedRows([]);
-                        } else {
-                          alert("Something went wrong...");
-                        }
+                        setOrder(newOrder);
+                        sessionStorage.setItem(
+                          "apps",
+                          JSON.stringify(newOrder)
+                        );
+                        alert("200 Request Successful");
+                        setButtonLoad("");
+                        setCheckedRows([]);
                       }}
                     >
                       {buttonLoad === button.name ? (
