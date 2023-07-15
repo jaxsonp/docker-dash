@@ -4,7 +4,7 @@ export default async function handleFetch(name, api) {
   } else {
     let response = await fetch(api);
     response = await response.json();
-    if (response.ok) {
+    if (typeof response === "object") {
       console.log("ok");
       sessionStorage.setItem(name, JSON.stringify(response));
       return JSON.parse(sessionStorage.getItem(name));
