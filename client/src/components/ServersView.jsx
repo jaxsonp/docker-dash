@@ -82,29 +82,21 @@ function ServersView() {
 
   useEffect(() => {
     async function fetchClusterData() {
-      try {
-        const nodes = await fetch(api + "get-node-status");
-        let nodesJ = await nodes.json();
-        return sortSpecificData(servers, [nodesJ]);
-      } catch (err) {
-        setFailed(true);
-        console.error(err);
-      }
+      const nodes = await fetch(api + "get-node-status");
+      let nodesJ = await nodes.json();
+      console.log(nodesJ);
+      return sortSpecificData(servers, [nodesJ]);
     }
     async function getServerPreviews() {
       setInitialData(await fetchClusterData());
       let timer = setInterval(async () => {
         if (!sessionStorage.getItem("sortedData")) {
-          try {
-            const nodes = await fetch(api + "get-node-status");
-            let nodesJ = await nodes.json();
-            let sorted = sortSpecificData(servers, [nodesJ]);
-            sessionStorage.setItem("sortedData", JSON.stringify(sorted));
-            setInitialData(sorted);
-          } catch (err) {
-            setFailed(true);
-            console.error(err);
-          }
+          const nodes = await fetch(api + "get-node-status");
+          let nodesJ = await nodes.json();
+          let sorted = sortSpecificData(servers, [nodesJ]);
+          sessionStorage.setItem("sortedData", JSON.stringify(sorted));
+          setInitialData(sorted);
+          console.log(nodesJ);
         } else {
           setInitialData(JSON.parse(sessionStorage.getItem("sortedData")));
           if (timeOfLastFetch + 600000 < Date.now()) {
@@ -135,14 +127,10 @@ function ServersView() {
   }, [initialData, selectedIndex, numItems]);
 
   async function handleInspectModal(endpoint) {
-    try {
-      let response = await fetch(endpoint);
-      response = await response.json();
-      setInspectInfo(response);
-    } catch (err) {
-      console.error(err);
-      setInspectInfo([{ message: "Something went wrong..." }]);
-    }
+    let response = await fetch(endpoint);
+    response = await response.json();
+    setInspectInfo(response);
+    console.log(response);
   }
 
   return (

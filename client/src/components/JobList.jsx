@@ -42,14 +42,11 @@ async function handleBatchPost(
   let url = apiCommand + commaStrung;
 
   let response;
-  try {
-    response = await fetch(url, {
-      method: "POST",
-    });
-    response = await response.json();
-  } catch (err) {
-    console.error(err);
-  }
+  response = await fetch(url, {
+    method: "POST",
+  });
+  response = await response.json();
+  console.log(response);
 
   if (response.status === 200) {
     if (newState === "fetch") {
@@ -170,29 +167,17 @@ export default function JobList() {
       if (view === "apps") {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
-        try {
-          let apps = await handleFetch("apps", api + "get-app-status");
-          setOrder(apps);
-        } catch (err) {
-          console.error(err, typeof err);
-          if (!err.includes("Success")) {
-            setFailed(true);
-          }
-        }
+        let apps = await handleFetch("apps", api + "get-app-status");
+        setOrder(apps);
+        console.log(apps);
         // if (viewId) {
         // }
       } else if (view === "images") {
         setDirectory("images");
         setSortableHeaders(imageHeaders);
-        try {
-          let images = await handleFetch("images", api + "get-images");
-          setOrder(images);
-        } catch (err) {
-          console.error(err, typeof err);
-          if (!err.includes("Success")) {
-            setFailed(true);
-          }
-        }
+        let images = await handleFetch("images", api + "get-images");
+        setOrder(images);
+        console.log(images);
         // if (viewId) {
         // }
       } else {
@@ -236,17 +221,14 @@ export default function JobList() {
 
   async function handleCreateApp() {
     let response = null;
-    try {
-      response = await fetch(
-        api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
-        {
-          method: "POST",
-        }
-      );
-      response = await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    response = await fetch(
+      api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
+      {
+        method: "POST",
+      }
+    );
+    response = await response.json();
+    console.log("create-app");
     response && navigate("/apps");
   }
 
@@ -322,23 +304,17 @@ export default function JobList() {
   }
 
   async function handleChartUpdate() {
-    let inspectApp;
-    try {
-      inspectApp = await fetch(api + `get-app-info?name=${checkedRows[0][0]}`);
-      inspectApp = await inspectApp.json();
-    } catch (err) {
-      console.error(err);
-    }
+    let inspectApp = await fetch(
+      api + `get-app-info?name=${checkedRows[0][0]}`
+    );
+    inspectApp = await inspectApp.json();
+    console.log(inspectApp);
 
-    let appHealth;
-    try {
-      appHealth = await fetch(
-        api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
-      );
-      appHealth = await appHealth.json();
-    } catch (err) {
-      console.error(err);
-    }
+    let appHealth = await fetch(
+      api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
+    );
+    appHealth = await appHealth.json();
+    console.log(appHealth);
 
     let appHealthLabels = Object.keys(appHealth).map((val) =>
       val.substring(11, 16)
