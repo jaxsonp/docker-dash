@@ -42,22 +42,16 @@ async function handleBatchPost(
   let url = apiCommand + commaStrung;
 
   let response;
-  try {
-    response = await fetch(url, {
-      method: "POST",
-    });
-    response = await response.json();
-  } catch (err) {
-    console.error(err);
-  }
+  response = await fetch(url, {
+    method: "POST",
+  });
+  response = await response.json();
 
-  if (response.status === 200) {
+  if (typeof response === "object") {
     if (newState === "fetch") {
-      setTimeout(async () => {
-        let response = await fetch(api + "get-app-status");
-        response = await response.json();
-        return response;
-      }, 1500);
+      let response = await fetch(api + "get-app-status");
+      response = await response.json();
+      return response;
     } else {
       let toRevise = originalArray.map((x) => Object.assign({}, x));
       let mappedRevised = toRevise
@@ -92,7 +86,7 @@ export default function JobList() {
     performance: null,
     details: null,
   });
-  const [loading, setLoading] = useState("");
+  const [buttonLoad, setButtonLoad] = useState("");
   const [checkedRows, setCheckedRows] = useState([]);
   const [relevantResults, setRelevantResults] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
@@ -148,14 +142,6 @@ export default function JobList() {
   const imageHeaders = ["Repository", "Size", "Containers", "Tag", "CreatedAt"];
 
   useEffect(() => {
-    setFailed(false);
-    let timer = setTimeout(() => {
-      order.length === 0 && setFailed(true);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [view]);
-
-  useEffect(() => {
     let timer = setInterval(() => {
       sessionStorage.removeItem("apps");
       sessionStorage.removeItem("images");
@@ -173,25 +159,17 @@ export default function JobList() {
       if (view === "apps") {
         setDirectory("apps");
         setSortableHeaders(appHeaders);
-        try {
-          let apps = await handleFetch("apps", api + "get-app-status");
-          setOrder(apps);
-        } catch (err) {
-          setFailed(true);
-          console.error(err);
-        }
+        let apps = await handleFetch("apps", api + "get-app-status");
+        setOrder(apps);
+        console.log(apps);
         // if (viewId) {
         // }
       } else if (view === "images") {
         setDirectory("images");
         setSortableHeaders(imageHeaders);
-        try {
-          let images = await handleFetch("images", api + "get-images");
-          setOrder(images);
-        } catch (err) {
-          setFailed(true);
-          console.error(err);
-        }
+        let images = await handleFetch("images", api + "get-images");
+        setOrder(images);
+        console.log(images);
         // if (viewId) {
         // }
       } else {
@@ -235,17 +213,13 @@ export default function JobList() {
 
   async function handleCreateApp() {
     let response = null;
-    try {
-      response = await fetch(
-        api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
-        {
-          method: "POST",
-        }
-      );
-      response = await response.json();
-    } catch (err) {
-      console.error(err);
-    }
+    response = await fetch(
+      api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
+      {
+        method: "POST",
+      }
+    );
+    response = await response.json();
     response && navigate("/apps");
   }
 
@@ -321,23 +295,15 @@ export default function JobList() {
   }
 
   async function handleChartUpdate() {
-    let inspectApp;
-    try {
-      inspectApp = await fetch(api + `get-app-info?name=${checkedRows[0][0]}`);
-      inspectApp = await inspectApp.json();
-    } catch (err) {
-      console.error(err);
-    }
+    let inspectApp = await fetch(
+      api + `get-app-info?name=${checkedRows[0][0]}`
+    );
+    inspectApp = await inspectApp.json();
 
-    let appHealth;
-    try {
-      appHealth = await fetch(
-        api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
-      );
-      appHealth = await appHealth.json();
-    } catch (err) {
-      console.error(err);
-    }
+    let appHealth = await fetch(
+      api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
+    );
+    appHealth = await appHealth.json();
 
     let appHealthLabels = Object.keys(appHealth).map((val) =>
       val.substring(11, 16)
@@ -361,9 +327,11 @@ export default function JobList() {
             onHide={async () => {
               let response = await fetch(api + "get-images");
               response = await response.json();
-              setOrder(response);
-              sessionStorage.setItem("images", JSON.stringify(response));
-              setModalShow(false);
+              if (typeof response === "object") {
+                setOrder(response);
+                sessionStorage.setItem("images", JSON.stringify(response));
+                setModalShow(false);
+              }
             }}
           />
           <DangerModal
@@ -376,7 +344,6 @@ export default function JobList() {
                 order,
                 "banished"
               ).then((res) => {
-                sessionStorage.setItem("apps", JSON.stringify(res));
                 setOrder(res);
                 setCheckedRows([]);
               })
@@ -427,27 +394,31 @@ export default function JobList() {
                         checkedRows
                           .flat()
                           .some((el) => button["disabledBy"].includes(el)) ||
-                        loading
+                        buttonLoad
                       }
                       onClick={async () => {
-                        setLoading(button.name);
+                        setButtonLoad(button.name);
                         let newOrder = await handleBatchPost(
                           checkedRows,
                           button.api,
                           order,
                           button.causes
                         );
-                        setOrder(newOrder);
-                        sessionStorage.setItem(
-                          "apps",
-                          JSON.stringify(newOrder)
-                        );
-                        alert("200 Request Successful");
-                        setLoading("");
-                        setCheckedRows([]);
+                        if (typeof newOrder === "object") {
+                          setOrder(newOrder);
+                          sessionStorage.setItem(
+                            "apps",
+                            JSON.stringify(newOrder)
+                          );
+                          alert("200 Request Successful");
+                          setButtonLoad("");
+                          setCheckedRows([]);
+                        } else {
+                          alert("Something went wrong...");
+                        }
                       }}
                     >
-                      {loading === button.name ? (
+                      {buttonLoad === button.name ? (
                         <div style={{ width: button.name.length - 1 + "ch" }}>
                           <Spinner size="sm" animation="border" />
                         </div>
@@ -467,7 +438,7 @@ export default function JobList() {
                           .some((el) =>
                             ["paused", "restarting", "running"].includes(el)
                           ) ||
-                        loading
+                        buttonLoad
                       }
                       onClick={() => setDangerShow(true)}
                     >
