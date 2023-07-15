@@ -47,7 +47,7 @@ async function handleBatchPost(
   });
   response = await response.json();
 
-  if (typeof response === "object") {
+  if (response) {
     if (newState === "fetch") {
       let response = await fetch(api + "get-app-status");
       response = await response.json();
