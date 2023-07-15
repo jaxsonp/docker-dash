@@ -3,3 +3,4 @@ join_command.txt
 .vscode
 nodes.csv
 server/logs/*
+*.pid

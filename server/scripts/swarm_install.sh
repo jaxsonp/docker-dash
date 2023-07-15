@@ -181,6 +181,12 @@ if [ "$(python3.9 --version 2>&1)" != "Python 3.9.16" ]; then
 fi
 echo "done"
 
+# installing and configing cron
+echo -n "  > Configuring cron tabs... "
+sudo yum install -y crontabs &> dev/null
+sudo systemctl start crond.service
+sudo systemctl enable crond.service
+echo done
 
 # create docker swarm
 joinfile="join_command.txt"

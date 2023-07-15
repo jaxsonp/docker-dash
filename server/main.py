@@ -1,6 +1,7 @@
 from colorama import Fore, Style
 import flask
 from methods import internal_methods
+import os
 import sys
 import threading
 
@@ -215,11 +216,13 @@ def getImagesWrapper(server_id) -> flask.Response:
 
 
 
-
-
-# main
-if __name__ == '__main__':
+def main(port=5000) -> None:
   print("\n\n\n")
+
+  print(f" * Exporting PID: {os.getpid()}")
+  pid_file_path = os.path.dirname(os.path.abspath(__file__))
+  with open(f"{pid_file_path}/docker-dash.pid", "w") as pid_file:
+    pid_file.write(str(os.getpid()))
 
   print(" * Checking swarm mode: ", end="")
   swarm_mode = internal_methods.checkSwarmMode()
@@ -229,6 +232,15 @@ if __name__ == '__main__':
   logThread = threading.Thread(target=logger.loggingThreadFunc, daemon=True)
   logThread.start()
 
+  completedProcess = internal_methods.subprocessRun("docker ps")
+  if completedProcess.returncode != 0:
+    print(Style.BRIGHT + Fore.RED + "WARNING: Docker does not appear to be running " + Style.RESET_ALL)
+
+  app.run(port=port)
+
+
+
+if __name__ == '__main__':
   port = 5000 # default port
   # getting port argument
   for i in range(len(sys.argv)):
@@ -240,8 +252,4 @@ if __name__ == '__main__':
       finally:
         break
 
-  completedProcess = internal_methods.subprocessRun("docker ps")
-  if completedProcess.returncode != 0:
-    print(Style.BRIGHT + Fore.RED + "WARNING: Docker does not appear to be running " + Style.RESET_ALL)
-
-  app.run(port=port)
+  main(port)
