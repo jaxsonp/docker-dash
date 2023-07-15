@@ -96,7 +96,8 @@ export default function JobList() {
     performance: null,
     details: null,
   });
-  const [loading, setLoading] = useState("");
+  const [buttonLoad, setButtonLoad] = useState("");
+  const [fetchLoad, setFetchLoad] = useState(false);
   const [checkedRows, setCheckedRows] = useState([]);
   const [relevantResults, setRelevantResults] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
@@ -152,14 +153,6 @@ export default function JobList() {
   const imageHeaders = ["Repository", "Size", "Containers", "Tag", "CreatedAt"];
 
   useEffect(() => {
-    setFailed(false);
-    let timer = setTimeout(() => {
-      order.length === 0 && setFailed(true);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [view]);
-
-  useEffect(() => {
     let timer = setInterval(() => {
       sessionStorage.removeItem("apps");
       sessionStorage.removeItem("images");
@@ -181,8 +174,10 @@ export default function JobList() {
           let apps = await handleFetch("apps", api + "get-app-status");
           setOrder(apps);
         } catch (err) {
-          setFailed(true);
-          console.error(err);
+          console.error(err, typeof err);
+          if (!err.includes("Success")) {
+            setFailed(true);
+          }
         }
         // if (viewId) {
         // }
@@ -193,8 +188,10 @@ export default function JobList() {
           let images = await handleFetch("images", api + "get-images");
           setOrder(images);
         } catch (err) {
-          setFailed(true);
-          console.error(err);
+          console.error(err, typeof err);
+          if (!err.includes("Success")) {
+            setFailed(true);
+          }
         }
         // if (viewId) {
         // }
@@ -430,10 +427,10 @@ export default function JobList() {
                         checkedRows
                           .flat()
                           .some((el) => button["disabledBy"].includes(el)) ||
-                        loading
+                        buttonLoad
                       }
                       onClick={async () => {
-                        setLoading(button.name);
+                        setButtonLoad(button.name);
                         let newOrder = await handleBatchPost(
                           checkedRows,
                           button.api,
@@ -446,11 +443,11 @@ export default function JobList() {
                           JSON.stringify(newOrder)
                         );
                         alert("200 Request Successful");
-                        setLoading("");
+                        setButtonLoad("");
                         setCheckedRows([]);
                       }}
                     >
-                      {loading === button.name ? (
+                      {buttonLoad === button.name ? (
                         <div style={{ width: button.name.length - 1 + "ch" }}>
                           <Spinner size="sm" animation="border" />
                         </div>
@@ -470,7 +467,7 @@ export default function JobList() {
                           .some((el) =>
                             ["paused", "restarting", "running"].includes(el)
                           ) ||
-                        loading
+                        buttonLoad
                       }
                       onClick={() => setDangerShow(true)}
                     >
