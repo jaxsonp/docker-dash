@@ -84,7 +84,6 @@ function ServersView() {
     async function fetchClusterData() {
       const nodes = await fetch(api + "get-node-status");
       let nodesJ = await nodes.json();
-      console.log(nodesJ);
       return sortSpecificData(servers, [nodesJ]);
     }
     async function getServerPreviews() {
@@ -96,7 +95,6 @@ function ServersView() {
           let sorted = sortSpecificData(servers, [nodesJ]);
           sessionStorage.setItem("sortedData", JSON.stringify(sorted));
           setInitialData(sorted);
-          console.log(nodesJ);
         } else {
           setInitialData(JSON.parse(sessionStorage.getItem("sortedData")));
           if (timeOfLastFetch + 600000 < Date.now()) {
@@ -130,7 +128,6 @@ function ServersView() {
     let response = await fetch(endpoint);
     response = await response.json();
     setInspectInfo(response);
-    console.log(response);
   }
 
   return (

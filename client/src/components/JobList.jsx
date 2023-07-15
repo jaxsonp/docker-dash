@@ -46,9 +46,8 @@ async function handleBatchPost(
     method: "POST",
   });
   response = await response.json();
-  console.log(response);
 
-  if (response.status === 200) {
+  if (typeof response === "object") {
     if (newState === "fetch") {
       async function refetch() {
         let timer = setTimeout(async () => {
@@ -94,7 +93,6 @@ export default function JobList() {
     details: null,
   });
   const [buttonLoad, setButtonLoad] = useState("");
-  const [fetchLoad, setFetchLoad] = useState(false);
   const [checkedRows, setCheckedRows] = useState([]);
   const [relevantResults, setRelevantResults] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
@@ -228,7 +226,6 @@ export default function JobList() {
       }
     );
     response = await response.json();
-    console.log("create-app");
     response && navigate("/apps");
   }
 
@@ -308,13 +305,11 @@ export default function JobList() {
       api + `get-app-info?name=${checkedRows[0][0]}`
     );
     inspectApp = await inspectApp.json();
-    console.log(inspectApp);
 
     let appHealth = await fetch(
       api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
     );
     appHealth = await appHealth.json();
-    console.log(appHealth);
 
     let appHealthLabels = Object.keys(appHealth).map((val) =>
       val.substring(11, 16)
@@ -338,9 +333,11 @@ export default function JobList() {
             onHide={async () => {
               let response = await fetch(api + "get-images");
               response = await response.json();
-              setOrder(response);
-              sessionStorage.setItem("images", JSON.stringify(response));
-              setModalShow(false);
+              if (typeof response === "object") {
+                setOrder(response);
+                sessionStorage.setItem("images", JSON.stringify(response));
+                setModalShow(false);
+              }
             }}
           />
           <DangerModal
@@ -413,14 +410,18 @@ export default function JobList() {
                           order,
                           button.causes
                         );
-                        setOrder(newOrder);
-                        sessionStorage.setItem(
-                          "apps",
-                          JSON.stringify(newOrder)
-                        );
-                        alert("200 Request Successful");
-                        setButtonLoad("");
-                        setCheckedRows([]);
+                        if (typeof newOrder === "object") {
+                          setOrder(newOrder);
+                          sessionStorage.setItem(
+                            "apps",
+                            JSON.stringify(newOrder)
+                          );
+                          alert("200 Request Successful");
+                          setButtonLoad("");
+                          setCheckedRows([]);
+                        } else {
+                          alert("Something went wrong...");
+                        }
                       }}
                     >
                       {buttonLoad === button.name ? (
