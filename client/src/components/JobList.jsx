@@ -404,18 +404,14 @@ export default function JobList() {
                           order,
                           button.causes
                         );
-                        if (typeof newOrder === "object") {
-                          setOrder(newOrder);
-                          sessionStorage.setItem(
-                            "apps",
-                            JSON.stringify(newOrder)
-                          );
-                          alert("200 Request Successful");
-                          setButtonLoad("");
-                          setCheckedRows([]);
-                        } else {
-                          alert("Something went wrong...");
-                        }
+                        setOrder(newOrder);
+                        sessionStorage.setItem(
+                          "apps",
+                          JSON.stringify(newOrder)
+                        );
+                        alert("200 Request Successful");
+                        setButtonLoad("");
+                        setCheckedRows([]);
                       }}
                     >
                       {buttonLoad === button.name ? (
