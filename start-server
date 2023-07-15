@@ -1,3 +1,15 @@
 #!/bin/bash
-cd $(dirname $0)/server
-.venv/bin/python main.py "$@"
+cd $(dirname $0)
+
+# adding cron job if necessary
+(crontab -l; echo "* * * * * $(pwd)/start-server") | sort -u | crontab -
+
+cd server/
+
+touch docker-dash.pid
+# checking if main is already running
+ps -e | grep $(cat docker-dash.pid) | grep -v "grep" &> /dev/null
+if [ $? -ne 0 ]; then 
+  # starting main
+  nohup .venv/bin/python main.py "$@" > /dev/null 2>&1 &
+fi

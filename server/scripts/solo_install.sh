@@ -6,6 +6,9 @@ echo -e "\n  > Starting install..."
 # verifying sudo
 sudo true
 
+echo -n "  > Updating packages... "
+sudo yum update -y
+echo done
 
 # start in home directory
 cd ~
@@ -114,6 +117,13 @@ if [ "$(python3.9 --version 2>&1)" != "Python 3.9.16" ]; then
   sudo rm Python-3.9.16.tgz
   sudo rm -rf Python-3.9.16
 fi
+echo done
+
+# installing and configing cron
+echo -n "  > Configuring cron tabs... "
+sudo yum install -y crontabs &> dev/null
+sudo systemctl start crond.service
+sudo systemctl enable crond.service
 echo done
 
 echo -e "\n  > To complete installation, a restart is required"
