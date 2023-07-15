@@ -57,7 +57,7 @@ async function handleBatchPost(
         }, 1000);
         return () => clearTimeout(timer);
       }
-      refetch();
+      return refetch();
     } else {
       let toRevise = originalArray.map((x) => Object.assign({}, x));
       let mappedRevised = toRevise
