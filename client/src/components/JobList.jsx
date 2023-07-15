@@ -53,11 +53,15 @@ async function handleBatchPost(
 
   if (response.status === 200) {
     if (newState === "fetch") {
-      setTimeout(async () => {
-        let response = await fetch(api + "get-app-status");
-        response = await response.json();
-        return response;
-      }, 1500);
+      async function refetch() {
+        let timer = setTimeout(async () => {
+          let response = await fetch(api + "get-app-status");
+          response = await response.json();
+          return response;
+        }, 1000);
+        return () => clearTimeout(timer);
+      }
+      refetch();
     } else {
       let toRevise = originalArray.map((x) => Object.assign({}, x));
       let mappedRevised = toRevise
@@ -376,7 +380,6 @@ export default function JobList() {
                 order,
                 "banished"
               ).then((res) => {
-                sessionStorage.setItem("apps", JSON.stringify(res));
                 setOrder(res);
                 setCheckedRows([]);
               })
