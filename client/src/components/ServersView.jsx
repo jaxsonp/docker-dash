@@ -137,7 +137,7 @@ function ServersView() {
     const appStats = async () => {
       await handleFetch("appStats", api + "get-app-stats");
     };
-    setSoloAppStats(JSON.parse(appStats));
+    setSoloAppStats(JSON.parse(appStats()));
     let interval = setInterval(async () => {
       sessionStorage.removeItem("appStats");
       let appStats = await handleFetch("appStats", api + "get-app-stats");
