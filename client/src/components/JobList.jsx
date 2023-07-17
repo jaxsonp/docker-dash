@@ -53,7 +53,7 @@ async function handleBatchPost(
 
   if (response) {
     if (newState === "fetch") {
-      const delayFetch = () => {
+      const delayFetch = async () => {
         return new Promise((resolve, reject) => {
           setTimeout(async () => {
             let response = await fetch(api + "get-app-status");
@@ -62,7 +62,7 @@ async function handleBatchPost(
           }, 500);
         });
       };
-      delayFetch().then((res) => {
+      await delayFetch().then((res) => {
         return res;
       });
     } else {
