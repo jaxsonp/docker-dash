@@ -136,8 +136,9 @@ function ServersView() {
   useEffect(() => {
     const appStats = async () => {
       await handleFetch("appStats", api + "get-app-stats");
+      setSoloAppStats(JSON.parse(sessionStorage.getItem("appStats")));
     };
-    setSoloAppStats(JSON.parse(appStats()));
+    appStats();
     let interval = setInterval(async () => {
       sessionStorage.removeItem("appStats");
       let appStats = await handleFetch("appStats", api + "get-app-stats");
