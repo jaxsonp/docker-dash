@@ -123,7 +123,8 @@ function ServersView() {
     //   };
     // }
     // getServerPreviews();
-    return sortSpecificData(servers, [soloNode]);
+    let initialData = sortSpecificData(servers, [soloNode]);
+    setInitialData(initialData);
   }, [soloNode]);
 
   useEffect(() => {
