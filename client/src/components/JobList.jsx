@@ -41,7 +41,7 @@ async function handleBatchPost(
 
   let url = apiCommand + commaStrung;
 
-  let response;
+  let response = null;
   try {
     response = await fetch(url, {
       method: "POST",
@@ -53,9 +53,18 @@ async function handleBatchPost(
 
   if (response) {
     if (newState === "fetch") {
-      let response = await fetch(api + "get-app-status");
-      response = await response.json();
-      return response;
+      const delayFetch = () => {
+        return new Promise((resolve, reject) => {
+          setTimeout(async () => {
+            let response = await fetch(api + "get-app-status");
+            response = await response.json();
+            resolve(response);
+          }, 500);
+        });
+      };
+      delayFetch().then((res) => {
+        return res;
+      });
     } else {
       let toRevise = originalArray.map((x) => Object.assign({}, x));
       let mappedRevised = toRevise
@@ -132,7 +141,7 @@ export default function JobList() {
     {
       name: "Restart",
       disabledBy: ["created", "restarting", "exited", "dead"],
-      causes: "fetch",
+      causes: "running",
       api: api + "restart-app?name=",
     },
     {
@@ -240,6 +249,7 @@ export default function JobList() {
     } catch (err) {
       console.error(err);
     }
+    response && navigate("/apps");
   }
 
   function handleChange(e, containerId, containerState) {
@@ -475,9 +485,7 @@ export default function JobList() {
                     Request Image
                   </Button>
                   <Button
-                    onClick={async () => {
-                      (await handleCreateApp()) && navigate("/apps");
-                    }}
+                    onClick={handleCreateApp}
                     disabled={checkedRows.length === 0}
                     size="sm"
                   >
