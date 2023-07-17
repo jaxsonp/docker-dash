@@ -3,6 +3,9 @@ import { Button, Card, Pagination, Spinner } from "react-bootstrap";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { InspectModal } from "./ImageModal";
 import servers from "../serverInfo.json";
+//TESTING
+import appStats from "../app-stats.json";
+import handleFetch from "../handleFetch";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   let pages = [];
@@ -25,31 +28,36 @@ const step = 3;
 
 function sortSpecificData(singleObj, multiObj) {
   let singElArr = singleObj.map((server) => [server]);
-  let sorted = multiObj.filter(
-    (el) =>
-      el.length > 1 ||
-      el[0].ManagerStatus === "Leader" ||
-      el[0].ManagerStatus === "Solo"
-  );
-  if (sorted.length > 1) {
-    sorted = sorted.sort((a, b) => b.length - a.length);
-    sorted.map((el) => {
-      return el.sort((a, b) => {
-        if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
-          if (a.ManagerStatus.length === 0 && b.ManagerStatus.length === 0) {
-            return 0;
-          } else if (a.ManagerStatus.length === 0) {
-            return 1;
+  let sorted = null;
+  if (multiObj) {
+    sorted = multiObj.filter(
+      (el) =>
+        el.length > 1 ||
+        el[0].ManagerStatus === "Leader" ||
+        el[0].ManagerStatus === "Solo"
+    );
+    if (sorted.length > 1) {
+      sorted = sorted.sort((a, b) => b.length - a.length);
+      sorted.map((el) => {
+        return el.sort((a, b) => {
+          if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
+            if (a.ManagerStatus.length === 0 && b.ManagerStatus.length === 0) {
+              return 0;
+            } else if (a.ManagerStatus.length === 0) {
+              return 1;
+            } else {
+              return -1;
+            }
           } else {
-            return -1;
+            return a.ManagerStatus.length - b.ManagerStatus.length;
           }
-        } else {
-          return a.ManagerStatus.length - b.ManagerStatus.length;
-        }
+        });
       });
-    });
+    }
+    sorted = sorted.concat(singElArr);
+  } else {
+    sorted = singElArr;
   }
-  sorted = sorted.concat(singElArr);
   sorted.sort((a, b) => {
     if (
       b[0].Status === "failed" ||
@@ -70,6 +78,8 @@ function sortSpecificData(singleObj, multiObj) {
 }
 
 function ServersView() {
+  const [soloAppStats, setSoloAppStats] = useState([]);
+  const [soloNode, setSoloNode] = useState({});
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [numItems, setNumItems] = useState(1);
   const [expanded, setExpanded] = useState(null);
@@ -81,44 +91,96 @@ function ServersView() {
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    async function fetchClusterData() {
-      try {
-        const nodes = await fetch(api + "get-node-status");
-        let nodesJ = await nodes.json();
-        return sortSpecificData(servers, [nodesJ]);
-      } catch (err) {
-        setFailed(true);
-        console.error(err);
-      }
-    }
-    async function getServerPreviews() {
-      setInitialData(await fetchClusterData());
-      let timer = setInterval(async () => {
-        if (!sessionStorage.getItem("sortedData")) {
-          try {
-            const nodes = await fetch(api + "get-node-status");
-            let nodesJ = await nodes.json();
-            let sorted = sortSpecificData(servers, [nodesJ]);
-            sessionStorage.setItem("sortedData", JSON.stringify(sorted));
-            setInitialData(sorted);
-          } catch (err) {
-            setFailed(true);
-            console.error(err);
-          }
-        } else {
-          setInitialData(JSON.parse(sessionStorage.getItem("sortedData")));
-          if (timeOfLastFetch + 600000 < Date.now()) {
-            setTimeOfLastFetch(Date.now());
-            sessionStorage.removeItem("sortedData");
-          }
-        }
-      }, 600000);
-      return function () {
-        clearTimeout(timer);
-      };
-    }
-    getServerPreviews();
+    // async function fetchClusterData() {
+    //   try {
+    //     const nodes = await fetch(api + "get-node-status");
+    //     let nodesJ = await nodes.json();
+    //     return sortSpecificData(servers, [nodesJ]);
+    //   } catch (err) {
+    //     setFailed(true);
+    //     console.error(err);
+    //   }
+    // }
+    // async function getServerPreviews() {
+    //   setInitialData(await fetchClusterData());
+    //   let timer = setInterval(async () => {
+    //     if (!sessionStorage.getItem("sortedData")) {
+    //       try {
+    //         const nodes = await fetch(api + "get-node-status");
+    //         let nodesJ = await nodes.json();
+    //         let sorted = sortSpecificData(servers, [nodesJ]);
+    //         sessionStorage.setItem("sortedData", JSON.stringify(sorted));
+    //         setInitialData(sorted);
+    //       } catch (err) {
+    //         setFailed(true);
+    //         console.error(err);
+    //       }
+    //     } else {
+    //       setInitialData(JSON.parse(sessionStorage.getItem("sortedData")));
+    //       if (timeOfLastFetch + 600000 < Date.now()) {
+    //         setTimeOfLastFetch(Date.now());
+    //         sessionStorage.removeItem("sortedData");
+    //       }
+    //     }
+    //   }, 600000);
+    //   return function () {
+    //     clearTimeout(timer);
+    //   };
+    // }
+    // getServerPreviews();
+    let allAccounted = [...servers, soloNode];
+    let initialData = sortSpecificData(allAccounted);
+    setInitialData(initialData);
+  }, [soloNode]);
+
+  useEffect(() => {
+    const appStats = async () => {
+      await handleFetch("appStats", api + "get-app-stats");
+      setSoloAppStats(JSON.parse(sessionStorage.getItem("appStats")));
+    };
+    appStats();
+    let interval = setInterval(async () => {
+      sessionStorage.removeItem("appStats");
+      let appStats = await handleFetch("appStats", api + "get-app-stats");
+      setSoloAppStats(appStats);
+    }, 60000);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    let memPerc = 0;
+    let cpuPerc = 0;
+    let appLength = appStats.length;
+    let userLength = 0;
+    let AppNames = [];
+    soloAppStats.forEach((el) => {
+      memPerc += parseFloat(el.MemPerc);
+      cpuPerc += parseFloat(el.CPUPerc);
+      AppNames.push(el.Name);
+    });
+    let named = [];
+    AppNames.forEach((name) => {
+      let ind = name.indexOf("--");
+      if (ind === -1) {
+        !named.includes("anon") && named.push("anon");
+      } else {
+        let sub = name.substring(ind + 2, name.length);
+        if (!named.includes(sub)) {
+          named.push(sub);
+        }
+      }
+    });
+    userLength = named.length;
+    let solo = {
+      state: cpuPerc && memPerc && "on",
+      Hostname: "ondemand",
+      "Memory%": memPerc.toFixed(2) + "%",
+      "CPU%": cpuPerc.toFixed(2) + "%",
+      "Current Apps": appLength,
+      Users: userLength,
+    };
+    setSoloNode(solo);
+  }, [soloAppStats]);
 
   useEffect(() => {
     setNumItems(initialData && initialData.length ? initialData.length : 1);

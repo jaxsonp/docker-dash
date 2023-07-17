@@ -26,8 +26,8 @@
   {
     "state": "off",
     "Hostname": "delivery",
-    "CPU%": "0",
-    "Memory%": "0",
+    "CPU%": "0%",
+    "Memory%": "0%",
     "Users": "0",
     "Current Apps": "0"
   },
