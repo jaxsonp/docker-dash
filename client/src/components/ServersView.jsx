@@ -154,8 +154,8 @@ function ServersView() {
     let userLength = 0;
     let AppNames = [];
     soloAppStats.forEach((el) => {
-      memPerc += parseFloat(el.memPerc);
-      cpuPerc += parseFloat(el.cpuPerc);
+      memPerc += parseFloat(el.MemPerc);
+      cpuPerc += parseFloat(el.CPUPerc);
       AppNames.push(el.Name);
     });
     let named = [];
