@@ -28,31 +28,36 @@ const step = 3;
 
 function sortSpecificData(singleObj, multiObj) {
   let singElArr = singleObj.map((server) => [server]);
-  let sorted = multiObj.filter(
-    (el) =>
-      el.length > 1 ||
-      el[0].ManagerStatus === "Leader" ||
-      el[0].ManagerStatus === "Solo"
-  );
-  if (sorted.length > 1) {
-    sorted = sorted.sort((a, b) => b.length - a.length);
-    sorted.map((el) => {
-      return el.sort((a, b) => {
-        if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
-          if (a.ManagerStatus.length === 0 && b.ManagerStatus.length === 0) {
-            return 0;
-          } else if (a.ManagerStatus.length === 0) {
-            return 1;
+  let sorted = null;
+  if (multiObj) {
+    sorted = multiObj.filter(
+      (el) =>
+        el.length > 1 ||
+        el[0].ManagerStatus === "Leader" ||
+        el[0].ManagerStatus === "Solo"
+    );
+    if (sorted.length > 1) {
+      sorted = sorted.sort((a, b) => b.length - a.length);
+      sorted.map((el) => {
+        return el.sort((a, b) => {
+          if (a.ManagerStatus.length === 0 || b.ManagerStatus.length === 0) {
+            if (a.ManagerStatus.length === 0 && b.ManagerStatus.length === 0) {
+              return 0;
+            } else if (a.ManagerStatus.length === 0) {
+              return 1;
+            } else {
+              return -1;
+            }
           } else {
-            return -1;
+            return a.ManagerStatus.length - b.ManagerStatus.length;
           }
-        } else {
-          return a.ManagerStatus.length - b.ManagerStatus.length;
-        }
+        });
       });
-    });
+    }
+    sorted = sorted.concat(singElArr);
+  } else {
+    sorted = singElArr;
   }
-  sorted = sorted.concat(singElArr);
   sorted.sort((a, b) => {
     if (
       b[0].Status === "failed" ||
@@ -123,7 +128,8 @@ function ServersView() {
     //   };
     // }
     // getServerPreviews();
-    let initialData = sortSpecificData(servers, [soloNode]);
+    let allAccounted = [...servers, soloNode];
+    let initialData = sortSpecificData(allAccounted);
     setInitialData(initialData);
   }, [soloNode]);
 
