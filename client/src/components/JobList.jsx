@@ -64,24 +64,24 @@ async function handleBatchPost(
           }
         }, 500);
       });
-    }
-  } else {
-    let toRevise = originalArray.map((x) => Object.assign({}, x));
-    let mappedRevised = toRevise
-      .filter((el) => commaSeparated.includes(el.Names))
-      .map((el) => (el.State = newState));
-    let updatedArray = null;
-    if (newState !== "banished") {
-      updatedArray = toRevise.map((obj) =>
-        obj.Names === mappedRevised.Names ? mappedRevised : obj
-      );
     } else {
-      toRevise.forEach(
-        (el, index) => el.State === "banished" && toRevise.splice(index, 1)
-      );
-      updatedArray = toRevise;
+      let toRevise = originalArray.map((x) => Object.assign({}, x));
+      let mappedRevised = toRevise
+        .filter((el) => commaSeparated.includes(el.Names))
+        .map((el) => (el.State = newState));
+      let updatedArray = null;
+      if (newState !== "banished") {
+        updatedArray = toRevise.map((obj) =>
+          obj.Names === mappedRevised.Names ? mappedRevised : obj
+        );
+      } else {
+        toRevise.forEach(
+          (el, index) => el.State === "banished" && toRevise.splice(index, 1)
+        );
+        updatedArray = toRevise;
+      }
+      return updatedArray;
     }
-    return updatedArray;
   }
 }
 
