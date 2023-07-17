@@ -1,0 +1,10 @@
+#!/bin/bash
+cd $(dirname $0)
+
+# stopping old server
+if [ ! -f "server/docker-dash.pid" ]; then
+  echo "Could not find PID file"
+  exit
+fi
+kill $(cat server/docker-dash.pid)
+rm server/docker-dash.pid
