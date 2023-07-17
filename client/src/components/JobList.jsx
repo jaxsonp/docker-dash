@@ -53,36 +53,35 @@ async function handleBatchPost(
 
   if (response) {
     if (newState === "fetch") {
-      const delayFetch = async () => {
-        return new Promise((resolve, reject) => {
-          setTimeout(async () => {
+      return new Promise((resolve, reject) => {
+        setTimeout(async () => {
+          try {
             let response = await fetch(api + "get-app-status");
             response = await response.json();
             resolve(response);
-          }, 500);
-        });
-      };
-      await delayFetch().then((res) => {
-        return res;
+          } catch (error) {
+            reject(error);
+          }
+        }, 500);
       });
-    } else {
-      let toRevise = originalArray.map((x) => Object.assign({}, x));
-      let mappedRevised = toRevise
-        .filter((el) => commaSeparated.includes(el.Names))
-        .map((el) => (el.State = newState));
-      let updatedArray = null;
-      if (newState !== "banished") {
-        updatedArray = toRevise.map((obj) =>
-          obj.Names === mappedRevised.Names ? mappedRevised : obj
-        );
-      } else {
-        toRevise.forEach(
-          (el, index) => el.State === "banished" && toRevise.splice(index, 1)
-        );
-        updatedArray = toRevise;
-      }
-      return updatedArray;
     }
+  } else {
+    let toRevise = originalArray.map((x) => Object.assign({}, x));
+    let mappedRevised = toRevise
+      .filter((el) => commaSeparated.includes(el.Names))
+      .map((el) => (el.State = newState));
+    let updatedArray = null;
+    if (newState !== "banished") {
+      updatedArray = toRevise.map((obj) =>
+        obj.Names === mappedRevised.Names ? mappedRevised : obj
+      );
+    } else {
+      toRevise.forEach(
+        (el, index) => el.State === "banished" && toRevise.splice(index, 1)
+      );
+      updatedArray = toRevise;
+    }
+    return updatedArray;
   }
 }
 
