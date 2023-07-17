@@ -1,0 +1,189 @@
+[
+  {
+    "BlockIO": "0B / 1.77MB",
+    "CPUPerc": "0.09%",
+    "Container": "20754c03fbca",
+    "ID": "20754c03fbca",
+    "MemPerc": "0.24%",
+    "MemUsage": "153.8MiB / 62.32GiB",
+    "Name": "rabbitmq--janeschmo",
+    "NetIO": "5.15kB / 0B",
+    "PIDs": "54"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "256fe888ab9f",
+    "ID": "256fe888ab9f",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "alpine--janeschmo",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.16%",
+    "Container": "c231e7876838",
+    "ID": "c231e7876838",
+    "MemPerc": "1.58%",
+    "MemUsage": "1005MiB / 62.32GiB",
+    "Name": "h2oai--janeschmo",
+    "NetIO": "59.8kB / 234MB",
+    "PIDs": "48"
+  },
+  {
+    "BlockIO": "130MB / 4.44MB",
+    "CPUPerc": "0.05%",
+    "Container": "53a542f5726b",
+    "ID": "53a542f5726b",
+    "MemPerc": "0.22%",
+    "MemUsage": "142MiB / 62.32GiB",
+    "Name": "mysql",
+    "NetIO": "44.7kB / 0B",
+    "PIDs": "30"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "e6dff2b44422",
+    "ID": "e6dff2b44422",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "mongodb",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 73.7kB",
+    "CPUPerc": "0.00%",
+    "Container": "4e699e52f10e",
+    "ID": "4e699e52f10e",
+    "MemPerc": "0.03%",
+    "MemUsage": "18.36MiB / 62.32GiB",
+    "Name": "ldap",
+    "NetIO": "63.6kB / 1.43kB",
+    "PIDs": "4"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "c400ff9f9e47",
+    "ID": "c400ff9f9e47",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "agitated_wilbur",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "6281a8180e30",
+    "ID": "6281a8180e30",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "zealous_kowalevski",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "0b5fb4bc43fa",
+    "ID": "0b5fb4bc43fa",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "xenodochial_chaplygin",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "8260eba31ffd",
+    "ID": "8260eba31ffd",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "busy_dubinsky",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "f6310361103c",
+    "ID": "f6310361103c",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "flamboyant_kalam",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "7c9e67754e7c",
+    "ID": "7c9e67754e7c",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "inspiring_keller",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "aa68b5441fb7",
+    "ID": "aa68b5441fb7",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "strange_hoover",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "2574045cc53e",
+    "ID": "2574045cc53e",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "hungry_blackwell",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "1cdc439b7e57",
+    "ID": "1cdc439b7e57",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "focused_antonelli",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "d775fecc2e69",
+    "ID": "d775fecc2e69",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "friendly_engelbart",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  },
+  {
+    "BlockIO": "0B / 0B",
+    "CPUPerc": "0.00%",
+    "Container": "17ac4a79c328",
+    "ID": "17ac4a79c328",
+    "MemPerc": "0.00%",
+    "MemUsage": "0B / 0B",
+    "Name": "recursing_albattani",
+    "NetIO": "0B / 0B",
+    "PIDs": "0"
+  }
+]

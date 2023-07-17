@@ -3,6 +3,9 @@ import { Button, Card, Pagination, Spinner } from "react-bootstrap";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { InspectModal } from "./ImageModal";
 import servers from "../serverInfo.json";
+//TESTING
+import appStats from "../app-stats.json";
+import handleFetch from "../handleFetch";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   let pages = [];
@@ -70,6 +73,8 @@ function sortSpecificData(singleObj, multiObj) {
 }
 
 function ServersView() {
+  const [soloAppStats, setSoloAppStats] = useState([]);
+  const [soloNode, setSoloNode] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [numItems, setNumItems] = useState(1);
   const [expanded, setExpanded] = useState(null);
@@ -81,44 +86,91 @@ function ServersView() {
   const [failed, setFailed] = useState(false);
 
   useEffect(() => {
-    async function fetchClusterData() {
-      try {
-        const nodes = await fetch(api + "get-node-status");
-        let nodesJ = await nodes.json();
-        return sortSpecificData(servers, [nodesJ]);
-      } catch (err) {
-        setFailed(true);
-        console.error(err);
-      }
-    }
-    async function getServerPreviews() {
-      setInitialData(await fetchClusterData());
-      let timer = setInterval(async () => {
-        if (!sessionStorage.getItem("sortedData")) {
-          try {
-            const nodes = await fetch(api + "get-node-status");
-            let nodesJ = await nodes.json();
-            let sorted = sortSpecificData(servers, [nodesJ]);
-            sessionStorage.setItem("sortedData", JSON.stringify(sorted));
-            setInitialData(sorted);
-          } catch (err) {
-            setFailed(true);
-            console.error(err);
-          }
-        } else {
-          setInitialData(JSON.parse(sessionStorage.getItem("sortedData")));
-          if (timeOfLastFetch + 600000 < Date.now()) {
-            setTimeOfLastFetch(Date.now());
-            sessionStorage.removeItem("sortedData");
-          }
-        }
-      }, 600000);
-      return function () {
-        clearTimeout(timer);
-      };
-    }
-    getServerPreviews();
+    // async function fetchClusterData() {
+    //   try {
+    //     const nodes = await fetch(api + "get-node-status");
+    //     let nodesJ = await nodes.json();
+    //     return sortSpecificData(servers, [nodesJ]);
+    //   } catch (err) {
+    //     setFailed(true);
+    //     console.error(err);
+    //   }
+    // }
+    // async function getServerPreviews() {
+    //   setInitialData(await fetchClusterData());
+    //   let timer = setInterval(async () => {
+    //     if (!sessionStorage.getItem("sortedData")) {
+    //       try {
+    //         const nodes = await fetch(api + "get-node-status");
+    //         let nodesJ = await nodes.json();
+    //         let sorted = sortSpecificData(servers, [nodesJ]);
+    //         sessionStorage.setItem("sortedData", JSON.stringify(sorted));
+    //         setInitialData(sorted);
+    //       } catch (err) {
+    //         setFailed(true);
+    //         console.error(err);
+    //       }
+    //     } else {
+    //       setInitialData(JSON.parse(sessionStorage.getItem("sortedData")));
+    //       if (timeOfLastFetch + 600000 < Date.now()) {
+    //         setTimeOfLastFetch(Date.now());
+    //         sessionStorage.removeItem("sortedData");
+    //       }
+    //     }
+    //   }, 600000);
+    //   return function () {
+    //     clearTimeout(timer);
+    //   };
+    // }
+    // getServerPreviews();
+    return sortSpecificData(servers, [soloNode]);
+  }, [soloNode]);
+
+  useEffect(() => {
+    const appStats = async () => {
+      await handleFetch("appStats", api + "get-app-stats");
+    };
+    setSoloAppStats(JSON.parse(appStats));
+    let interval = setInterval(async () => {
+      sessionStorage.removeItem("appStats");
+      let appStats = await handleFetch("appStats", api + "get-app-stats");
+      setSoloAppStats(JSON.parse(appStats));
+    }, 300000);
+    return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    let memPerc = 0;
+    let cpuPerc = 0;
+    let appLength = appStats.length;
+    let userLength = 0;
+    let AppNames = [];
+    soloAppStats.forEach((el) => {
+      memPerc += parseFloat(el.memPerc);
+      cpuPerc += parseFloat(el.cpuPerc);
+      AppNames.push(el.Name);
+    });
+    let named = [];
+    AppNames.forEach((name) => {
+      let ind = name.indexOf("--");
+      if (ind === -1) {
+        !named.includes("anon") && named.push("anon");
+      } else {
+        let sub = name.substring(ind + 2, name.length);
+        if (!named.includes(sub)) {
+          named.push(sub);
+        }
+      }
+    });
+    userLength = named.length;
+    let solo = {
+      "Memory%": memPerc,
+      "CPU%": cpuPerc,
+      "Current Apps": appLength,
+      Users: userLength,
+    };
+    setSoloNode([solo]);
+  }, [soloAppStats]);
 
   useEffect(() => {
     setNumItems(initialData && initialData.length ? initialData.length : 1);

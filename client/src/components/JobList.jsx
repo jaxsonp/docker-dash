@@ -154,9 +154,16 @@ export default function JobList() {
   const imageHeaders = ["Repository", "Size", "Containers", "Tag", "CreatedAt"];
 
   useEffect(() => {
-    let timer = setInterval(() => {
+    let timer = setInterval(async () => {
       sessionStorage.removeItem("apps");
       sessionStorage.removeItem("images");
+      let apps = await handleFetch("apps", api + "get-app-status");
+      let images = await handleFetch("images", api + "get-images");
+      if (view === "apps") {
+        setOrder(apps);
+      } else if (view === "images") {
+        setOrder(images);
+      }
     }, 300000);
     return () => clearInterval(timer);
   }, []);
