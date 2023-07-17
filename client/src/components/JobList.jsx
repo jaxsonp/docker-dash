@@ -24,14 +24,22 @@ const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
   return pages;
 };
 
-async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
+const api = "http://192.168.98.74/api/demo/";
+const step = 10;
+
+async function handleBatchPost(
+  arrayOfArrays,
+  apiCommand,
+  originalArray,
+  newState
+) {
   let commaSeparated = [];
   for (let i = 0; i < arrayOfArrays.length; i++) {
     commaSeparated.push(arrayOfArrays[i][0]);
   }
   let commaStrung = commaSeparated.join(",");
 
-  let url = api + commaStrung;
+  let url = apiCommand + commaStrung;
 
   let response;
   try {
@@ -44,29 +52,36 @@ async function handleBatchPost(arrayOfArrays, api, originalArray, newState) {
   }
 
   if (response.status === 200) {
-    let toRevise = originalArray.map((x) => Object.assign({}, x));
-    let mappedRevised = toRevise
-      .filter((el) => commaSeparated.includes(el.Names))
-      .map(
-        (el) => (el.State = newState !== "restarting" ? newState : "running")
-      );
-    let updatedArray = null;
-    if (newState !== "banished") {
-      updatedArray = toRevise.map((obj) =>
-        obj.Names === mappedRevised.Names ? mappedRevised : obj
-      );
+    if (newState === "fetch") {
+      async function refetch() {
+        let timer = setTimeout(async () => {
+          let response = await fetch(api + "get-app-status");
+          response = await response.json();
+          return response;
+        }, 1000);
+        return () => clearTimeout(timer);
+      }
+      refetch();
     } else {
-      toRevise.forEach(
-        (el, index) => el.State === "banished" && toRevise.splice(index, 1)
-      );
-      updatedArray = toRevise;
+      let toRevise = originalArray.map((x) => Object.assign({}, x));
+      let mappedRevised = toRevise
+        .filter((el) => commaSeparated.includes(el.Names))
+        .map((el) => (el.State = newState));
+      let updatedArray = null;
+      if (newState !== "banished") {
+        updatedArray = toRevise.map((obj) =>
+          obj.Names === mappedRevised.Names ? mappedRevised : obj
+        );
+      } else {
+        toRevise.forEach(
+          (el, index) => el.State === "banished" && toRevise.splice(index, 1)
+        );
+        updatedArray = toRevise;
+      }
+      return updatedArray;
     }
-    return updatedArray;
   }
 }
-
-const api = "http://192.168.98.74/api/demo/";
-const step = 10;
 
 export default function JobList() {
   const [directory, setDirectory] = useState("");
@@ -81,7 +96,8 @@ export default function JobList() {
     performance: null,
     details: null,
   });
-  const [loading, setLoading] = useState("");
+  const [buttonLoad, setButtonLoad] = useState("");
+  const [fetchLoad, setFetchLoad] = useState(false);
   const [checkedRows, setCheckedRows] = useState([]);
   const [relevantResults, setRelevantResults] = useState([]);
   const [filterQuery, setFilterQuery] = useState("");
@@ -94,12 +110,12 @@ export default function JobList() {
   const [dangerShow, setDangerShow] = useState(false);
   const navigate = useNavigate();
 
-  const appHeaders = ["ID", "State", "Image", "Names", "CreatedAt"];
+  const appHeaders = ["Image", "Names", "State", "Status", "CreatedAt"];
   const appButtons = [
     {
       name: "Start",
       disabledBy: ["restarting", "running", "paused", "dead"],
-      causes: "running",
+      causes: "fetch",
       api: api + "start-app?name=",
     },
     {
@@ -123,7 +139,7 @@ export default function JobList() {
     {
       name: "Restart",
       disabledBy: ["created", "restarting", "exited", "dead"],
-      causes: "restarting",
+      causes: "fetch",
       api: api + "restart-app?name=",
     },
     {
@@ -135,14 +151,6 @@ export default function JobList() {
     },
   ];
   const imageHeaders = ["Repository", "Size", "Containers", "Tag", "CreatedAt"];
-
-  useEffect(() => {
-    setFailed(false);
-    let timer = setTimeout(() => {
-      order.length === 0 && setFailed(true);
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [view]);
 
   useEffect(() => {
     let timer = setInterval(() => {
@@ -166,11 +174,13 @@ export default function JobList() {
           let apps = await handleFetch("apps", api + "get-app-status");
           setOrder(apps);
         } catch (err) {
-          setFailed(true);
-          console.error(err);
+          console.error(err, typeof err);
+          if (!err.includes("Success")) {
+            setFailed(true);
+          }
         }
-        if (viewId) {
-        }
+        // if (viewId) {
+        // }
       } else if (view === "images") {
         setDirectory("images");
         setSortableHeaders(imageHeaders);
@@ -178,21 +188,23 @@ export default function JobList() {
           let images = await handleFetch("images", api + "get-images");
           setOrder(images);
         } catch (err) {
-          setFailed(true);
-          console.error(err);
+          console.error(err, typeof err);
+          if (!err.includes("Success")) {
+            setFailed(true);
+          }
         }
-        if (viewId) {
-        }
+        // if (viewId) {
+        // }
       } else {
         setOrder([]);
       }
     }
     getExpectedData();
-  }, [view, viewId]);
+  }, [view]);
 
   useEffect(() => {
-    setNumItems(order.length);
-  }, [order.length]);
+    order && order.length && setNumItems(order.length);
+  }, [order]);
 
   useEffect(() => {
     if (order && order.length) {
@@ -345,7 +357,16 @@ export default function JobList() {
     <>
       {(view === "images" || view === "apps") && order && order.length > 0 ? (
         <>
-          <ImportModal show={modalShow} onHide={() => setModalShow(false)} />
+          <ImportModal
+            show={modalShow}
+            onHide={async () => {
+              let response = await fetch(api + "get-images");
+              response = await response.json();
+              setOrder(response);
+              sessionStorage.setItem("images", JSON.stringify(response));
+              setModalShow(false);
+            }}
+          />
           <DangerModal
             show={dangerShow}
             onHide={() => setDangerShow(false)}
@@ -356,7 +377,6 @@ export default function JobList() {
                 order,
                 "banished"
               ).then((res) => {
-                sessionStorage.setItem("apps", JSON.stringify(res));
                 setOrder(res);
                 setCheckedRows([]);
               })
@@ -407,10 +427,10 @@ export default function JobList() {
                         checkedRows
                           .flat()
                           .some((el) => button["disabledBy"].includes(el)) ||
-                        loading
+                        buttonLoad
                       }
                       onClick={async () => {
-                        setLoading(button.name);
+                        setButtonLoad(button.name);
                         let newOrder = await handleBatchPost(
                           checkedRows,
                           button.api,
@@ -418,12 +438,16 @@ export default function JobList() {
                           button.causes
                         );
                         setOrder(newOrder);
+                        sessionStorage.setItem(
+                          "apps",
+                          JSON.stringify(newOrder)
+                        );
                         alert("200 Request Successful");
-                        setLoading("");
+                        setButtonLoad("");
                         setCheckedRows([]);
                       }}
                     >
-                      {loading === button.name ? (
+                      {buttonLoad === button.name ? (
                         <div style={{ width: button.name.length - 1 + "ch" }}>
                           <Spinner size="sm" animation="border" />
                         </div>
@@ -443,7 +467,7 @@ export default function JobList() {
                           .some((el) =>
                             ["paused", "restarting", "running"].includes(el)
                           ) ||
-                        loading
+                        buttonLoad
                       }
                       onClick={() => setDangerShow(true)}
                     >

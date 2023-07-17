@@ -1,14 +1,16 @@
 import { Button } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 import { Form } from "react-bootstrap";
+import { Spinner } from "react-bootstrap";
 import ReactJson from "@microlink/react-json-view";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 const api = "http://192.168.98.74/api/demo/";
 
 export default function ImportModal(props) {
   const imageRef = useRef();
   const reasonRef = useRef();
+  const [loading, setLoading] = useState(false);
 
   return (
     <Modal
@@ -34,23 +36,28 @@ export default function ImportModal(props) {
       <Modal.Footer>
         <div style={{ margin: "auto" }}>
           <Button
-            style={{ marginRight: "50px" }}
+            style={{ marginRight: "50px", width: loading ? "5ch" : "initial" }}
+            disabled={loading}
             onClick={async () => {
+              setLoading(true);
               let response = await fetch(
                 api + "request-image?image=" + imageRef.current.value,
                 {
                   method: "POST",
                 }
               );
-              response.ok === true
-                ? alert("200 Request Successful")
-                : alert("Something went wrong...");
-              imageRef.current.value = "";
-              reasonRef.current.value = "";
-              return props.onHide();
+              if (response.ok === true) {
+                alert("200 Request Successful");
+                imageRef.current.value = "";
+                reasonRef.current.value = "";
+              } else {
+                alert("Something went wrong...");
+              }
+              setLoading(false);
+              props.onHide();
             }}
           >
-            Submit
+            {loading ? <Spinner size="sm" animation="border" /> : "Submit"}
           </Button>
           <Button variant="warning" onClick={() => props.onHide()}>
             Cancel

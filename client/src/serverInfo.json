@@ -1,75 +1,74 @@
 [
-    {
-      "state": "on",
-      "Hostname": "9104",
-      "CPU%": "27%",
-      "Memory%": "82%",
-      "User Quantity": "1",
-      "Container Quantity": "27"
-    },
-    {
-      "state": "on",
-      "Hostname": "9479",
-      "CPU%": "88%",
-      "Memory%": "32%",
-      "User Quantity": "97",
-      "Container Quantity": "19"
-    },
-    {
-      "state": "off",
-      "Hostname": "4411",
-      "CPU%": "0%",
-      "Memory%": "0%",
-      "User Quantity": "0",
-      "Container Quantity": "2"
-    },
-    {
-      "state": "off",
-      "Hostname": "1277",
-      "CPU%": "0",
-      "Memory%": "0",
-      "User Quantity": "0",
-      "Container Quantity": "15"
-    },
-    {
-      "state": "on",
-      "Hostname": "2369",
-      "CPU%": "15%",
-      "Memory%": "46%",
-      "User Quantity": "13",
-      "Container Quantity": "30"
-    },
-    {
-      "state": "on",
-      "Hostname": "5176",
-      "CPU%": "5%",
-      "Memory%": "30%",
-      "User Quantity": "14",
-      "Container Quantity": "15"
-    },
-    {
-      "state": "on",
-      "Hostname": "2775",
-      "CPU%": "83%",
-      "Memory%": "96%",
-      "User Quantity": "74",
-      "Container Quantity": "25"
-    },
-    {
-      "state": "on",
-      "Hostname": "6238",
-      "CPU%": "2%",
-      "Memory%": "89%",
-      "User Quantity": "58",
-      "Container Quantity": "19"
-    },
-    {
-      "state": "on",
-      "Hostname": "9383",
-      "CPU%": "59%",
-      "Memory%": "17%",
-      "User Quantity": "53",
-      "Container Quantity": "20"
-    }
-  ]
-  
+  {
+    "state": "on",
+    "Hostname": "judgment",
+    "CPU%": "27%",
+    "Memory%": "82%",
+    "Users": "1",
+    "Current Apps": "27"
+  },
+  {
+    "state": "on",
+    "Hostname": "society",
+    "CPU%": "88%",
+    "Memory%": "32%",
+    "Users": "97",
+    "Current Apps": "19"
+  },
+  {
+    "state": "off",
+    "Hostname": "presence",
+    "CPU%": "0%",
+    "Memory%": "0%",
+    "Users": "0",
+    "Current Apps": "0"
+  },
+  {
+    "state": "off",
+    "Hostname": "delivery",
+    "CPU%": "0",
+    "Memory%": "0",
+    "Users": "0",
+    "Current Apps": "0"
+  },
+  {
+    "state": "on",
+    "Hostname": "awareness",
+    "CPU%": "15%",
+    "Memory%": "46%",
+    "Users": "13",
+    "Current Apps": "30"
+  },
+  {
+    "state": "on",
+    "Hostname": "fishing",
+    "CPU%": "5%",
+    "Memory%": "30%",
+    "Users": "14",
+    "Current Apps": "15"
+  },
+  {
+    "state": "on",
+    "Hostname": "painting",
+    "CPU%": "83%",
+    "Memory%": "96%",
+    "Users": "74",
+    "Current Apps": "25"
+  },
+  {
+    "state": "on",
+    "Hostname": "passenger",
+    "CPU%": "2%",
+    "Memory%": "89%",
+    "Users": "58",
+    "Current Apps": "19"
+  },
+  {
+    "state": "on",
+    "Hostname": "magazine",
+    "CPU%": "59%",
+    "Memory%": "17%",
+    "Users": "53",
+    "Current Apps": "20"
+  }
+]
