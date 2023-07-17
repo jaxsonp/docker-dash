@@ -230,6 +230,7 @@ export default function JobList() {
   async function handleCreateApp() {
     let response = null;
     try {
+      console.log("I ran");
       response = await fetch(
         api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
         {
@@ -324,7 +325,6 @@ export default function JobList() {
 
     let appHealth;
     try {
-      console.log("I ran");
       appHealth = await fetch(
         api + `get-uptime-summary?name=${checkedRows[0][0]}&duration=hour`
       );
