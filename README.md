@@ -54,6 +54,10 @@ This will download all files and install and configure Docker and Python 3.9.16.
 ``` bash
 ./start-server
 ```
+This will start the API as a service, which will then be running in the background indefinitely on the system. If you need to refresh/restart the API for whatever reason, you can run the `restart-server` script, similar to starting it:
+``` bash
+./restart-server
+```
 
 ### For Swarm Mode:
 
@@ -65,7 +69,11 @@ This will download all files and install and configure Docker and Python 3.9.16.
 ``` bash
 bash <(curl -s https://raw.githubusercontent.com/JaxsonP/docker-dash/master/server/scripts/swarm_install_worker.sh) [SWARM_TOKEN] [MANAGER_IP_ADDRESS]:2377
 ```
-Run this command on each worker node to complete setup. This script will first add the node to the swarm as a manager so that it can configure itself, then it will demote itself to worker. Once that is done, you can navigate to the `docker-dash/` directory on the true manager node and start the server with:
+Run this command on each worker node to complete setup. This script will first add the node to the swarm as a manager so that it can configure itself, then it will demote itself to worker. Once that is done, you can navigate to the `docker-dash/` directory on the manager node and start the server with:
 ``` bash
 ./start-server
+```
+This will start the API as a service, which will then be running in the background indefinitely on the system. If you need to refresh/restart the API for whatever reason, you can run the `restart-server` script, similar to starting it:
+``` bash
+./restart-server
 ```

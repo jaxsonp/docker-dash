@@ -7,7 +7,7 @@ echo -e "\n  > Starting install..."
 sudo true
 
 echo -n "  > Updating packages... "
-sudo yum update -y
+sudo yum update -y &> /dev/null
 echo done
 
 # start in home directory
