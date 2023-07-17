@@ -142,7 +142,7 @@ function ServersView() {
     let interval = setInterval(async () => {
       sessionStorage.removeItem("appStats");
       let appStats = await handleFetch("appStats", api + "get-app-stats");
-      setSoloAppStats(JSON.parse(appStats));
+      setSoloAppStats(appStats);
     }, 60000);
     return () => clearInterval(interval);
   }, []);
