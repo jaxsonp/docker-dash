@@ -173,8 +173,8 @@ function ServersView() {
     userLength = named.length;
     let solo = {
       Hostname: "ondemand",
-      "Memory%": memPerc,
-      "CPU%": cpuPerc,
+      "Memory%": memPerc.toFixed(2) + "%",
+      "CPU%": cpuPerc.toFixed(2) + "%",
       "Current Apps": appLength,
       Users: userLength,
     };
