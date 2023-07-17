@@ -79,7 +79,7 @@ function sortSpecificData(singleObj, multiObj) {
 
 function ServersView() {
   const [soloAppStats, setSoloAppStats] = useState([]);
-  const [soloNode, setSoloNode] = useState([]);
+  const [soloNode, setSoloNode] = useState({});
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [numItems, setNumItems] = useState(1);
   const [expanded, setExpanded] = useState(null);
@@ -172,12 +172,13 @@ function ServersView() {
     });
     userLength = named.length;
     let solo = {
+      Hostname: "ondemand",
       "Memory%": memPerc,
       "CPU%": cpuPerc,
       "Current Apps": appLength,
       Users: userLength,
     };
-    setSoloNode([solo]);
+    setSoloNode(solo);
   }, [soloAppStats]);
 
   useEffect(() => {
