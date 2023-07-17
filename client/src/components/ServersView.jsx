@@ -82,19 +82,29 @@ function ServersView() {
 
   useEffect(() => {
     async function fetchClusterData() {
-      const nodes = await fetch(api + "get-node-status");
-      let nodesJ = await nodes.json();
-      return sortSpecificData(servers, [nodesJ]);
+      try {
+        const nodes = await fetch(api + "get-node-status");
+        let nodesJ = await nodes.json();
+        return sortSpecificData(servers, [nodesJ]);
+      } catch (err) {
+        setFailed(true);
+        console.error(err);
+      }
     }
     async function getServerPreviews() {
       setInitialData(await fetchClusterData());
       let timer = setInterval(async () => {
         if (!sessionStorage.getItem("sortedData")) {
-          const nodes = await fetch(api + "get-node-status");
-          let nodesJ = await nodes.json();
-          let sorted = sortSpecificData(servers, [nodesJ]);
-          sessionStorage.setItem("sortedData", JSON.stringify(sorted));
-          setInitialData(sorted);
+          try {
+            const nodes = await fetch(api + "get-node-status");
+            let nodesJ = await nodes.json();
+            let sorted = sortSpecificData(servers, [nodesJ]);
+            sessionStorage.setItem("sortedData", JSON.stringify(sorted));
+            setInitialData(sorted);
+          } catch (err) {
+            setFailed(true);
+            console.error(err);
+          }
         } else {
           setInitialData(JSON.parse(sessionStorage.getItem("sortedData")));
           if (timeOfLastFetch + 600000 < Date.now()) {
@@ -125,9 +135,14 @@ function ServersView() {
   }, [initialData, selectedIndex, numItems]);
 
   async function handleInspectModal(endpoint) {
-    let response = await fetch(endpoint);
-    response = await response.json();
-    setInspectInfo(response);
+    try {
+      let response = await fetch(endpoint);
+      response = await response.json();
+      setInspectInfo(response);
+    } catch (err) {
+      console.error(err);
+      setInspectInfo([{ message: "Something went wrong..." }]);
+    }
   }
 
   return (
