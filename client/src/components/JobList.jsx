@@ -230,7 +230,6 @@ export default function JobList() {
   async function handleCreateApp() {
     let response = null;
     try {
-      console.log("I ran");
       response = await fetch(
         api + "create-app?image=" + checkedRows[0] + "&user=janeschmo",
         {
@@ -476,7 +475,9 @@ export default function JobList() {
                     Request Image
                   </Button>
                   <Button
-                    onClick={handleCreateApp}
+                    onClick={async () => {
+                      (await handleCreateApp()) && navigate("/apps");
+                    }}
                     disabled={checkedRows.length === 0}
                     size="sm"
                   >
