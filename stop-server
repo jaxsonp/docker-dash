@@ -1,0 +1,16 @@
+#!/bin/bash
+cd $(dirname $0)
+
+# removing cron job
+crontab -l > old_crontab
+grep -v "* * * * * $(pwd)/start-server" old_crontab > new_crontab
+crontab new_crontab
+rm old_crontab new_crontab
+
+# stopping old server
+if [ ! -f "server/docker-dash.pid" ]; then
+  echo "Could not find PID"
+  exit
+fi
+kill $(cat server/docker-dash.pid)
+rm server/docker-dash.pid
