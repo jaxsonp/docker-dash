@@ -172,7 +172,7 @@ function ServersView() {
     });
     userLength = named.length;
     let solo = {
-      state: cpuPerc && memPerc && "on",
+      state: (cpuPerc || memPerc || userLength || appLength) && "on",
       Hostname: "ondemand",
       "Memory%": memPerc.toFixed(2) + "%",
       "CPU%": cpuPerc.toFixed(2) + "%",
