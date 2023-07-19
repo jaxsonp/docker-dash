@@ -12,7 +12,7 @@ sudo true
 
 # start in home directory
 cd ~
-path="docker-dash"
+path=".docker-dash-api"
 
 
 # checking if repo dir already exists
@@ -37,19 +37,21 @@ fi
 
 # downloading github repo
 echo -n "  > Downloading repository... "
-curl -sSLo ./docker-dash.tar https://api.github.com/repos/JaxsonP/docker-dash/tarball
+curl -sSLo ./repo.tar https://api.github.com/repos/JaxsonP/docker-dash/tarball
 echo "done"
 
 
 # extracting tar archive
-echo -n "  > Extracting... "
+echo -n "  > Extracting api server... "
+sudo rm -rf "$path-tmp/"
+mkdir "$path-tmp/"
+tar -sxf ./repo.tar -C $path-tmp/ --strip-components=1 &> /dev/null
+sudo rm repo.tar
+# extracting server from repo
 sudo rm -rf "$path/"
-mkdir "$path/"
-tar -sxf ./docker-dash.tar -C ./$path/ --strip-components=1 &> /dev/null
-sudo rm docker-dash.tar
-echo "done"
-
-cd $path
+mv ./$path-tmp/server $path/
+sudo rm -rf "$path-tmp"
+echo done
 
 
 # query number of worker nodes
@@ -181,12 +183,6 @@ if [ "$(python3.9 --version 2>&1)" != "Python 3.9.16" ]; then
 fi
 echo "done"
 
-# installing and configing cron
-echo -n "  > Configuring cron tabs... "
-sudo yum install -y crontabs &> dev/null
-sudo systemctl start crond.service
-sudo systemctl enable crond.service
-echo done
 
 # create docker swarm
 joinfile="join_command.txt"
@@ -197,7 +193,29 @@ sudo firewall-cmd --reload &> /dev/null
 jointoken=$(sudo docker swarm join-token manager)
 echo -e "run this command on each worker node:\nbash <(curl -s https://raw.githubusercontent.com/JaxsonP/docker-dash/master/scripts/swarm_install_worker.sh) ${jointoken:89}" > $joinfile
 echo "done"
-echo "  > NOTE: run the command found at 'docker-dash/$joinfile' to set up the worker nodes"
+echo "  > NOTE: run the command found at '~/.docker-dash-api/$joinfile' to set up the worker nodes"
+
+
+# configuring service
+echo -n "  > Configuring API service... "
+sudo rm /etc/systemd/system/docker-dash-api.service &> /dev/null
+sudo tee -a /etc/systemd/system/docker-dash-api.service > /dev/null <<- END
+    [Unit]
+    Description="docker dash API"
+    After=multi-user.target
+    
+    [Service]
+    Type=simple
+    Restart=always
+    ExecStart=/home/$USER/$path/.venv/bin/python /home/$USER/$path/main.py -p 5000
+    
+    [Install]
+    WantedBy=multi-user.target
+END
+sudo systemctl daemon-reload  &> /dev/null
+sudo systemctl enable docker-dash-api.service &> /dev/null
+sudo systemctl start docker-dash-api.service &> /dev/null
+echo done
 
 
 # prompt for restart

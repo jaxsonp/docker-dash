@@ -12,14 +12,14 @@ echo done
 
 # start in home directory
 cd ~
-path="docker-dash"
+path=".docker-dash-api"
 
 
 # checking if dir exists
 if [ -d "$path/" ]; then
   # prompting yes or no for overwrite
   while true; do
-    read -p "Directory \"$path/\" already exists, overwrite? (y/n) " yn
+    read -p "Directory \"$path/\" already exists and will be overwritten, continue? (y/n) " yn
     case $yn in 
       [yY] ) 
         break
@@ -37,15 +37,20 @@ fi
 
 # downloading github repo
 echo -n "  > Downloading repository... "
-curl -sSLo ./docker-dash.tar https://api.github.com/repos/JaxsonP/docker-dash/tarball
+curl -sSLo ./repo.tar https://api.github.com/repos/JaxsonP/docker-dash/tarball
 echo done
 
+
 # extracting tar archive
-echo -n "  > Extracting... "
+echo -n "  > Extracting api server... "
+sudo rm -rf "$path-tmp/"
+mkdir "$path-tmp/"
+tar -sxf ./repo.tar -C $path-tmp/ --strip-components=1 &> /dev/null
+sudo rm repo.tar
+# extracting server from repo
 sudo rm -rf "$path/"
-mkdir "$path/"
-tar -sxf ./docker-dash.tar -C ./$path/ --strip-components=1 &> /dev/null
-sudo rm docker-dash.tar
+mv ./$path-tmp/server $path/
+sudo rm -rf "$path-tmp"
 echo done
 
 
@@ -119,14 +124,33 @@ if [ "$(python3.9 --version 2>&1)" != "Python 3.9.16" ]; then
 fi
 echo done
 
-# installing and configing cron
-echo -n "  > Configuring cron tabs... "
-sudo yum install -y crontabs &> dev/null
-sudo systemctl start crond.service
-sudo systemctl enable crond.service
+# installing and configing systemd
+echo -n "  > Configuring systemd... "
+sudo yum install -y systemd &> dev/null
 echo done
 
-echo -e "\n  > To complete installation, a restart is required"
+# configuring service
+echo -n "  > Configuring API service... "
+sudo rm /etc/systemd/system/docker-dash-api.service &> /dev/null
+sudo tee -a /etc/systemd/system/docker-dash-api.service > /dev/null <<- END
+    [Unit]
+    Description="docker dash API"
+    After=multi-user.target
+    
+    [Service]
+    Type=simple
+    Restart=always
+    ExecStart=/home/$USER/$path/.venv/bin/python /home/$USER/$path/main.py -p 5000
+    
+    [Install]
+    WantedBy=multi-user.target
+END
+sudo systemctl daemon-reload  &> /dev/null
+sudo systemctl enable docker-dash-api.service &> /dev/null
+sudo systemctl start docker-dash-api.service &> /dev/null
+echo done
+
+echo -e "\nTo complete installation, a restart is required"
 # prompting yes or no for restart
 while true; do
   read -p "Do you want to restart now? (y/n) " yn

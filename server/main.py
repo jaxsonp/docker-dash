@@ -7,14 +7,15 @@ import threading
 
 import logger
 
-swarm_mode=False
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+swarm_mode=False
 app = flask.Flask(__name__)
 
 
 @app.route('/')
 def helper() -> flask.Response:
-  with open("root_page.txt", "r") as f:
+  with open(f"{CURRENT_DIR}/root_page.txt", "r") as f:
     return flask.Response(f.read(), mimetype='text/plain')
 
 
@@ -218,11 +219,6 @@ def getImagesWrapper(server_id) -> flask.Response:
 
 def main(port=5000) -> None:
   print("\n\n\n")
-
-  print(f" * Exporting PID: {os.getpid()}")
-  pid_file_path = os.path.dirname(os.path.abspath(__file__))
-  with open(f"{pid_file_path}/docker-dash.pid", "w") as pid_file:
-    pid_file.write(str(os.getpid()))
 
   print(" * Checking swarm mode: ", end="")
   swarm_mode = internal_methods.checkSwarmMode()
