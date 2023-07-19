@@ -19,7 +19,7 @@ path=".docker-dash-api"
 if [ -d "$path/" ]; then
   # prompting yes or no for overwrite
   while true; do
-    read -p "Directory \"$path/\" already exists, overwrite? (y/n) " yn
+    read -p "Directory \"$path/\" already exists and will be overwritten, continue? (y/n) " yn
     case $yn in 
       [yY] ) 
         break
@@ -145,7 +145,7 @@ sudo tee -a /etc/systemd/system/docker-dash-api.service > /dev/null <<- END
     [Install]
     WantedBy=multi-user.target
 END
-sudo systemctl daemon-reload  > /dev/null
+sudo systemctl daemon-reload  &> /dev/null
 sudo systemctl enable docker-dash-api.service &> /dev/null
 sudo systemctl start docker-dash-api.service &> /dev/null
 echo done
