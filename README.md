@@ -11,9 +11,9 @@
 
 # Introduction
 
-Docker Dash is a handy GUI dashboard made for administrators to manage apps running as docker containers on a server. This project was created to demonstrate the concept of containerization in the context of user/app management on a research server.
+Docker Dash is a handy web GUI dashboard made for administrators to manage apps running as docker containers on a server. This project was created to demonstrate the concept of containerization in the context of user/app management on a multiple servers.
 
-Docker Dash is designed to be running on a shared research server. A user wishing to access the server will do so through various apps, which are then spawned on the server as Docker containers, and managed easily by an administrator through Docker Dash. 
+Docker Dash is designed to be running on a individual/multiple servers. A user wishing to access the server will do so through various apps, which are then spawned on the server as Docker containers, and managed easily by an administrator through Docker Dash. 
 
 ## Security warning
 
@@ -92,7 +92,7 @@ This API serves as a backend for Docker Dash, providing an interface between the
 ## Setup Guide
 
 ### Prerequisites:
-- CentOS 7
+- CentOS 7 | Ubuntu | RHEL(broken) 
 - Internet connection
 - All nodes must have unique hostnames *(for swarm mode)*
 
