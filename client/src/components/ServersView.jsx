@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import { Button, Card, Pagination, Spinner } from "react-bootstrap";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { InspectModal } from "./ImageModal";
-import servers from "../serverInfo.json";
+import servers from "../data/serverInfo.json";
 //TESTING
-import appStats from "../app-stats.json";
+import appStats from "../data/app-stats.json";
 import handleFetch from "../handleFetch";
 
 const renderPagination = (items, step, selectedIndex, setSelectedIndex) => {
