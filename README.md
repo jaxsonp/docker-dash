@@ -23,8 +23,62 @@ This project was created as a mockup to demonstrate the concept of containerizat
 
 # Getting Started
 
-*TODO put stuff here*
+## General Usage
 
+### View Servers
+This page displays the servers active on the network as well as some of their important metrics. Included is CPU%, memory%, amount of unique users, and number of applications running on that unit.
+This page displays the servers active on the network as well as some of their important metrics. 
+
+Included is CPU%, memory%, amount of unique users, and number of applications running on that unit.
+
+The colored circle on the top right of the server cards flashes green to indicate the system is running smoothly and red otherwise.
+
+![Server view](./images/server_view.jpg)
+
+---
+
+### View Applications
+This page allows the user to see the complete list of applications running on the network and allows them to perform tasks on these applications.
+
+#### Functionality 
+- Start: starts selected application
+- Pause: Pauses the specified app. The app must be running in order to pause
+- Unpause: Unpauses the specified app. The app must be paused in order to unpause
+- Restart: Restarts the specified app.
+- Remove: Removes an application from the network
+- Kill: Forcefully stops the specified app.
+  
+![App view](./images/app_view.jpg)
+
+---
+
+### View Images
+This page allows the user to see what iso images that apps can be created from, update this list, and use the image to create apps.
+#### Functionality
+- Request Image: Sends a request to add an image from Dockerhub, which then adds the iso image to the images page
+- Create App: Generates an application instance from the selected image, that can be found in the apps page.
+
+![Image view](./images/image_view.jpg)
+
+---
+
+<br>
+
+## Hosting the website
+
+### Prerequisites:
+- Integrated Development Environment on your computer
+- Internet connection
+- Admin privileges
+
+### Setup guide:
+- Open terminal
+- Navigate to client folder: `cd client`
+- In Terminal run: `npm install` and `npm run dev` to start your development server.
+
+
+
+<br>
 <br>
 
 # Docker Dash API
