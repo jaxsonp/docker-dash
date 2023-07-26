@@ -48,7 +48,7 @@ This page allows the user to see the complete list of applications running on th
 - Remove: Removes an application from the network
 - Kill: Forcefully stops the specified app.
   
-![App view](./images/app_view.jpg)
+![App view](./images/app_view.jpeg)
 
 ---
 
